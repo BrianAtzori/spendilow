@@ -1,4 +1,6 @@
+import {StatusCodes} from "http-status-codes"
 class CustomAPIError extends Error {
+    public statusCode: any;
     constructor(message: string) {
         super(message);
     }
@@ -7,5 +9,5 @@ class CustomAPIError extends Error {
 module.exports = CustomAPIError
 
 /**
- * ! https://www.codeconcisely.com/posts/how-to-handle-errors-in-express-with-typescript/ 
+ * ? https://www.codeconcisely.com/posts/how-to-handle-errors-in-express-with-typescript/ 
  */

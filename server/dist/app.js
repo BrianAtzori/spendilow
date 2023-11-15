@@ -34,12 +34,12 @@ app.use(rateLimiter({
 }));
 // ------ MIDDLEWARE SETUP ------
 //Imports
-// const errorHandlerMiddleware: RequestHandler = require("./middleware/error-handler");
+const errorHandlerMiddleware = require("./middleware/error-handler");
 /**
  * TODO: Da inserire e attivare eventuali altri middleware
  */
 //Activation
-// app.use(errorHandlerMiddleware);
+app.use(errorHandlerMiddleware);
 //------ ROUTES SETUP ------
 //const authRouter = require("./routes/auth"); ESEMPIO
 /**
