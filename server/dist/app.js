@@ -41,10 +41,8 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 //Activation
 app.use(errorHandlerMiddleware);
 //------ ROUTES SETUP ------
-//const authRouter = require("./routes/auth"); ESEMPIO
-/**
- * TODO: Da inserire/importare e mappare eventuali altre rotte
- */
+const usersRouter = require("./routes/users");
+app.use("/api/v1/users", usersRouter);
 //------- Try DB Connection or throw error ------
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     let conn;

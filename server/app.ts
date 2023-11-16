@@ -2,7 +2,7 @@
 require("dotenv").config();
 
 // ------ EXPRESS SETUP ------
-import { Express, Request, Response, RequestHandler } from 'express' //TS Import
+import { Express, Request, Response, RequestHandler, Router } from 'express' //TS Import
 const express = require('express');
 const app: Express = express();
 require("express-async-errors");
@@ -39,10 +39,11 @@ const errorHandlerMiddleware: RequestHandler = require("./middleware/error-handl
 app.use(errorHandlerMiddleware);
 
 //------ ROUTES SETUP ------
-//const authRouter = require("./routes/auth"); ESEMPIO
-/**
- * TODO: Da inserire/importare e mappare eventuali altre rotte
- */
+const usersRouter: Router = require("./routes/users");
+
+
+app.use("/api/v1/users", usersRouter);
+
 
 //------- Try DB Connection or throw error ------
 
