@@ -1,8 +1,8 @@
 "use strict";
 // ------ IMPORT MARIA DB ------
 let mariaDB = require("mariadb");
-// ------ CREATE CONNECTION POOL ------
-const pool = mariaDB.createPool({
+// ------ CREATE CONNECTION dbConnectionPool ------
+const dbConnectionPool = mariaDB.createdbConnectionPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -12,7 +12,7 @@ const pool = mariaDB.createPool({
 module.exports = {
     getConnection: function () {
         return new Promise(function (resolve, reject) {
-            pool
+            dbConnectionPool
                 .getConnection()
                 .then(function (connection) {
                 resolve(connection);

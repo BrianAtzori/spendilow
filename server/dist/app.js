@@ -16,7 +16,7 @@ const app = express();
 require("express-async-errors");
 app.use(express.json());
 // ----- DB IMPORT ------
-const pool = require('./db/db');
+const dbConnectionPool = require('./db/db-connector');
 //------ SECURITY SETUP ------
 //Imports
 const helmet = require("helmet");
@@ -45,10 +45,10 @@ const usersRouter = require("./routes/users");
 app.use("/api/v1/users", usersRouter);
 //------- Try DB Connection or throw error ------
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
-    let conn;
+    let connection;
     try {
-        conn = yield pool.getConnection();
-        if (conn) {
+        connection = yield dbConnectionPool.getConnection();
+        if (connection) {
             app.listen(process.env.PORT, () => {
                 console.log(`Server connected to DB and running at http://localhost:${process.env.PORT}`);
             });
@@ -58,23 +58,8 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(error);
     }
     finally {
-        if (conn)
-            return conn.release();
+        if (connection)
+            return connection.release();
     }
 });
 start();
-// app.get('/users', async (req: Request, res: Response) => {
-//     let conn;
-//     try {
-//         // establish a connection to MariaDB
-//         conn = await pool.getConnection();
-//         // create a new query
-//         var query = "select * from splusers";
-//         // execute the query and set the result to a new variable
-//         var rows = await conn.query(query);
-//         // return the results
-//         res.send(rows);
-//     } catch (err) {
-//         throw err;
-//     }
-// });

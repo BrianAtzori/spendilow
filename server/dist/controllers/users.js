@@ -11,30 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const SpendilowUser = require("../classes/spendilow-user");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
-const pool = require('../db/db');
+const dbManager = require("../db/db-manager");
+/**
+ * !JWT Generation and send to user
+ * !Password hash
+ */
 // ------ REGISTER USER ------
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body) {
         throw new BadRequestError("Richiesta non effetuata correttamente, ricontrolla i dati inseriti.");
     }
-    const { id, email, password, savings, salary, profileImage, workfield, username } = new SpendilowUser(Object.assign({}, req.body));
-    let conn;
-    try {
-        // establish a connection to MariaDB
-        conn = yield pool.getConnection();
-        // create a new query
-        const query = `
-        INSERT INTO \`splusers\` (\`id\`, \`email\`, \`password\`, \`savings\`, \`salary\`, \`profileimage\`, \`workfield\`, \`username\`)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `;
-        // execute the query and set the result to a new variable
-        let rows = yield conn.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
-        // return the results
-        res.json(rows.warningStatus);
-    }
-    catch (err) {
-        throw err;
-    }
+    const newAccount = new SpendilowUser(Object.assign({}, req.body));
+    let queryResult = yield dbManager.databaseInteraction('CREATE_USER', newAccount);
+    res.json(queryResult);
 });
 // ------ LOGIN USER ------
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

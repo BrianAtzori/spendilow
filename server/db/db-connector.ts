@@ -1,7 +1,7 @@
 // ------ IMPORT MARIA DB ------
 let mariaDB = require("mariadb");
 
-// ------ CREATE CONNECTION POOL ------
+// ------ CREATE CONNECTION dbConnectionPool ------
 const pool = mariaDB.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
