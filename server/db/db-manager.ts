@@ -1,6 +1,6 @@
 
 // ------ Imports ------
-const riella = require("../errors");
+const BRError = require("../errors");
 const dbConnectionPool = require("./db-connector");
 
 // ------ DB ACTIONS MANAGER ------
@@ -17,20 +17,25 @@ const databaseInteraction = async (operation: string, queryData: any) => {
                 case 'CREATE_USER': {
                     queryResult = await createSplUser(queryData, connection)
                 }
+                case 'GET_USER': {
+                    queryResult = await readSplUser(queryData, connection);
+                }
                 default: {
-                    throw new riella(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente.`)
+                    throw new BRError(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente.`)
                 }
             }
         }
-
-        return queryResult;
     }
     catch (error) {
-        throw new riella(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`)
+        throw new BRError(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`)
     }
     finally {
-        if (connection) return connection.release();
+        if (connection) {
+            connection.release();
+        }
+        return queryResult
     }
+
 }
 
 // ------ REGISTER SPENDILOW USER ------
@@ -43,10 +48,21 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
 
     let { id, email, password, savings, salary, profileImage, workfield, username } = spendilowUser
 
-    let rows = await connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
+    let result = await connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
 
-    return rows
+    return result
 
+}
+
+// ------ RETRIEVE SPENDILOW USER ------
+const readSplUser = async (spendilowUser: any, connection: any) => {
+    const query = `SELECT * FROM \`splusers\` WHERE \`email\`=? LIMIT 1`
+
+    let { email } = spendilowUser
+
+    let rows = await connection.query(query, [email]);
+
+    return rows[0]
 }
 
 // ------ Exports ------

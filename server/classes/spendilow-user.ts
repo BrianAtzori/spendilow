@@ -1,5 +1,6 @@
-// const crypto = require("crypto");
-import Crypto from "crypto"
+import crypto from "crypto"
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 class SpendilowUser {
 
@@ -12,8 +13,8 @@ class SpendilowUser {
     public workfield: string;
     public username: string;
 
-    constructor({email, password, savings, salary, profileImage,workfield, username}: any) {
-        this.id = Crypto.randomUUID();
+    constructor({ email, password, savings, salary, profileImage, workfield, username }: any) {
+        this.id = crypto.randomUUID();
         this.email = email;
         this.password = password;
         this.savings = savings;
@@ -22,6 +23,16 @@ class SpendilowUser {
         this.workfield = workfield;
         this.username = username;
     }
+
+    async hashPassword(): Promise<void> {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt)
+    }
+
+    JWTGeneration(): string {
+        return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
+    }
+
 }
 
 module.exports = SpendilowUser;

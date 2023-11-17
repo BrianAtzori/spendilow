@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 // ------ Imports ------
-const riella = require("../errors");
+const BRError = require("../errors");
 const dbConnectionPool = require("./db-connector");
 // ------ DB ACTIONS MANAGER ------
 const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -22,19 +22,23 @@ const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, 
                 case 'CREATE_USER': {
                     queryResult = yield createSplUser(queryData, connection);
                 }
+                case 'GET_USER': {
+                    queryResult = yield readSplUser(queryData, connection);
+                }
                 default: {
-                    throw new riella(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente.`);
+                    throw new BRError(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente.`);
                 }
             }
         }
-        return queryResult;
     }
     catch (error) {
-        throw new riella(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`);
+        throw new BRError(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`);
     }
     finally {
-        if (connection)
-            return connection.release();
+        if (connection) {
+            connection.release();
+        }
+        return queryResult;
     }
 });
 // ------ REGISTER SPENDILOW USER ------
@@ -44,8 +48,15 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
     let { id, email, password, savings, salary, profileImage, workfield, username } = spendilowUser;
-    let rows = yield connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
-    return rows;
+    let result = yield connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
+    return result;
+});
+// ------ RETRIEVE SPENDILOW USER ------
+const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `SELECT * FROM \`splusers\` WHERE \`email\`=? LIMIT 1`;
+    let { email } = spendilowUser;
+    let rows = yield connection.query(query, [email]);
+    return rows[0];
 });
 // ------ Exports ------
 module.exports = {
