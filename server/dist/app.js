@@ -11,6 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 // ------ ENV SETUP ------
 require("dotenv").config();
+// ------ GOOGLE AUTH SETUP FOR SAMPLE ------
+const generate_secret_key = require("./ts-utilities/generate_secret_key");
+const secretKey = generate_secret_key();
+console.log(secretKey);
+const generate_qr_code = require("./ts-utilities/generate_qr_code");
+generate_qr_code();
 const express = require('express');
 const app = express();
 require("express-async-errors");
