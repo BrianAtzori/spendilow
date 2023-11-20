@@ -1,3 +1,4 @@
+import { SqlError } from "mariadb";
 
 // ------ Imports ------
 const BRError = require("../errors");
@@ -33,6 +34,7 @@ const databaseInteraction = async (operation: string, queryData: any) => {
         if (connection) {
             connection.release();
         }
+        console.log(queryResult)
         return queryResult
     }
 
@@ -52,8 +54,12 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
 
     try {
         result = await connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
-    } catch (error) {
-        return error
+    }
+    catch (error: any) {
+
+        error.errno === 1062 ? result = "DUPLICATED_VALUE" : result = undefined;
+
+        return result;
     }
 
     return result;

@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 // ------ Imports ------
 const BRError = require("../errors");
 const dbConnectionPool = require("./db-connector");
@@ -38,6 +39,7 @@ const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, 
         if (connection) {
             connection.release();
         }
+        console.log(queryResult);
         return queryResult;
     }
 });
@@ -53,7 +55,8 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
         result = yield connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
     }
     catch (error) {
-        return error;
+        error.errno === 1062 ? result = "DUPLICATED_VALUE" : result = undefined;
+        return result;
     }
     return result;
 });
