@@ -26,13 +26,13 @@ const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, 
                     queryResult = yield readSplUser(queryData, connection);
                 }
                 default: {
-                    throw new BRError(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente.`);
+                    throw new BRError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
             }
         }
     }
     catch (error) {
-        throw new BRError(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`);
+        throw new BRError(`Il salvataggio dei dati non è stato effettuato correttamente oppure il Database non è disponibile, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`);
     }
     finally {
         if (connection) {
@@ -47,8 +47,14 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
         INSERT INTO \`splusers\` (\`id\`, \`email\`, \`password\`, \`savings\`, \`salary\`, \`profileimage\`, \`workfield\`, \`username\`)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
+    let result;
     let { id, email, password, savings, salary, profileImage, workfield, username } = spendilowUser;
-    let result = yield connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
+    try {
+        result = yield connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
+    }
+    catch (error) {
+        return error;
+    }
     return result;
 });
 // ------ RETRIEVE SPENDILOW USER ------

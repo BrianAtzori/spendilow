@@ -21,13 +21,13 @@ const databaseInteraction = async (operation: string, queryData: any) => {
                     queryResult = await readSplUser(queryData, connection);
                 }
                 default: {
-                    throw new BRError(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente.`)
+                    throw new BRError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`)
                 }
             }
         }
     }
     catch (error) {
-        throw new BRError(`Il salvataggio dei dati non è stato effetuato correttamente, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`)
+        throw new BRError(`Il salvataggio dei dati non è stato effettuato correttamente oppure il Database non è disponibile, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`)
     }
     finally {
         if (connection) {
@@ -46,12 +46,17 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
+    let result;
+
     let { id, email, password, savings, salary, profileImage, workfield, username } = spendilowUser
 
-    let result = await connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
+    try {
+        result = await connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
+    } catch (error) {
+        return error
+    }
 
-    return result
-
+    return result;
 }
 
 // ------ RETRIEVE SPENDILOW USER ------

@@ -10,6 +10,7 @@ const registerUser = async (req: Request, res: Response) => {
     if (!req.body) {
         throw new BadRequestError("Richiesta non effetuata correttamente, ricontrolla i dati inseriti.")
     }
+
     const newAccount = new SpendilowUser({ ...req.body });
 
     await newAccount.hashPassword();
@@ -18,7 +19,7 @@ const registerUser = async (req: Request, res: Response) => {
 
     await dbManager.databaseInteraction('CREATE_USER', newAccount);
 
-    res.status(StatusCodes.CREATED).json({ account: newAccount.email, token });
+    res.status(StatusCodes.CREATED).cookie("jwt", token, { httpOnly: true, }).json({ account: newAccount.email });
 }
 
 // ------ LOGIN USER ------
@@ -29,9 +30,7 @@ const loginUser = async (req: Request, res: Response) => {
         throw new BadRequestError("Email o password non validi");
     }
 
-    const spendilowUser = await dbManager.databaseInteraction('GET_USER',req.body);
-
-    console.log(spendilowUser)
+    const spendilowUser = new SpendilowUser(await dbManager.databaseInteraction('GET_USER', req.body));
 
     if (!spendilowUser) {
         throw new UnauthenticatedError("L'indirizzo email fornito è errato.");
@@ -43,9 +42,9 @@ const loginUser = async (req: Request, res: Response) => {
         throw new UnauthenticatedError("La password fornita è errata.");
     }
 
-    const token = SpendilowUser.JWTGeneration();
+    const token = spendilowUser.JWTGeneration();
 
-    res.status(StatusCodes.OK).json({id: spendilowUser.id, email: spendilowUser.email, token})
+    res.status(StatusCodes.OK).cookie("jwt", token, { httpOnly: true }).json({ id: spendilowUser.id, email: spendilowUser.email })
 }
 
 // ------ MODIFY USER ------

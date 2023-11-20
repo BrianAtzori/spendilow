@@ -33,6 +33,10 @@ class SpendilowUser {
         return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
     }
 
+    pwdCheck() : boolean{
+        return true;
+    }
+
 }
 
 module.exports = SpendilowUser;

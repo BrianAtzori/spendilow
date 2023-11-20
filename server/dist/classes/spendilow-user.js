@@ -35,5 +35,8 @@ class SpendilowUser {
     JWTGeneration() {
         return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
     }
+    pwdCheck() {
+        return true;
+    }
 }
 module.exports = SpendilowUser;
