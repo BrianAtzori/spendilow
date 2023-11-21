@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes"
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 const qrCodeGenerator = require("../ts-utilities/generate_qr_code")
+const speakeasy = require("speakeasy");
 
 // ------ REGISTER USER ------
 const registerUser = async (req: Request, res: Response) => {
@@ -81,10 +82,27 @@ const deleteUser = async (req: Request, res: Response) => {
     res.json("OK");
 }
 
+// ------ ACTIVATE MFA FOR USER ------
 const activateMFA = async (req: Request, res: Response) => {
     let qrForUser: string = await qrCodeGenerator();
     res.status(StatusCodes.OK).json(qrForUser);
 }
 
+// ------ VERIFY MFA FOR USER ------
+const verifyMFA = async (req: Request, res: Response) => {
+    const { otp } = req.body;
+    const verified: boolean = speakeasy.totp.verify({
+        secret: process.env.MFA_SEC,
+        encoding: "base32",
+        token: otp,
+    });
+    if (verified) {
+        res.status(StatusCodes.OK).json({ verified })
+    }
+    else {
+        res.status(StatusCodes.UNAUTHORIZED).json({ verified })
+    }
+}
+
 // ------ Exports ------
-module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA }
+module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA }

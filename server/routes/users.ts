@@ -4,7 +4,7 @@ const express = require("express");
 const usersRouter: Router = express.Router();
 
 // ------ Controllers imports and setup ------
-const { registerUser, loginUser, modifyUser, deleteUser, activateMFA } = require("../controllers/users")
+const { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA } = require("../controllers/users")
 
 // ------ REGISTER USER ------
 usersRouter.post("/new/", registerUser);
@@ -20,6 +20,9 @@ usersRouter.delete("/del/:id", deleteUser)
 
 // ------ ACTIVATE MFA ------
 usersRouter.get("/mfa-activation/", activateMFA)
+
+// ------ VERIFY MFA ------
+usersRouter.post("/mfa-verification/", verifyMFA)
 
 // ------ Exports ------
 module.exports = usersRouter;

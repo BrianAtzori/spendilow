@@ -14,6 +14,7 @@ const http_status_codes_1 = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 const qrCodeGenerator = require("../ts-utilities/generate_qr_code");
+const speakeasy = require("speakeasy");
 // ------ REGISTER USER ------
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body) {
@@ -65,9 +66,25 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     console.log("Del User");
     res.json("OK");
 });
+// ------ ACTIVATE MFA FOR USER ------
 const activateMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let qrForUser = yield qrCodeGenerator();
     res.status(http_status_codes_1.StatusCodes.OK).json(qrForUser);
 });
+// ------ VERIFY MFA FOR USER ------
+const verifyMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { otp } = req.body;
+    const verified = speakeasy.totp.verify({
+        secret: process.env.MFA_SEC,
+        encoding: "base32",
+        token: otp,
+    });
+    if (verified) {
+        res.status(http_status_codes_1.StatusCodes.OK).json({ verified });
+    }
+    else {
+        res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({ verified });
+    }
+});
 // ------ Exports ------
-module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA };
+module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA };

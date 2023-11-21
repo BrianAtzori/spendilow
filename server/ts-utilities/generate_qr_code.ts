@@ -2,7 +2,7 @@ const QRCode = require("qrcode");
 
 function generateQRCodeURL() {
     return new Promise((resolve, reject) => {
-        QRCode.toDataURL(process.env.MFA_SEC, (err: any, dataURL: any) => {
+        QRCode.toDataURL(`otpauth://totp/Spendilow-OTP?secret=${process.env.MFA_SEC}`, (err: any, dataURL: any) => {
             if (err) {
                 reject(err);
             } else {

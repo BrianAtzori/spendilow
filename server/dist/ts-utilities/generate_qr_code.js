@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const QRCode = require("qrcode");
 function generateQRCodeURL() {
     return new Promise((resolve, reject) => {
-        QRCode.toDataURL(process.env.MFA_SEC, (err, dataURL) => {
+        QRCode.toDataURL(`otpauth://totp/Spendilow-OTP?secret=${process.env.MFA_SEC}`, (err, dataURL) => {
             if (err) {
                 reject(err);
             }
