@@ -65,7 +65,7 @@ const start = async () => {
         }
     }
     catch (error) {
-        console.log(error)
+        throw new Error("Errore di connessione al Database, il server non è disponibile.")
     }
     finally {
         if (connection) return connection.release();

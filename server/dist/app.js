@@ -55,7 +55,7 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (error) {
-        console.log(error);
+        throw new Error("Errore di connessione al Database, il server non è disponibile.");
     }
     finally {
         if (connection)

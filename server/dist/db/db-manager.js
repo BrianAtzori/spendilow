@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const mariadb_1 = require("mariadb");
 // ------ Imports ------
 const BRError = require("../errors");
 const dbConnectionPool = require("./db-connector");
@@ -39,7 +40,6 @@ const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, 
         if (connection) {
             connection.release();
         }
-        console.log(queryResult);
         return queryResult;
     }
 });
@@ -55,15 +55,14 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
         result = yield connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
     }
     catch (error) {
-        error.errno === 1062 ? result = "DUPLICATED_VALUE" : result = undefined;
-        return result;
+        throw new mariadb_1.SqlError("Errore durante il salvataggio dei dati dell'utente, ricontrolla i dati inseriti oppure contatta il supporto utente.");
     }
     return result;
 });
 // ------ RETRIEVE SPENDILOW USER ------
 const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `SELECT * FROM \`splusers\` WHERE \`email\`=? LIMIT 1`;
-    let { email } = spendilowUser;
+    const email = spendilowUser.email;
     let rows = yield connection.query(query, [email]);
     return rows[0];
 });

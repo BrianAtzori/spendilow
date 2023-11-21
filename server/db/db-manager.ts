@@ -34,7 +34,6 @@ const databaseInteraction = async (operation: string, queryData: any) => {
         if (connection) {
             connection.release();
         }
-        console.log(queryResult)
         return queryResult
     }
 
@@ -56,10 +55,7 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
         result = await connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
     }
     catch (error: any) {
-
-        error.errno === 1062 ? result = "DUPLICATED_VALUE" : result = undefined;
-
-        return result;
+        throw new SqlError("Errore durante il salvataggio dei dati dell'utente, ricontrolla i dati inseriti oppure contatta il supporto utente.");
     }
 
     return result;
@@ -69,7 +65,7 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
 const readSplUser = async (spendilowUser: any, connection: any) => {
     const query = `SELECT * FROM \`splusers\` WHERE \`email\`=? LIMIT 1`
 
-    let { email } = spendilowUser
+    const email = spendilowUser.email;
 
     let rows = await connection.query(query, [email]);
 

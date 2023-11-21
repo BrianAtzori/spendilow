@@ -7,8 +7,22 @@ const dbManager = require("../db/db-manager");
 
 // ------ REGISTER USER ------
 const registerUser = async (req: Request, res: Response) => {
+
     if (!req.body) {
-        throw new BadRequestError("Richiesta non effetuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.")
+        throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.")
+    }
+
+    const { email } = req.body
+
+    if (!email) {
+        throw new BadRequestError("Email non valida, ricontrolla i dati inseriti o contatta il supporto utente.");
+    }
+
+    const spendilowUser = await dbManager.databaseInteraction('GET_USER', req.body);
+
+    //Check if user exists
+    if (spendilowUser) {
+        throw new BadRequestError("Errore nella creazione dell'account, l'email inserita è già associata ad un account.");
     }
 
     const newAccount = new SpendilowUser({ ...req.body });
@@ -19,14 +33,8 @@ const registerUser = async (req: Request, res: Response) => {
 
     const createdUser = await dbManager.databaseInteraction('CREATE_USER', newAccount);
 
-    // console.log(createdUser)
-
     if (!createdUser) {
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.")
-    }
-
-    if (createdUser === "DUPLICATED_VALUE") {
-        throw new BadRequestError("Errore nella creazione dell'account, l'email inserita è già associata ad un account.")
     }
 
     res.status(StatusCodes.CREATED).cookie("jwt", token, { httpOnly: true, }).json({ account: newAccount.email });
@@ -34,6 +42,7 @@ const registerUser = async (req: Request, res: Response) => {
 
 // ------ LOGIN USER ------
 const loginUser = async (req: Request, res: Response) => {
+
     const { email, password } = req.body
 
     if (!email || !password) {
