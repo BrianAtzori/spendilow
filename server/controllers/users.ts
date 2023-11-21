@@ -4,6 +4,7 @@ const SpendilowUser = require("../classes/spendilow-user")
 import { StatusCodes } from "http-status-codes"
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
+const qrCodeGenerator = require("../ts-utilities/generate_qr_code")
 
 // ------ REGISTER USER ------
 const registerUser = async (req: Request, res: Response) => {
@@ -49,11 +50,13 @@ const loginUser = async (req: Request, res: Response) => {
         throw new BadRequestError("Email o password non validi");
     }
 
-    const spendilowUser = new SpendilowUser(await dbManager.databaseInteraction('GET_USER', req.body));
+    const retrievedUser = await dbManager.databaseInteraction('GET_USER', req.body);
 
-    if (!spendilowUser) {
-        throw new UnauthenticatedError("L'indirizzo email fornito è errato.");
+    if (!retrievedUser) {
+        throw new UnauthenticatedError("L'indirizzo email fornito non è associato ad alcun account.");
     }
+
+    const spendilowUser = new SpendilowUser(retrievedUser);
 
     const isPasswordCorrect: boolean = spendilowUser.pwdCheck(password);
 
@@ -78,5 +81,10 @@ const deleteUser = async (req: Request, res: Response) => {
     res.json("OK");
 }
 
+const activateMFA = async (req: Request, res: Response) => {
+    let qrForUser: string = await qrCodeGenerator();
+    res.status(StatusCodes.OK).json(qrForUser);
+}
+
 // ------ Exports ------
-module.exports = { registerUser, loginUser, modifyUser, deleteUser }
+module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA }

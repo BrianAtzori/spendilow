@@ -1,13 +1,8 @@
-const speakeasyQR = require("speakeasy");
 const QRCode = require("qrcode");
 
-// Generate a secret key
-const secret = speakeasyQR.generateSecret({ length: 20 });
-
-// Function to generate a QR code URL for Google Authenticator
 function generateQRCodeURL() {
     return new Promise((resolve, reject) => {
-        QRCode.toDataURL(secret.otpauth_url, (err: any, dataURL: any) => {
+        QRCode.toDataURL(process.env.MFA_SEC, (err: any, dataURL: any) => {
             if (err) {
                 reject(err);
             } else {
@@ -17,16 +12,16 @@ function generateQRCodeURL() {
     });
 }
 
-function qrGenerationAndOutput() {
-    // Generate and display the QR code URL
-    generateQRCodeURL()
+async function qrGenerationAndOutput() {
+    let generatedQR: any = await generateQRCodeURL()
         .then((dataURL) => {
-            console.log("Scan the QR code with the Google Authenticator app:");
-            console.log(dataURL);
+            return dataURL
         })
-        .catch((err) => {
-            console.error("Error generating QR code:", err);
+        .catch((error) => {
+            throw new Error(`Errore nell'attivare l'autenticazione a due fattori, contatta il supporto utente. ERR: ${error}`)
         });
+
+    return generatedQR
 }
 
 module.exports = qrGenerationAndOutput;

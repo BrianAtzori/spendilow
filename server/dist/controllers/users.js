@@ -13,6 +13,7 @@ const SpendilowUser = require("../classes/spendilow-user");
 const http_status_codes_1 = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
+const qrCodeGenerator = require("../ts-utilities/generate_qr_code");
 // ------ REGISTER USER ------
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body) {
@@ -42,10 +43,11 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!email || !password) {
         throw new BadRequestError("Email o password non validi");
     }
-    const spendilowUser = new SpendilowUser(yield dbManager.databaseInteraction('GET_USER', req.body));
-    if (!spendilowUser) {
-        throw new UnauthenticatedError("L'indirizzo email fornito è errato.");
+    const retrievedUser = yield dbManager.databaseInteraction('GET_USER', req.body);
+    if (!retrievedUser) {
+        throw new UnauthenticatedError("L'indirizzo email fornito non è associato ad alcun account.");
     }
+    const spendilowUser = new SpendilowUser(retrievedUser);
     const isPasswordCorrect = spendilowUser.pwdCheck(password);
     if (!isPasswordCorrect) {
         throw new UnauthenticatedError("La password fornita è errata.");
@@ -63,5 +65,9 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     console.log("Del User");
     res.json("OK");
 });
+const activateMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let qrForUser = yield qrCodeGenerator();
+    res.status(http_status_codes_1.StatusCodes.OK).json(qrForUser);
+});
 // ------ Exports ------
-module.exports = { registerUser, loginUser, modifyUser, deleteUser };
+module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA };
