@@ -15,6 +15,7 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 const qrCodeGenerator = require("../ts-utilities/generate_qr_code");
 const speakeasy = require("speakeasy");
+const jwt = require("jsonwebtoken");
 // ------ REGISTER USER ------
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body) {
@@ -31,12 +32,17 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
     const newAccount = new SpendilowUser(Object.assign({}, req.body));
     yield newAccount.hashPassword();
-    const token = newAccount.JWTGeneration();
+    const refreshToken = newAccount.JWTGeneration('refresh');
+    const accessToken = newAccount.JWTGeneration('access');
     const createdUser = yield dbManager.databaseInteraction('CREATE_USER', newAccount);
     if (!createdUser) {
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.");
     }
-    res.status(http_status_codes_1.StatusCodes.CREATED).cookie("jwt", token, { httpOnly: true, }).json({ account: newAccount.email });
+    res.
+        status(http_status_codes_1.StatusCodes.CREATED).
+        cookie("spendilow-refresh-token", refreshToken, { httpOnly: true, }).
+        header('Authorization', accessToken).
+        json({ id: newAccount.id, account: newAccount.email });
 });
 // ------ LOGIN USER ------
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,8 +59,12 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!isPasswordCorrect) {
         throw new UnauthenticatedError("La password fornita è errata.");
     }
-    const token = spendilowUser.JWTGeneration();
-    res.status(http_status_codes_1.StatusCodes.OK).cookie("jwt", token, { httpOnly: true }).json({ id: spendilowUser.id, email: spendilowUser.email });
+    const refreshToken = spendilowUser.JWTGeneration('refresh');
+    const accessToken = spendilowUser.JWTGeneration('access');
+    res.status(http_status_codes_1.StatusCodes.OK).
+        cookie("spendilow-refresh-token", refreshToken, { httpOnly: true }).
+        header("Authorization", accessToken).
+        json({ id: spendilowUser.id, email: spendilowUser.email });
 });
 // ------ MODIFY USER ------
 const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -86,5 +96,24 @@ const verifyMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({ verified });
     }
 });
+// ------ REFRESH USER TOKENS ------
+const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.headers.cookie);
+    // const refreshToken = req.cookies["jwt"];
+    // if (!refreshToken) {
+    //     throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.")
+    // }
+    // const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
+    // console.log(decodedData);
+    // const accessToken = jwt.sign({ "": "" }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
+    // try {
+    //     res.
+    //         header('Authorization', accessToken)
+    //         .json("");
+    // }
+    // catch (error) {
+    //     return res.status(StatusCodes.BAD_REQUEST).send({ token: "Invalid" })
+    // }
+});
 // ------ Exports ------
-module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA };
+module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA, refreshUserTokens };

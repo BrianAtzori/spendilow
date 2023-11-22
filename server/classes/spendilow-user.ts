@@ -29,11 +29,21 @@ class SpendilowUser {
         this.password = await bcrypt.hash(this.password, salt)
     }
 
-    JWTGeneration(): string {
-        return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
+    JWTGeneration(mode: string): string {
+        switch (mode) {
+            case 'access': {
+                return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
+            }
+            case 'refresh': {
+                return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_REFRESH_LIFE })
+            }
+            default: {
+                return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
+            }
+        }
     }
 
-    pwdCheck() : boolean{
+    pwdCheck(): boolean {
         return true;
     }
 

@@ -6,6 +6,7 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 const qrCodeGenerator = require("../ts-utilities/generate_qr_code")
 const speakeasy = require("speakeasy");
+const jwt = require("jsonwebtoken");
 
 // ------ REGISTER USER ------
 const registerUser = async (req: Request, res: Response) => {
@@ -31,8 +32,8 @@ const registerUser = async (req: Request, res: Response) => {
 
     await newAccount.hashPassword();
 
-    const refreshToken = newAccount.JWTGeneration();
-    const accessToken = newAccount.JWTGeneration();
+    const refreshToken = newAccount.JWTGeneration('refresh');
+    const accessToken = newAccount.JWTGeneration('access');
 
     const createdUser = await dbManager.databaseInteraction('CREATE_USER', newAccount);
 
@@ -70,11 +71,11 @@ const loginUser = async (req: Request, res: Response) => {
         throw new UnauthenticatedError("La password fornita è errata.");
     }
 
-    const refreshToken = spendilowUser.JWTGeneration();
-    const accessToken = spendilowUser.JWTGeneration();
+    const refreshToken = spendilowUser.JWTGeneration('refresh');
+    const accessToken = spendilowUser.JWTGeneration('access');
 
     res.status(StatusCodes.OK).
-        cookie("jwt", refreshToken, { httpOnly: true }).
+        cookie("spendilow-refresh-token", refreshToken, { httpOnly: true }).
         header("Authorization", accessToken).
         json({ id: spendilowUser.id, email: spendilowUser.email })
 }
@@ -113,12 +114,31 @@ const verifyMFA = async (req: Request, res: Response) => {
     }
 }
 
+// ------ REFRESH USER TOKENS ------
 const refreshUserTokens = async (req: Request, res: Response) => {
-    const refreshToken = req.cookies["spendilow-refresh-token"];
-    if (!refreshToken) {
-        throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.")
-    }
-    
+
+    console.log(req.headers.cookie);
+
+    // const refreshToken = req.cookies["jwt"];
+
+    // if (!refreshToken) {
+    //     throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.")
+    // }
+
+    // const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
+
+    // console.log(decodedData);
+
+    // const accessToken = jwt.sign({ "": "" }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
+
+    // try {
+    //     res.
+    //         header('Authorization', accessToken)
+    //         .json("");
+    // }
+    // catch (error) {
+    //     return res.status(StatusCodes.BAD_REQUEST).send({ token: "Invalid" })
+    // }
 }
 
 // ------ Exports ------

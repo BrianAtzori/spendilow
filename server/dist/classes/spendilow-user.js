@@ -32,8 +32,18 @@ class SpendilowUser {
             this.password = yield bcrypt.hash(this.password, salt);
         });
     }
-    JWTGeneration() {
-        return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
+    JWTGeneration(mode) {
+        switch (mode) {
+            case 'access': {
+                return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
+            }
+            case 'refresh': {
+                return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_REFRESH_LIFE });
+            }
+            default: {
+                return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
+            }
+        }
     }
     pwdCheck() {
         return true;
