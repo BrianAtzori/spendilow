@@ -1,10 +1,10 @@
 // ------ Express + Router Setup ------
-import { Express, Request, Response, RequestHandler, Router } from 'express' //TS Import
+import { Router } from 'express' //TS Import
 const express = require("express");
 const usersRouter: Router = express.Router();
 
 // ------ Controllers imports and setup ------
-const { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA } = require("../controllers/users")
+const { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA, refreshUserTokens } = require("../controllers/users")
 
 // ------ REGISTER USER ------
 usersRouter.post("/new/", registerUser);
@@ -23,6 +23,9 @@ usersRouter.get("/mfa-activation/", activateMFA)
 
 // ------ VERIFY MFA ------
 usersRouter.post("/mfa-verification/", verifyMFA)
+
+// ------ REFRESH USER TOKENS ------
+usersRouter.get('/refresh-auth/', refreshUserTokens)
 
 // ------ Exports ------
 module.exports = usersRouter;

@@ -31,7 +31,8 @@ const registerUser = async (req: Request, res: Response) => {
 
     await newAccount.hashPassword();
 
-    const token = newAccount.JWTGeneration();
+    const refreshToken = newAccount.JWTGeneration();
+    const accessToken = newAccount.JWTGeneration();
 
     const createdUser = await dbManager.databaseInteraction('CREATE_USER', newAccount);
 
@@ -39,7 +40,11 @@ const registerUser = async (req: Request, res: Response) => {
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.")
     }
 
-    res.status(StatusCodes.CREATED).cookie("jwt", token, { httpOnly: true, }).json({ account: newAccount.email });
+    res.
+        status(StatusCodes.CREATED).
+        cookie("spendilow-refresh-token", refreshToken, { httpOnly: true, }).
+        header('Authorization', accessToken).
+        json({ id: newAccount.id, account: newAccount.email });
 }
 
 // ------ LOGIN USER ------
@@ -65,9 +70,13 @@ const loginUser = async (req: Request, res: Response) => {
         throw new UnauthenticatedError("La password fornita è errata.");
     }
 
-    const token = spendilowUser.JWTGeneration();
+    const refreshToken = spendilowUser.JWTGeneration();
+    const accessToken = spendilowUser.JWTGeneration();
 
-    res.status(StatusCodes.OK).cookie("jwt", token, { httpOnly: true }).json({ id: spendilowUser.id, email: spendilowUser.email })
+    res.status(StatusCodes.OK).
+        cookie("jwt", refreshToken, { httpOnly: true }).
+        header("Authorization", accessToken).
+        json({ id: spendilowUser.id, email: spendilowUser.email })
 }
 
 // ------ MODIFY USER ------
@@ -104,5 +113,13 @@ const verifyMFA = async (req: Request, res: Response) => {
     }
 }
 
+const refreshUserTokens = async (req: Request, res: Response) => {
+    const refreshToken = req.cookies["spendilow-refresh-token"];
+    if (!refreshToken) {
+        throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.")
+    }
+    
+}
+
 // ------ Exports ------
-module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA }
+module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA, refreshUserTokens }
