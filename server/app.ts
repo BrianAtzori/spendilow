@@ -42,9 +42,11 @@ app.use(errorHandlerMiddleware);
 
 //------ ROUTES SETUP ------
 const usersRouter: Router = require("./routes/users");
+const utilitiesRouter: Router = require("./routes/utilities");
 
 
 app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/utilities", utilitiesRouter);
 
 
 //------- Try DB Connection or throw error ------
