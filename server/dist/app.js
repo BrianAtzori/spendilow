@@ -17,6 +17,10 @@ require("express-async-errors");
 app.use(express.json());
 // ----- DB IMPORT ------
 const dbConnectionPool = require('./db/db-connector');
+// ------ SWAGGER ------
+const swaggerUI = require('swagger-ui-express');
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml");
 //------ SECURITY SETUP ------
 //Imports
 const helmet = require("helmet");
@@ -47,6 +51,7 @@ const usersRouter = require("./routes/users");
 const utilitiesRouter = require("./routes/utilities");
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
+app.use('/api-docs/', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 //------- Try DB Connection or throw error ------
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     let connection;
