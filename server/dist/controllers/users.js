@@ -98,22 +98,20 @@ const verifyMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 // ------ REFRESH USER TOKENS ------
 const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.headers.cookie);
-    // const refreshToken = req.cookies["jwt"];
-    // if (!refreshToken) {
-    //     throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.")
-    // }
-    // const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
-    // console.log(decodedData);
-    // const accessToken = jwt.sign({ "": "" }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
-    // try {
-    //     res.
-    //         header('Authorization', accessToken)
-    //         .json("");
-    // }
-    // catch (error) {
-    //     return res.status(StatusCodes.BAD_REQUEST).send({ token: "Invalid" })
-    // }
+    const refreshToken = req.cookies['spendilow-refresh-token'];
+    if (!refreshToken) {
+        throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.");
+    }
+    try {
+        const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
+        const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
+        res.
+            header('Authorization', accessToken)
+            .json({ id: decodedData.id, email: decodedData.email });
+    }
+    catch (error) {
+        return res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).send({ token: "Invalid" });
+    }
 });
 // ------ Exports ------
 module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA, refreshUserTokens };

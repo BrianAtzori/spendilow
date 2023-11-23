@@ -17,6 +17,7 @@ const helmet = require("helmet");
 const cors = require("express-cors");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
+const cookieParser = require('cookie-parser');
 
 //Activation
 app.use(helmet());
@@ -27,6 +28,7 @@ app.use(rateLimiter({
     windowMs: 15 * 60 * 100,
     max: 100,
 }))
+app.use(cookieParser());
 
 // ------ MIDDLEWARE SETUP ------
 //Imports

@@ -116,29 +116,23 @@ const verifyMFA = async (req: Request, res: Response) => {
 
 // ------ REFRESH USER TOKENS ------
 const refreshUserTokens = async (req: Request, res: Response) => {
+    const refreshToken = req.cookies['spendilow-refresh-token']
 
-    console.log(req.headers.cookie);
+    if (!refreshToken) {
+        throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.")
+    }
 
-    // const refreshToken = req.cookies["jwt"];
+    try {
+        const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
 
-    // if (!refreshToken) {
-    //     throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.")
-    // }
-
-    // const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
-
-    // console.log(decodedData);
-
-    // const accessToken = jwt.sign({ "": "" }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
-
-    // try {
-    //     res.
-    //         header('Authorization', accessToken)
-    //         .json("");
-    // }
-    // catch (error) {
-    //     return res.status(StatusCodes.BAD_REQUEST).send({ token: "Invalid" })
-    // }
+        const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
+        res.
+            header('Authorization', accessToken)
+            .json({ id: decodedData.id, email: decodedData.email });
+    }
+    catch (error) {
+        return res.status(StatusCodes.BAD_REQUEST).send({ token: "Invalid" })
+    }
 }
 
 // ------ Exports ------
