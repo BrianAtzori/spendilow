@@ -62,7 +62,7 @@ const start = async () => {
     try {
         connection = await dbConnectionPool.getConnection();
         if (connection) {
-            app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT, () => {
                 console.log(`Server connected to DB and running at http://localhost:${process.env.PORT}`);
             });
         }
