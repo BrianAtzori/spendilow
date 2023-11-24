@@ -1,10 +1,8 @@
-import { afterEach, beforeEach, describe, it } from "node:test";
-
 // ------ TEST SETUPS ------
-const chai = require('chai')
+const chaiTests = require('chai')
 const chaiHttp = require('chai-http')
-const should = chai.should();
-chai.use(chaiHttp)
+const should = chaiTests.should();
+chaiTests.use(chaiHttp);
 
 // ------ APPLICATION INCLUDES ------
 const dbManager = require("../../db/db-manager");
@@ -14,15 +12,18 @@ const SpendilowUser = require("../../classes/spendilow-user")
 describe('Spendilow API', function () {
     beforeEach(function (done) {
         console.log("Inizio Test")
+        done()
     })
 
     afterEach(function (done) {
         console.log("Fine Test")
+        done()
     })
 
     it('should answer true to server availability check on /utilities/check-server-alive GET', function(done){
         console.log("test");
         true;
+        done()
     })
 })
 
