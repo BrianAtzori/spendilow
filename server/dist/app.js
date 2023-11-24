@@ -72,3 +72,5 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 start();
+// ------ Exports ------
+module.exports = start;

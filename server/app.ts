@@ -76,3 +76,6 @@ const start = async () => {
 }
 
 start();
+
+// ------ Exports ------
+module.exports = start;
