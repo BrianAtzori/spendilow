@@ -11,6 +11,6 @@
 | /mfa-verification | Verify MFA sent by user |
 
 ### Route /utilities
-| Paragraph | Text |
+| Path | Function |
 | ----------- | ----------- |
 | /check-server-alive | Verify if server is up and running |
