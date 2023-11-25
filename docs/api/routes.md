@@ -1,9 +1,16 @@
+# API Cheatsheet
 ## Base Route: /api/v1/
-
-### /users
-| Syntax | Description |
+### Route /users
+| Path | Function |
 | ----------- | ----------- |
-| Header | Title |
-| Paragraph | Text |
+| /new | Sign up with a new profile |
+| /login | Login with user credentials |
+| /mod/:id | Modify a user profile |
+| /del/:id | Delete a user account |
+| /mfa-activation | Activate MFA for a profile |
+| /mfa-verification | Verify MFA sent by user |
 
-### /utilities
+### Route /utilities
+| Paragraph | Text |
+| ----------- | ----------- |
+| /check-server-alive | Verify if server is up and running |
