@@ -21,6 +21,9 @@ const databaseInteraction = async (operation: string, queryData: any) => {
                 case 'GET_USER': {
                     queryResult = await readSplUser(queryData, connection);
                 }
+                case 'DELETE_USER': {
+                    queryResult = await deleteSplUser(queryData, connection)
+                }
                 default: {
                     throw new BRError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`)
                 }
@@ -70,6 +73,18 @@ const readSplUser = async (spendilowUser: any, connection: any) => {
     let rows = await connection.query(query, [email]);
 
     return rows[0]
+}
+
+// ------ DELETE SPENDILOW USER ------
+const deleteSplUser = async (spendilowUser: any, connection: any) => {
+
+    const query = `DELETE FROM \`splusers\` WHERE \`id\` = ?`
+
+    const id = spendilowUser.id;
+
+    let result = await connection.query(query, [id]);
+
+    console.log(result);
 }
 
 // ------ Exports ------

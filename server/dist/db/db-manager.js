@@ -27,6 +27,9 @@ const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, 
                 case 'GET_USER': {
                     queryResult = yield readSplUser(queryData, connection);
                 }
+                case 'DELETE_USER': {
+                    queryResult = yield deleteSplUser(queryData, connection);
+                }
                 default: {
                     throw new BRError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
@@ -65,6 +68,13 @@ const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, voi
     const email = spendilowUser.email;
     let rows = yield connection.query(query, [email]);
     return rows[0];
+});
+// ------ DELETE SPENDILOW USER ------
+const deleteSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `DELETE FROM \`splusers\` WHERE \`id\` = ?`;
+    const id = spendilowUser.id;
+    let result = yield connection.query(query, [id]);
+    console.log(result);
 });
 // ------ Exports ------
 module.exports = {
