@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mariadb_1 = require("mariadb");
 // ------ Imports ------
-const BRError = require("../errors");
+const BadRequestError = require("../errors");
 const dbConnectionPool = require("./db-connector");
 // ------ DB ACTIONS MANAGER ------
 const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,21 +23,24 @@ const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, 
             switch (operation) {
                 case 'CREATE_USER': {
                     queryResult = yield createSplUser(queryData, connection);
+                    break;
                 }
                 case 'GET_USER': {
                     queryResult = yield readSplUser(queryData, connection);
+                    break;
                 }
                 case 'DELETE_USER': {
                     queryResult = yield deleteSplUser(queryData, connection);
+                    break;
                 }
                 default: {
-                    throw new BRError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
+                    throw new BadRequestError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
             }
         }
     }
     catch (error) {
-        throw new BRError(`Il salvataggio dei dati non è stato effettuato correttamente oppure il Database non è disponibile, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`);
+        throw new BadRequestError(`Il salvataggio dei dati non è stato effettuato correttamente oppure il Database non è disponibile, ricontrolla i dati inseriti o contatta il supporto utente. ERR: ${error}`);
     }
     finally {
         if (connection) {
@@ -73,8 +76,8 @@ const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, voi
 const deleteSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `DELETE FROM \`splusers\` WHERE \`id\` = ?`;
     const id = spendilowUser.id;
+    console.log(id);
     let result = yield connection.query(query, [id]);
-    console.log(result);
 });
 // ------ Exports ------
 module.exports = {

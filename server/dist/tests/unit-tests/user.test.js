@@ -24,16 +24,16 @@ describe('Spendilow API 💰', function () {
             "workfield": "Testing",
             "username": "SpendilowTestingUser"
         });
-        server();
     });
     beforeEach(function (done) {
+        server();
         done();
     });
     afterEach(function (done) {
         done();
     });
     after(function () {
-        // dbManager.databaseInteraction('DELETE_USER', spendilowTestingUser)
+        dbManager.databaseInteraction('DELETE_USER', spendilowTestingUser);
         console.log("Fine dei test...✋🏻");
     });
     it('should answer current server availability on /utilities/check-server-alive GET', function (done) {
@@ -52,8 +52,6 @@ describe('Spendilow API 💰', function () {
             .post('api/v1/users/new')
             .send(spendilowTestingUser)
             .end(function (err, res) {
-            console.log(spendilowTestingUser);
-            console.log(res);
             res.should.have.status(201);
             res.should.be.json;
             should.exist(res.header['set-cookie']);

@@ -27,10 +27,10 @@ describe('Spendilow API 💰', function () {
             "workfield": "Testing",
             "username": "SpendilowTestingUser"
         })
-        server()
     })
 
     beforeEach(function (done) {
+        server()
         done()
     })
 
@@ -39,7 +39,7 @@ describe('Spendilow API 💰', function () {
     })
 
     after(function () {
-        // dbManager.databaseInteraction('DELETE_USER', spendilowTestingUser)
+        dbManager.databaseInteraction('DELETE_USER', spendilowTestingUser)
         console.log("Fine dei test...✋🏻")
     })
 
@@ -60,8 +60,6 @@ describe('Spendilow API 💰', function () {
             .post('api/v1/users/new')
             .send(spendilowTestingUser)
             .end(function (err: Error, res: any) {
-                console.log(spendilowTestingUser)
-                console.log(res)
                 res.should.have.status(201)
                 res.should.be.json;
                 should.exist(res.header['set-cookie'])
