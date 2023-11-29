@@ -73,7 +73,9 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 // ------ DELETE USER ------
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Del User");
+    const temporaryAPITestingUser = req.body;
+    console.log(temporaryAPITestingUser);
+    dbManager.databaseInteraction('DELETE_USER', temporaryAPITestingUser);
     res.json("OK");
 });
 // ------ ACTIVATE MFA FOR USER ------

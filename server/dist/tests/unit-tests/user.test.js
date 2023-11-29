@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 // ------ TEST SETUP ------
 const chaiTests = require('chai');
 const chaiHttp = require('chai-http');
@@ -16,7 +25,7 @@ describe('Spendilow API 💰', function () {
     before(function () {
         console.log("Inizio dei test... 🧪");
         spendilowTestingUser = new SpendilowUser({
-            "email": "testing-user@spendilow-testing.com",
+            "email": "testing-user@spendilow-testing.test",
             "password": "Sp3ndTest87!",
             "savings": 0.00,
             "salary": 0.00,
@@ -33,8 +42,10 @@ describe('Spendilow API 💰', function () {
         done();
     });
     after(function () {
-        dbManager.databaseInteraction('DELETE_USER', spendilowTestingUser);
-        console.log("Fine dei test...✋🏻");
+        return __awaiter(this, void 0, void 0, function* () {
+            yield dbManager.databaseInteraction('DELETE_TEST_USER', spendilowTestingUser); //DONE BECAUSE UUID ISSUE
+            console.log("Fine dei test...✋🏻");
+        });
     });
     it('should answer current server availability on /utilities/check-server-alive GET', function (done) {
         chaiTests.request(baseURL)

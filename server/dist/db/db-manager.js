@@ -30,7 +30,11 @@ const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, 
                     break;
                 }
                 case 'DELETE_USER': {
-                    queryResult = yield deleteSplUser(queryData, connection);
+                    queryResult = yield deleteSplUser(queryData, connection, "production");
+                    break;
+                }
+                case 'DELETE_TEST_USER': {
+                    queryResult = yield deleteSplUser(queryData, connection, "testing");
                     break;
                 }
                 default: {
@@ -73,11 +77,24 @@ const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, voi
     return rows[0];
 });
 // ------ DELETE SPENDILOW USER ------
-const deleteSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = `DELETE FROM \`splusers\` WHERE \`id\` = ?`;
-    const id = spendilowUser.id;
-    console.log(id);
-    let result = yield connection.query(query, [id]);
+const deleteSplUser = (spendilowUser, connection, mode) => __awaiter(void 0, void 0, void 0, function* () {
+    // Mode management done because of testing issue with user uuid
+    // switch (mode) {
+    //     case 'testing':
+    //         {
+    //             const deleteTestingQuery = `DELETE FROM \`splusers\` WHERE \`email\` = ?`
+    //             const email = spendilowUser.email;
+    //             let deleteTestingResult = await connection.query(deleteTestingQuery, [email]);
+    //             break;
+    //         }
+    //     case 'production': {
+    //         const deleteProductionUserQuery = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`
+    //         const id = spendilowUser.id;
+    //         let deleteProductionUserResult = await connection.query(deleteProductionUserQuery, [id]);
+    //         break;
+    //     }
+    // }
+    console.log("CIAO!");
 });
 // ------ Exports ------
 module.exports = {

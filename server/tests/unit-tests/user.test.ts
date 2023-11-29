@@ -19,7 +19,7 @@ describe('Spendilow API 💰', function () {
     before(function () {
         console.log("Inizio dei test... 🧪")
         spendilowTestingUser = new SpendilowUser({
-            "email": "testing-user@spendilow-testing.com",
+            "email": "testing-user@spendilow-testing.test",
             "password": "Sp3ndTest87!",
             "savings": 0.00,
             "salary": 0.00,
@@ -38,8 +38,8 @@ describe('Spendilow API 💰', function () {
         done()
     })
 
-    after(function () {
-        dbManager.databaseInteraction('DELETE_USER', spendilowTestingUser)
+    after(async function () {
+        await dbManager.databaseInteraction('DELETE_TEST_USER', spendilowTestingUser) //DONE BECAUSE UUID ISSUE
         console.log("Fine dei test...✋🏻")
     })
 

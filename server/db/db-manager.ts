@@ -24,7 +24,11 @@ const databaseInteraction = async (operation: string, queryData: any) => {
                     break;
                 }
                 case 'DELETE_USER': {
-                    queryResult = await deleteSplUser(queryData, connection);
+                    queryResult = await deleteSplUser(queryData, connection, "production");
+                    break;
+                }
+                case 'DELETE_TEST_USER': {
+                    queryResult = await deleteSplUser(queryData, connection, "testing");
                     break;
                 }
                 default: {
@@ -79,15 +83,39 @@ const readSplUser = async (spendilowUser: any, connection: any) => {
 }
 
 // ------ DELETE SPENDILOW USER ------
-const deleteSplUser = async (spendilowUser: any, connection: any) => {
+const deleteSplUser = async (spendilowUser: any, connection: any, mode: string) => {
 
-    const query = `DELETE FROM \`splusers\` WHERE \`id\` = ?`
+    // Mode management done because of testing issue with user uuid
 
-    const id = spendilowUser.id;
+    // switch (mode) {
 
-    console.log(id)
+    //     case 'testing':
+    //         {
+    //             const deleteTestingQuery = `DELETE FROM \`splusers\` WHERE \`email\` = ?`
 
-    let result = await connection.query(query, [id]);
+    //             const email = spendilowUser.email;
+
+    //             let deleteTestingResult = await connection.query(deleteTestingQuery, [email]);
+
+    //             break;
+    //         }
+
+    //     case 'production': {
+    //         const deleteProductionUserQuery = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`
+
+    //         const id = spendilowUser.id;
+
+    //         let deleteProductionUserResult = await connection.query(deleteProductionUserQuery, [id]);
+
+    //         break;
+    //     }
+
+
+
+    // }
+
+    console.log("CIAO!")
+
 }
 
 // ------ Exports ------

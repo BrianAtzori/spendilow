@@ -88,7 +88,9 @@ const modifyUser = async (req: Request, res: Response) => {
 
 // ------ DELETE USER ------
 const deleteUser = async (req: Request, res: Response) => {
-    console.log("Del User")
+    const temporaryAPITestingUser = req.body
+    console.log(temporaryAPITestingUser)
+    dbManager.databaseInteraction('DELETE_USER', temporaryAPITestingUser)
     res.json("OK");
 }
 
