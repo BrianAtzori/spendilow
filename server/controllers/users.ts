@@ -7,6 +7,7 @@ const dbManager = require("../db/db-manager");
 const qrCodeGenerator = require("../ts-utilities/generate_qr_code")
 const speakeasy = require("speakeasy");
 const jwt = require("jsonwebtoken");
+import crypto from "crypto"
 
 // ------ REGISTER USER ------
 const registerUser = async (req: Request, res: Response) => {
@@ -28,7 +29,9 @@ const registerUser = async (req: Request, res: Response) => {
         throw new BadRequestError("Errore nella creazione dell'account, l'email inserita è già associata ad un account.");
     }
 
-    const newAccount = new SpendilowUser({ ...req.body });
+    let id: string = crypto.randomUUID();
+
+    const newAccount = new SpendilowUser({ id, ...req.body });
 
     await newAccount.hashPassword();
 
@@ -36,6 +39,8 @@ const registerUser = async (req: Request, res: Response) => {
     const accessToken = newAccount.JWTGeneration('access');
 
     const createdUser = await dbManager.databaseInteraction('CREATE_USER', newAccount);
+
+    console.log(createdUser)
 
     if (!createdUser) {
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.")
@@ -65,7 +70,7 @@ const loginUser = async (req: Request, res: Response) => {
 
     const spendilowUser = new SpendilowUser(retrievedUser);
 
-    const isPasswordCorrect: boolean = spendilowUser.pwdCheck(password);
+    const isPasswordCorrect: boolean = await spendilowUser.pwdCheck(password);
 
     if (!isPasswordCorrect) {
         throw new UnauthenticatedError("La password fornita è errata.");
@@ -82,14 +87,13 @@ const loginUser = async (req: Request, res: Response) => {
 
 // ------ MODIFY USER ------
 const modifyUser = async (req: Request, res: Response) => {
-    console.log("Mod User")
+    ("Mod User")
     res.json("OK");
 }
 
 // ------ DELETE USER ------
 const deleteUser = async (req: Request, res: Response) => {
     const userId = req.params.id
-    console.log("ID FROM CALL:" + userId)
     dbManager.databaseInteraction('DELETE_USER', userId)
     res.json("OK");
 }

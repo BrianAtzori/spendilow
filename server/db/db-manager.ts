@@ -85,7 +85,7 @@ const deleteSplUser = async (spendilowUserId: any, connection: any) => {
 
     let result = await connection.query(query, [spendilowUserId]);
 
-    console.log("RESULT: " + result)
+    ("RESULT: " + result)
 
     return result;
 

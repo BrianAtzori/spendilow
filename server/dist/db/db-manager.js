@@ -76,7 +76,7 @@ const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, voi
 const deleteSplUser = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`;
     let result = yield connection.query(query, [spendilowUserId]);
-    console.log("RESULT: " + result);
+    ("RESULT: " + result);
     return result;
 });
 // ------ Exports ------

@@ -16,8 +16,8 @@ const crypto_1 = __importDefault(require("crypto"));
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 class SpendilowUser {
-    constructor({ email, password, savings, salary, profileImage, workfield, username }) {
-        this.id = crypto_1.default.randomUUID();
+    constructor({ id, email, password, savings, salary, profileImage, workfield, username }) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.savings = savings;
@@ -25,6 +25,9 @@ class SpendilowUser {
         this.profileImage = profileImage;
         this.workfield = workfield;
         this.username = username;
+    }
+    idGeneration() {
+        return crypto_1.default.randomUUID();
     }
     hashPassword() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -45,8 +48,11 @@ class SpendilowUser {
             }
         }
     }
-    pwdCheck() {
-        return true;
+    pwdCheck(attempt) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const isAttemptMatching = yield bcrypt.compare(attempt, this.password);
+            return isAttemptMatching;
+        });
     }
 }
 module.exports = SpendilowUser;

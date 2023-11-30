@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const SpendilowUser = require("../classes/spendilow-user");
 const http_status_codes_1 = require("http-status-codes");
@@ -16,6 +19,7 @@ const dbManager = require("../db/db-manager");
 const qrCodeGenerator = require("../ts-utilities/generate_qr_code");
 const speakeasy = require("speakeasy");
 const jwt = require("jsonwebtoken");
+const crypto_1 = __importDefault(require("crypto"));
 // ------ REGISTER USER ------
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body) {
@@ -30,11 +34,13 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     if (spendilowUser) {
         throw new BadRequestError("Errore nella creazione dell'account, l'email inserita è già associata ad un account.");
     }
-    const newAccount = new SpendilowUser(Object.assign({}, req.body));
+    let id = crypto_1.default.randomUUID();
+    const newAccount = new SpendilowUser(Object.assign({ id }, req.body));
     yield newAccount.hashPassword();
     const refreshToken = newAccount.JWTGeneration('refresh');
     const accessToken = newAccount.JWTGeneration('access');
     const createdUser = yield dbManager.databaseInteraction('CREATE_USER', newAccount);
+    console.log(createdUser);
     if (!createdUser) {
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.");
     }
@@ -55,7 +61,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         throw new UnauthenticatedError("L'indirizzo email fornito non è associato ad alcun account.");
     }
     const spendilowUser = new SpendilowUser(retrievedUser);
-    const isPasswordCorrect = spendilowUser.pwdCheck(password);
+    const isPasswordCorrect = yield spendilowUser.pwdCheck(password);
     if (!isPasswordCorrect) {
         throw new UnauthenticatedError("La password fornita è errata.");
     }
@@ -68,13 +74,12 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 // ------ MODIFY USER ------
 const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Mod User");
+    ("Mod User");
     res.json("OK");
 });
 // ------ DELETE USER ------
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.id;
-    console.log("ID FROM CALL:" + userId);
     dbManager.databaseInteraction('DELETE_USER', userId);
     res.json("OK");
 });

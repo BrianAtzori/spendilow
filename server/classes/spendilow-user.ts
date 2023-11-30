@@ -13,8 +13,8 @@ class SpendilowUser {
     public workfield: string;
     public username: string;
 
-    constructor({ email, password, savings, salary, profileImage, workfield, username }: any) {
-        this.id = crypto.randomUUID();
+    constructor({ id, email, password, savings, salary, profileImage, workfield, username }: any) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.savings = savings;
@@ -22,6 +22,10 @@ class SpendilowUser {
         this.profileImage = profileImage;
         this.workfield = workfield;
         this.username = username;
+    }
+
+    idGeneration(): string {
+        return crypto.randomUUID();
     }
 
     async hashPassword(): Promise<void> {
@@ -43,8 +47,9 @@ class SpendilowUser {
         }
     }
 
-    pwdCheck(): boolean {
-        return true;
+    async pwdCheck(attempt: string): Promise<boolean> {
+        const isAttemptMatching: boolean = await bcrypt.compare(attempt, this.password);
+        return isAttemptMatching;
     }
 
 }
