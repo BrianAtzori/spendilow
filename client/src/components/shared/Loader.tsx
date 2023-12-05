@@ -12,7 +12,7 @@ export default function Loader({ isLoading, message }: loaderProps) {
         <>
           <div className="mx-auto">
             <span className="loading loading-bars loading-lg text-primary"></span>
-            <p>{message}</p>
+            <p className="font-heading">{message}</p>
           </div>
         </>
       )}

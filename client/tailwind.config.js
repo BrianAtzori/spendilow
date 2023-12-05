@@ -1,8 +1,29 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    screens: {
+      mobile: "300px",
+      tablet: "451px",
+      // => @media (min-width: 640px) { ... }
+
+      desktop: "961px",
+      // => @media (min-width: 1024px) { ... }
+
+      "desktop-l": "1440px",
+      // => @media (min-width: 1280px) { ... }
+
+      "desktop-4k": "2560px",
+      // => @media (min-width: 1280px) { ... }
+    },
+    extend: {
+      fontFamily: {
+        primary: ["Playfair Display", "sans-serif"],
+        heading: ["Raleway", "serif"],
+        body: ["Montserrat", "sans-serif"],
+      },
+    },
   },
   daisyui: {
     themes: [

@@ -1,31 +1,16 @@
 // ------ REACT ------
 import React from "react";
+import {Routes, Route } from "react-router-dom";
 
 // ------ COMPONENTS & PAGES ------
-import Loader from "./components/shared/Loader";
-
-// ------ REDUX ------
-import { useSelector, useDispatch } from "react-redux";
-import { changeState } from "./redux/reducers/main/mainSlice";
+import Splash from "./pages/general/Splash";
 
 function App() {
-  const result: boolean = useSelector((state) => state.main.value);
-  const dispatch = useDispatch();
-
   return (
     <>
-      <Loader
-        isLoading={result}
-        message={"Controllo il collegamento ai server di Spendilow 💰"}
-      ></Loader>
-      <button
-        className="btn btn-primary"
-        onClick={() => {
-          dispatch(changeState());
-        }}
-      >
-        Premi qui
-      </button>
+      <Routes>
+        <Route path="/" element={<Splash />}></Route>
+      </Routes>
     </>
   );
 }
