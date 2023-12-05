@@ -1,6 +1,12 @@
+// ------ REACT ------
 import React from "react";
+
+// ------ COMPONENTS & PAGES ------
+import Loader from "./components/shared/Loader";
+
+// ------ REDUX ------
 import { useSelector, useDispatch } from "react-redux";
-import { changeState } from "./features/main/mainSlice";
+import { changeState } from "./redux/reducers/main/mainSlice";
 
 function App() {
   const result: boolean = useSelector((state) => state.main.value);
@@ -8,7 +14,10 @@ function App() {
 
   return (
     <>
-      {result || <h1>Ciao!</h1>}
+      <Loader
+        isLoading={result}
+        message={"Controllo il collegamento ai server di Spendilow 💰"}
+      ></Loader>
       <button
         className="btn btn-primary"
         onClick={() => {

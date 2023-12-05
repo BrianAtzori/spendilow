@@ -2,7 +2,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 // ------ SLICES ------
-import mainReducer from "./features/main/mainSlice";
+import mainReducer from "./reducers/main/mainSlice";
 
 export default configureStore({
     reducer: {
