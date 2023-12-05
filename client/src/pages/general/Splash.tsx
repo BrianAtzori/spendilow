@@ -6,13 +6,13 @@ import { Link } from "react-router-dom";
 import Loader from "../../components/shared/Loader";
 
 // ------ REDUX ------
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "../../redux/hooks";
 import { changeState } from "../../redux/reducers/main/mainSlice";
 
 //! This component manage user redirection, if server is alive check if user is logged, if it's logged go to app or go to auth picker
 export default function Splash() {
-  const result: boolean = useSelector((state) => state.main.value);
-  const dispatch = useDispatch();
+  const result: boolean = useAppSelector((state) => state.main.value);
+  const dispatch = useAppDispatch();
 
   return (
     <>
