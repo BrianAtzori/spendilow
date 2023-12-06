@@ -12,9 +12,8 @@ const checkServerAlive = async function (): Promise<boolean> {
             }
             return false
         })
-        .catch(function (error) {
-            console.log(error)
-            //**!GESTISCI L'ERRORE PERCHÈ NON HAI RISPOSTA NEGATIVA */
+        .catch(function () {
+            return false
         })
 
     return false
