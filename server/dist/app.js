@@ -24,13 +24,15 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 //------ SECURITY SETUP ------
 //Imports
 const helmet = require("helmet");
-const cors = require("express-cors");
+const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
 const cookieParser = require('cookie-parser');
 //Activation
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+    origin: '*'
+}));
 app.use(xss());
 app.set("Trust Proxy", 1);
 app.use(rateLimiter({
@@ -41,9 +43,6 @@ app.use(cookieParser());
 // ------ MIDDLEWARE SETUP ------
 //Imports
 const errorHandlerMiddleware = require("./middleware/error-handler");
-/**
- * TODO: Da inserire e attivare eventuali altri middleware
- */
 //Activation
 app.use(errorHandlerMiddleware);
 //------ ROUTES SETUP ------
