@@ -5,3 +5,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body{
+    scroll-behavior: smooth;
+    background-image: url("./assets/pattern/ffflux.svg");
+}

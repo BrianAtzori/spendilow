@@ -8,7 +8,7 @@ import { TiThMenu } from "react-icons/ti";
 export default function Header() {
   return (
     <>
-      <div className="drawer">
+      <div className="drawer font-heading text-neutral bg-base-100">
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           <div className="w-full navbar border-solid border-primary border-b-4">
