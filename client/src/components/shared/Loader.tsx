@@ -2,7 +2,7 @@
 import React from "react";
 
 // ------ ASSETS ------
-import spendilowLogo from "../../assets/logo/spendilow-logo-png.png";
+import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 
 // ------ TYPESCRIPT ------
 interface loaderProps {

@@ -5,6 +5,7 @@ import { useState } from "react";
 // ------ COMPONENTS & PAGES ------
 import Loader from "../../components/shared/Loader";
 import ErrorComponent from "../../components/shared/ErrorComponent";
+import Landing from "../auth/Landing";
 
 // ------ SERVICES ------
 import { checkServerAlive } from "../../services/utilities/external-calls";
@@ -13,18 +14,16 @@ import { checkServerAlive } from "../../services/utilities/external-calls";
 
 export default function Splash() {
   const [isLoading, setIsLoading] = useState(true);
-  const [isServerAlive, setServerAlive] = useState(false)
+  const [isServerAlive, setServerAlive] = useState(false);
 
   useEffect(() => {
     preFlightChecks();
   }, []);
 
   async function preFlightChecks() {
-
-    setServerAlive (await checkServerAlive())
+    setServerAlive(await checkServerAlive());
 
     isServerAlive ? setIsLoading(false) : setIsLoading(false);
-
   }
 
   return (
@@ -32,9 +31,11 @@ export default function Splash() {
       <Loader
         isLoading={isLoading}
         message={"Controllo il collegamento ai server di Spendilow 💰"}
-      ></Loader> 
-      {isServerAlive || <h1>Ciao</h1>}
-      {!isServerAlive || <ErrorComponent message="I servizi di Spendilow risultano non raggiungibili, contatta il supporto 📲"></ErrorComponent>}
+      ></Loader>
+      {isServerAlive || <Landing></Landing>}
+      {!isServerAlive || (
+        <ErrorComponent message="I servizi di Spendilow risultano non raggiungibili, contatta il supporto 📲"></ErrorComponent>
+      )}
     </>
   );
 }
