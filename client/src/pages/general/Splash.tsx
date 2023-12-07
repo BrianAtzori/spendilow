@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 // ------ COMPONENTS & PAGES ------
-import Loader from "../../components/shared/Loader";
+import LoaderComponent from "../../components/shared/LoaderComponent";
 import ErrorComponent from "../../components/shared/ErrorComponent";
 import Landing from "../auth/Landing";
 
@@ -28,13 +28,13 @@ export default function Splash() {
 
   return (
     <>
-      <Loader
+      <LoaderComponent
         isLoading={isLoading}
         message={"Controllo il collegamento ai server di Spendilow 💰"}
-      ></Loader>
+      ></LoaderComponent>
       {isServerAlive || <Landing></Landing>}
       {!isServerAlive || (
-        <ErrorComponent message="I servizi di Spendilow risultano non raggiungibili, contatta il supporto 📲"></ErrorComponent>
+        <ErrorComponent message="I servizi di Spendilow non risultano raggiungibili, contatta il supporto 📲"></ErrorComponent>
       )}
     </>
   );

@@ -5,10 +5,10 @@ import React from "react";
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 import { TiThMenu } from "react-icons/ti";
 
-export default function Header() {
+export default function HeaderComponent() {
   return (
     <>
-      <div className="drawer font-heading text-neutral bg-base-100">
+      <div className="drawer font-heading text-neutral bg-base-100 z-10">
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           <div className="w-full navbar border-solid border-primary border-b-4">

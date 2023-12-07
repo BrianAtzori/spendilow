@@ -7,7 +7,7 @@ import { IoLogoGithub } from "react-icons/io";
 import { IoLogoLinkedin } from "react-icons/io";
 import { SiLinktree } from "react-icons/si";
 
-export default function Footer() {
+export default function FooterComponent() {
   return (
     <>
       <footer className="footer footer-center p-10 bg-base-100 border-solid border-primary border-t-4 font-heading text-neutral">

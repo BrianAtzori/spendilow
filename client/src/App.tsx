@@ -4,8 +4,9 @@ import { Routes, Route } from "react-router-dom";
 
 // ------ COMPONENTS & PAGES ------
 import Splash from "./pages/general/Splash";
-import Header from "./components/shared/Header";
-import Footer from "./components/shared/Footer";
+import Header from "./components/shared/HeaderComponent";
+import Footer from "./components/shared/FooterComponent";
+import AuthForm from "./pages/auth/AuthForm";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Header></Header>
       <Routes>
         <Route path="/" element={<Splash />}></Route>
+        <Route path="/auth/:mode" element={<AuthForm />}></Route>
       </Routes>
       <Footer></Footer>
     </div>
