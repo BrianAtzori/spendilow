@@ -8,7 +8,7 @@ import ErrorComponent from "../../components/shared/ErrorComponent";
 import Landing from "../auth/Landing";
 
 // ------ SERVICES ------
-import { checkServerAlive } from "../../services/utilities/external-calls";
+import { checkServerAlive } from "../../services/utilities/utilities-external-calls";
 
 //* This component manage user redirection, if server is alive check if user is logged, if it's logged go to app or go to auth picker
 
