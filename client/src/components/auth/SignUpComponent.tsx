@@ -1,5 +1,5 @@
 // ------ REACT ------
-import React, { SyntheticEvent, useState } from "react";
+import React from "react";
 
 // ------ ASSETS ------
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
@@ -7,32 +7,26 @@ import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 // ------ SERVICES ------
 import { signUpNewSpendilowUser } from "../../services/users/users-external-calls";
 
-//**! RIFARE CON FORMIK o USEFORMS */
+// ------ PACKAGES ------
+import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
+import ErrorComponent from "../shared/ErrorComponent";
+
 //**! AGGIUNGERE LOADER AL BOTTONE */
 //**! AGGIUNGERE INPUT CLEANING */
+//**! https://blog.logrocket.com/react-hook-form-complete-guide/ */
 
 export default function SignUpComponent() {
-  const [newSpendilowUser, setNewSpendilowUser] = useState({
-    email: "",
-    password: "",
-    savings: 0.0,
-    salary: 0.0,
-    profileImage: "",
-    workfield: "",
-    username: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewSpendilowUser({
-      ...newSpendilowUser,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  async function signUp(event: SyntheticEvent) {
-    event.preventDefault();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const signUp = async (newSpendilowUser: any) => {
     signUpNewSpendilowUser(newSpendilowUser);
-  }
+  };
 
   return (
     <div className="hero min-h-screen text-neutral my-10">
@@ -45,7 +39,7 @@ export default function SignUpComponent() {
           </p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form className="card-body font-body" onSubmit={signUp}>
+          <form className="card-body font-body" onSubmit={handleSubmit(signUp)}>
             <img src={spendilowLogo} />
             <div className="form-control">
               <label className="label">
@@ -53,11 +47,8 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
-                id="email"
-                name="email"
                 placeholder="Indirizzo Email"
-                onChange={handleChange}
-                required
+                {...register("email", { required: true })}
               />
             </div>
             <div className="form-control">
@@ -66,12 +57,9 @@ export default function SignUpComponent() {
               </label>
               <input
                 type="password"
-                id="password"
-                name="password"
                 placeholder="Password"
                 className="input input-bordered"
-                required
-                onChange={handleChange}
+                {...register("password", { required: true })}
               />
             </div>
             <div className="form-control">
@@ -80,12 +68,9 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
-                id="savings"
-                name="savings"
                 placeholder="Risparmi"
-                onChange={handleChange}
                 type="number"
-                required
+                {...register("savings", { required: true })}
               />
             </div>
             <div className="form-control">
@@ -94,12 +79,9 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
-                id="salary"
-                name="salary"
                 placeholder="Stipendio"
-                onChange={handleChange}
                 type="number"
-                required
+                {...register("salary", { required: true })}
               />
             </div>
             <div className="form-control">
@@ -107,11 +89,12 @@ export default function SignUpComponent() {
                 <span className="label-text">Foto Profilo</span>
               </label>
               <input
-                id="image"
-                name="image"
                 className="input input-bordered"
                 placeholder="Foto profilo"
-                value="https://i.pravatar.cc/150"
+                {...register("image", {
+                  required: true,
+                  value: "https://i.pravatar.cc/150",
+                })}
               />
             </div>
             <div className="form-control">
@@ -120,11 +103,8 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
-                id="workfield"
-                name="workfield"
+                {...register("workfield", { required: true })}
                 placeholder="Ambito lavoro"
-                onChange={handleChange}
-                required
               />
             </div>
             <div className="form-control">
@@ -133,11 +113,8 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
-                id="username"
-                name="username"
                 placeholder="Username"
-                onChange={handleChange}
-                required
+                {...register("username", { required: true })}
               />
             </div>
             <div className="form-control">
