@@ -35,65 +35,120 @@ export default function SignUpComponent() {
   }
 
   return (
-    <div className="hero min-h-screen">
-      <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100 text-neutral font-body">
-        <form className="card-body" onSubmit={signUp}>
-          <img src={spendilowLogo} />
-          <input
-            className="form-control"
-            id="email"
-            name="email"
-            placeholder="email"
-            onChange={handleChange}
-          />
-          <input
-            className="form-control"
-            id="password"
-            name="password"
-            placeholder="password"
-            onChange={handleChange}
-          />
-          <input
-            className="form-control"
-            id="savings"
-            name="savings"
-            placeholder="savings"
-            onChange={handleChange}
-          />
-          <input
-            className="form-control"
-            id="salary"
-            name="salary"
-            placeholder="salary"
-            onChange={handleChange}
-          />
-          <input
-            id=""
-            name=""
-            className="form-control"
-            placeholder="image"
-            value="https://i.pravatar.cc/150"
-          />
-          <input
-            className="form-control"
-            id="workfield"
-            name="workfield"
-            placeholder="workfield"
-            onChange={handleChange}
-          />
-          <input
-            className="form-control"
-            id="username"
-            name="username"
-            placeholder="username"
-            onChange={handleChange}
-          />
-          <input
-            type="submit"
-            className="bg-primary font-primary"
-            value="Registrati"
-          ></input>
-        </form>
+    <div className="hero min-h-screen text-neutral my-10">
+      <div className="hero-content flex-col desktop:flex-row-reverse">
+        <div className="text-center desktop:text-left">
+          <h1 className="text-5xl font-bold font-primary">Registrati</h1>
+          <p className="py-6 font-heading">
+            “Se aggiungi poco al poco, ma lo farai di frequente, presto il poco
+            diventerà molto.” - Esiodo
+          </p>
+        </div>
+        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <form className="card-body font-body" onSubmit={signUp}>
+            <img src={spendilowLogo} />
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Indirizzo Email</span>
+              </label>
+              <input
+                className="input input-bordered"
+                id="email"
+                name="email"
+                placeholder="Indirizzo Email"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Password</span>
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                className="input input-bordered"
+                required
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Risparmi</span>
+              </label>
+              <input
+                className="input input-bordered"
+                id="savings"
+                name="savings"
+                placeholder="Risparmi"
+                onChange={handleChange}
+                type="number"
+                required
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Stipendio Medio Mensile</span>
+              </label>
+              <input
+                className="input input-bordered"
+                id="salary"
+                name="salary"
+                placeholder="Stipendio"
+                onChange={handleChange}
+                type="number"
+                required
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Foto Profilo</span>
+              </label>
+              <input
+                id="image"
+                name="image"
+                className="input input-bordered"
+                placeholder="Foto profilo"
+                value="https://i.pravatar.cc/150"
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Ambito Di Lavoro</span>
+              </label>
+              <input
+                className="input input-bordered"
+                id="workfield"
+                name="workfield"
+                placeholder="Ambito lavoro"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Username</span>
+              </label>
+              <input
+                className="input input-bordered"
+                id="username"
+                name="username"
+                placeholder="Username"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-control">
+              <input
+                type="submit"
+                className="btn btn-primary font-primary"
+                value="Registrati"
+              ></input>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
