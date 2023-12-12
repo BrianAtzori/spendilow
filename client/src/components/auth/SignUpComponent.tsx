@@ -8,6 +8,8 @@ import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 import { signUpNewSpendilowUser } from "../../services/users/users-external-calls";
 
 //**! RIFARE CON FORMIK o USEFORMS */
+//**! AGGIUNGERE LOADER AL BOTTONE */
+//**! AGGIUNGERE INPUT CLEANING */
 
 export default function SignUpComponent() {
   const [newSpendilowUser, setNewSpendilowUser] = useState({

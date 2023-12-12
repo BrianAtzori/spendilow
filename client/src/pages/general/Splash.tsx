@@ -32,8 +32,8 @@ export default function Splash() {
         isLoading={isLoading}
         message={"Controllo il collegamento ai server di Spendilow 💰"}
       ></LoaderComponent>
-      {isServerAlive || <Landing></Landing>}
-      {!isServerAlive || (
+      {!isServerAlive || <Landing></Landing>}
+      {isServerAlive || (
         <ErrorComponent message="I servizi di Spendilow non risultano raggiungibili, contatta il supporto 📲"></ErrorComponent>
       )}
     </>

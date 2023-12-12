@@ -10,8 +10,11 @@ import { baseURL } from "..";
 const route: string = "/utilities"
 
 const checkServerAlive = async function (): Promise<boolean> {
-    axios
-        .get(baseURL + route + "check-server-alive/")
+
+    let isServerAlive: boolean = false;
+
+    isServerAlive = await axios
+        .get(baseURL + route + "/check-server-alive/")
         .then((res) => {
             if (res.data.available) {
                 return true
@@ -22,7 +25,7 @@ const checkServerAlive = async function (): Promise<boolean> {
             return false
         })
 
-    return false
+    return isServerAlive
 }
 
 export {
