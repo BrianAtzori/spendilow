@@ -1,5 +1,5 @@
 // ------ REACT ------
-import React from "react";
+import React, { SyntheticEvent, useState } from "react";
 
 // ------ ASSETS ------
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
@@ -7,26 +7,34 @@ import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 // ------ SERVICES ------
 import { signUpNewSpendilowUser } from "../../services/users/users-external-calls";
 
-// ------ PACKAGES ------
-import { useForm } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
-import ErrorComponent from "../shared/ErrorComponent";
-
-//**! AGGIUNGERE LOADER AL BOTTONE */
 //**! AGGIUNGERE INPUT CLEANING */
-//**! https://blog.logrocket.com/react-hook-form-complete-guide/ */
 
 export default function SignUpComponent() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const [newSpendilowUser, setNewSpendilowUser] = useState({
+    email: "",
+    password: "",
+    savings: 0.0,
+    salary: 0.0,
+    profileImage: "",
+    workfield: "",
+    username: "",
+  });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const signUp = async (newSpendilowUser: any) => {
-    signUpNewSpendilowUser(newSpendilowUser);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewSpendilowUser({
+      ...newSpendilowUser,
+      [event.target.name]: event.target.value,
+    });
   };
+
+  async function signUp(event: SyntheticEvent) {
+    setIsLoading(true);
+    event.preventDefault();
+    await signUpNewSpendilowUser(newSpendilowUser);
+    setIsLoading(false);
+  }
 
   return (
     <div className="hero min-h-screen text-neutral my-10">
@@ -39,7 +47,7 @@ export default function SignUpComponent() {
           </p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form className="card-body font-body" onSubmit={handleSubmit(signUp)}>
+          <form className="card-body font-body" onSubmit={signUp}>
             <img src={spendilowLogo} />
             <div className="form-control">
               <label className="label">
@@ -47,8 +55,11 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
+                id="email"
+                name="email"
                 placeholder="Indirizzo Email"
-                {...register("email", { required: true })}
+                onChange={handleChange}
+                required
               />
             </div>
             <div className="form-control">
@@ -57,9 +68,12 @@ export default function SignUpComponent() {
               </label>
               <input
                 type="password"
+                id="password"
+                name="password"
                 placeholder="Password"
                 className="input input-bordered"
-                {...register("password", { required: true })}
+                required
+                onChange={handleChange}
               />
             </div>
             <div className="form-control">
@@ -68,9 +82,12 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
+                id="savings"
+                name="savings"
                 placeholder="Risparmi"
+                onChange={handleChange}
                 type="number"
-                {...register("savings", { required: true })}
+                required
               />
             </div>
             <div className="form-control">
@@ -79,9 +96,12 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
+                id="salary"
+                name="salary"
                 placeholder="Stipendio"
+                onChange={handleChange}
                 type="number"
-                {...register("salary", { required: true })}
+                required
               />
             </div>
             <div className="form-control">
@@ -89,12 +109,11 @@ export default function SignUpComponent() {
                 <span className="label-text">Foto Profilo</span>
               </label>
               <input
+                id="image"
+                name="image"
                 className="input input-bordered"
                 placeholder="Foto profilo"
-                {...register("image", {
-                  required: true,
-                  value: "https://i.pravatar.cc/150",
-                })}
+                value="https://i.pravatar.cc/150"
               />
             </div>
             <div className="form-control">
@@ -103,8 +122,11 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
-                {...register("workfield", { required: true })}
+                id="workfield"
+                name="workfield"
                 placeholder="Ambito lavoro"
+                onChange={handleChange}
+                required
               />
             </div>
             <div className="form-control">
@@ -113,16 +135,29 @@ export default function SignUpComponent() {
               </label>
               <input
                 className="input input-bordered"
+                id="username"
+                name="username"
                 placeholder="Username"
-                {...register("username", { required: true })}
+                onChange={handleChange}
+                required
               />
             </div>
             <div className="form-control">
-              <input
-                type="submit"
-                className="btn btn-primary font-primary"
-                value="Registrati"
-              ></input>
+              {isLoading ? (
+                <>
+                  <button className="btn btn-primary font-primary">
+                    <span className="loading loading-dots loading-md"></span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <input
+                    type="submit"
+                    className="btn btn-primary font-primary"
+                    value="Registrati"
+                  ></input>
+                </>
+              )}
             </div>
           </form>
         </div>
