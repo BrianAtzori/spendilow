@@ -17,7 +17,7 @@ export default function SignUpComponent() {
     password: "",
     savings: 0.0,
     salary: 0.0,
-    profileImage: "https://i.pravatar.cc/150",
+    profileImage: "",
     workfield: "",
     username: "",
   });
@@ -40,6 +40,35 @@ export default function SignUpComponent() {
       ...newSpendilowUser,
       [event.target.name]: event.target.value,
     });
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const convertBase64 = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  async function manageImageInputConversion(file) {
+    const base64: string = await convertBase64(file);
+    setNewSpendilowUser({
+      ...newSpendilowUser,
+      profileImage: base64,
+    });
+  }
+
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.currentTarget.files;
+    manageImageInputConversion(file);
   };
 
   async function verifyInputThenTriggerSignUp(event: SyntheticEvent) {
@@ -78,6 +107,7 @@ export default function SignUpComponent() {
   // ------ FUNCTIONS ------
 
   async function signUp() {
+    console.log(newSpendilowUser.profileImage);
     await signUpNewSpendilowUser(newSpendilowUser);
     setIsLoading(false);
   }
@@ -155,11 +185,13 @@ export default function SignUpComponent() {
                 <span className="label-text">Foto Profilo</span>
               </label>
               <input
+                type="file"
                 id="image"
                 name="image"
-                className="input input-bordered"
+                accept="image/png, image/jpeg"
                 placeholder="Foto profilo"
-                value="https://i.pravatar.cc/150"
+                className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                onChange={handleAvatarChange}
               />
             </div>
             <div className="form-control">
