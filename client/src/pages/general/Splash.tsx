@@ -4,7 +4,7 @@ import { useState } from "react";
 
 // ------ COMPONENTS & PAGES ------
 import LoaderComponent from "../../components/shared/LoaderComponent";
-import ErrorComponent from "../../components/shared/ErrorComponent";
+import ErrorScreenComponent from "../../components/shared/ErrorScreenComponent";
 import Landing from "../auth/Landing";
 
 // ------ SERVICES ------
@@ -34,7 +34,7 @@ export default function Splash() {
       ></LoaderComponent>
       {!isServerAlive || <Landing></Landing>}
       {isServerAlive || (
-        <ErrorComponent message="I servizi di Spendilow non risultano raggiungibili, contatta il supporto 📲"></ErrorComponent>
+        <ErrorScreenComponent message="I servizi di Spendilow non risultano raggiungibili, contatta il supporto 📲"></ErrorScreenComponent>
       )}
     </>
   );
