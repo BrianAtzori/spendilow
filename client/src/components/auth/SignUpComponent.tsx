@@ -30,7 +30,6 @@ export default function SignUpComponent() {
   });
 
   // ------ FORM HANDLING ------
-
   const passwordCheck = new RegExp(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])(?=.*[a-zA-Z\d@#$%^&+=]).{8,}$/
   );
@@ -42,33 +41,35 @@ export default function SignUpComponent() {
     });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const convertBase64 = (file: any) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
+  const handleProfileImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files && event.target.files[0];
 
-      fileReader.onload = () => {
-        resolve(fileReader.result);
+    if (file) {
+      if (file.size > 2097152) {
+        alert("File is too big!");
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        setNewSpendilowUser({
+          ...newSpendilowUser,
+          profileImage: base64String,
+        });
       };
 
-      fileReader.onerror = (error) => {
-        reject(error);
+      reader.onerror = (error) => {
+        alert(
+          "Errore nel caricare l'immagine! Contatta il supporto. Errore: " +
+            error
+        );
       };
-    });
-  };
 
-  async function manageImageInputConversion(file) {
-    const base64: string = await convertBase64(file);
-    setNewSpendilowUser({
-      ...newSpendilowUser,
-      profileImage: base64,
-    });
-  }
-
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.currentTarget.files;
-    manageImageInputConversion(file);
+      reader.readAsDataURL(file);
+    }
   };
 
   async function verifyInputThenTriggerSignUp(event: SyntheticEvent) {
@@ -105,11 +106,11 @@ export default function SignUpComponent() {
   }
 
   // ------ FUNCTIONS ------
-
   async function signUp() {
-    console.log(newSpendilowUser.profileImage);
-    await signUpNewSpendilowUser(newSpendilowUser);
-    setIsLoading(false);
+    console.log(newSpendilowUser);
+    await signUpNewSpendilowUser(newSpendilowUser).then(() => {
+      setIsLoading(false);
+    });
   }
 
   return (
@@ -191,7 +192,7 @@ export default function SignUpComponent() {
                 accept="image/png, image/jpeg"
                 placeholder="Foto profilo"
                 className="file-input file-input-bordered file-input-primary w-full max-w-xs"
-                onChange={handleAvatarChange}
+                onChange={handleProfileImageChange}
               />
             </div>
             <div className="form-control">
