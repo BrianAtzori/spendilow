@@ -5,9 +5,9 @@ import axios from "axios";
 import { baseURL } from "..";
 
 // ------ DATA ------
-
 const route: string = "/users"
 
+// ------ TYPESCRIPT ------
 interface newSpendilowUser {
     email: string,
     password: string,
@@ -18,8 +18,13 @@ interface newSpendilowUser {
     username: string
 }
 
+interface spendilowUserLogin {
+    email: string,
+    password: string,
+}
+
+// ------ CALLS ------
 const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUser) {
-    axios
     axios
         .post(baseURL + route + "/new", newSpendilowUser)
         .then((res) => {
@@ -30,6 +35,18 @@ const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUse
         })
 }
 
+const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) {
+    axios
+        .post(baseURL + route + "/login", userCredentials)
+        .then((res) => {
+            console.log(res.data);
+        })
+        .catch(function (error) {
+            console.log(error)
+        })
+}
+
 export {
-    signUpNewSpendilowUser
+    signUpNewSpendilowUser,
+    loginSpendilowUser
 }
