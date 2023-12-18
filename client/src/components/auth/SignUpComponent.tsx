@@ -47,10 +47,6 @@ export default function SignUpComponent() {
     const file = event.target.files && event.target.files[0];
 
     if (file) {
-      if (file.size > 2097152) {
-        alert("File is too big!");
-      }
-
       const reader = new FileReader();
 
       reader.onload = () => {
@@ -69,6 +65,10 @@ export default function SignUpComponent() {
       };
 
       reader.readAsDataURL(file);
+    } else {
+      alert(
+        "Errore nel caricare l'immagine! Riprova, cambia immagine oppure contatta il supporto."
+      );
     }
   };
 

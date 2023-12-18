@@ -6,7 +6,7 @@ import { Express, Request, Response, RequestHandler, Router } from 'express' //T
 const express = require('express');
 const app: Express = express();
 require("express-async-errors");
-app.use(express.json());
+app.use(express.json({limit:'10mb'}));
 
 // ----- DB IMPORT ------
 const dbConnectionPool = require('./db/db-connector')
