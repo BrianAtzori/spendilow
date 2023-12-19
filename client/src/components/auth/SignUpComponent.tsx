@@ -140,6 +140,7 @@ export default function SignUpComponent() {
                 name="email"
                 placeholder="Indirizzo Email"
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="form-control">
@@ -153,6 +154,7 @@ export default function SignUpComponent() {
                 placeholder="Password"
                 className="input input-bordered"
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="form-control">
@@ -217,6 +219,7 @@ export default function SignUpComponent() {
                 name="username"
                 placeholder="Username"
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="form-control">

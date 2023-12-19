@@ -1,10 +1,11 @@
 // ------ REACT ------
-import React, { useState } from "react";
+import React, { useState, SyntheticEvent } from "react";
 
 // ------ ASSETS ------
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 
 // ------ COMPONENTS & PAGES ------
+import ErrorComponent from "../shared/ErrorComponent";
 
 // ------ SERVICES ------
 import { loginSpendilowUser } from "../../services/users/users-external-calls";
@@ -16,6 +17,13 @@ export default function LoginComponent() {
     password: "",
   });
 
+  const [loginError, setLoginError] = useState({
+    state: false,
+    message: "Errore in fase di login",
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
   // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserCredentials({
@@ -24,7 +32,31 @@ export default function LoginComponent() {
     });
   };
 
+  async function verifyInputThenTriggerLogin(event: SyntheticEvent) {
+    event.preventDefault();
+
+    setLoginError({
+      state: false,
+      message: "",
+    });
+
+    if (userCredentials.email === "" || userCredentials.password === "") {
+      setLoginError({
+        state: true,
+        message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
+      });
+    } else {
+      setIsLoading(true);
+      await login();
+    }
+  }
+
   // ------ FUNCTIONS ------
+  async function login() {
+    await loginSpendilowUser(userCredentials).then(() => {
+      setIsLoading(false);
+    });
+  }
 
   return (
     <div className="hero min-h-screen text-neutral">
@@ -39,7 +71,10 @@ export default function LoginComponent() {
           </p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form className="card-body font-body">
+          <form
+            className="card-body font-body"
+            onSubmit={verifyInputThenTriggerLogin}
+          >
             <img src={spendilowLogo} />
             <div className="form-control">
               <label className="label">
@@ -49,6 +84,7 @@ export default function LoginComponent() {
                 type="email"
                 placeholder="iltuoindirizzo@peraccedere.com"
                 className="input input-bordered"
+                onChange={handleChange}
                 required
               />
             </div>
@@ -60,13 +96,28 @@ export default function LoginComponent() {
                 type="password"
                 placeholder="La tua password"
                 className="input input-bordered"
+                onChange={handleChange}
                 required
               />
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary font-primary text-neutral">
-                Login
-              </button>
+              <div className="form-control">
+                {isLoading ? (
+                  <>
+                    <button className="btn btn-primary font-primary">
+                      <span className="loading loading-dots loading-md"></span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="submit"
+                      className="btn btn-primary font-primary"
+                      value="Accedi"
+                    ></input>
+                  </>
+                )}
+              </div>
             </div>
           </form>
         </div>
