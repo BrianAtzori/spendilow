@@ -193,7 +193,7 @@ export default function SignUpComponent() {
                 name="image"
                 accept="image/png, image/jpeg"
                 placeholder="Foto profilo"
-                className="file-input file-input-bordered file-input-primary w-full max-w-xs"
+                className="file-input file-input-bordered file-input-accent w-full max-w-xs"
                 onChange={handleProfileImageChange}
               />
             </div>
@@ -230,7 +230,7 @@ export default function SignUpComponent() {
             <div className="form-control">
               {isLoading ? (
                 <>
-                  <button className="btn btn-primary font-primary">
+                  <button className="btn btn-accent font-primary">
                     <span className="loading loading-dots loading-md"></span>
                   </button>
                 </>
@@ -238,7 +238,7 @@ export default function SignUpComponent() {
                 <>
                   <input
                     type="submit"
-                    className="btn btn-primary font-primary"
+                    className="btn btn-accent font-primary"
                     value="Registrati"
                   ></input>
                 </>

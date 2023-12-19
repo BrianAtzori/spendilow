@@ -29,6 +29,7 @@ const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUse
         .post(baseURL + route + "/new", newSpendilowUser)
         .then((res) => {
             console.log(res.data);
+            window.location.href = "/auth/login";
         })
         .catch(function (error) {
             console.log(error)
@@ -40,6 +41,7 @@ const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) 
         .post(baseURL + route + "/login", userCredentials)
         .then((res) => {
             console.log(res.data);
+            window.location.href = "/user/dashboard";
         })
         .catch(function (error) {
             console.log(error)

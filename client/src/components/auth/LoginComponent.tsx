@@ -34,7 +34,7 @@ export default function LoginComponent() {
 
   async function verifyInputThenTriggerLogin(event: SyntheticEvent) {
     event.preventDefault();
-
+    console.log("qui");
     setLoginError({
       state: false,
       message: "",
@@ -53,6 +53,7 @@ export default function LoginComponent() {
 
   // ------ FUNCTIONS ------
   async function login() {
+    console.log("Prova");
     await loginSpendilowUser(userCredentials).then(() => {
       setIsLoading(false);
     });
@@ -81,6 +82,8 @@ export default function LoginComponent() {
                 <span className="label-text">Email</span>
               </label>
               <input
+                id="email"
+                name="email"
                 type="email"
                 placeholder="iltuoindirizzo@peraccedere.com"
                 className="input input-bordered"
@@ -93,6 +96,8 @@ export default function LoginComponent() {
                 <span className="label-text">Password</span>
               </label>
               <input
+                id="password"
+                name="password"
                 type="password"
                 placeholder="La tua password"
                 className="input input-bordered"
@@ -100,11 +105,16 @@ export default function LoginComponent() {
                 required
               />
             </div>
+            <div className="form-control">
+              {loginError.state && (
+                <ErrorComponent message={loginError.message}></ErrorComponent>
+              )}
+            </div>
             <div className="form-control mt-6">
               <div className="form-control">
                 {isLoading ? (
                   <>
-                    <button className="btn btn-primary font-primary">
+                    <button className="btn btn-accent font-primary bg-accent">
                       <span className="loading loading-dots loading-md"></span>
                     </button>
                   </>
@@ -112,7 +122,7 @@ export default function LoginComponent() {
                   <>
                     <input
                       type="submit"
-                      className="btn btn-primary font-primary"
+                      className="btn btn-accent font-primary bg-accent"
                       value="Accedi"
                     ></input>
                   </>
