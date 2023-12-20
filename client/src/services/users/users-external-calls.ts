@@ -7,6 +7,9 @@ import { baseURL } from "..";
 // ------ DATA ------
 const route: string = "/users"
 
+// ------ SERVICES ------
+import { apiErrorResponseHandler } from "../general/apiErrorResponseHandler";
+
 // ------ TYPESCRIPT ------
 interface newSpendilowUser {
     email: string,
@@ -32,7 +35,7 @@ const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUse
             window.location.href = "/auth/login";
         })
         .catch(function (error) {
-            console.log(error)
+            apiErrorResponseHandler(error.response.status);
         })
 }
 
@@ -44,11 +47,30 @@ const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) 
             window.location.href = "/user/dashboard";
         })
         .catch(function (error) {
-            console.log(error)
+            apiErrorResponseHandler(error.response.status);
         })
+}
+
+const verifyCaptcha = async function (token: string) {
+    try {
+        // Sending secret key and response token to Google Recaptcha API for authentication.
+        const response = await axios.post(
+            `https://www.google.com/recaptcha/api/siteverify?secret=${import.meta.env.VITE_CAPTCHA_SITE_KEY}&response=${token}`
+        );
+        // Check response status and send back to the client-side
+        if (response.data.success) {
+            alert("Human 👨 👩");
+        } else {
+            alert("Robot 🤖");
+        }
+    } catch (error) {
+        // Handle any errors that occur during the reCAPTCHA verification process
+        alert(error);
+    }
 }
 
 export {
     signUpNewSpendilowUser,
-    loginSpendilowUser
+    loginSpendilowUser,
+    verifyCaptcha
 }
