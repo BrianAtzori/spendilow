@@ -33,7 +33,7 @@ export default function SignUpComponent() {
     message: "Errore in fase di registrazione",
   });
 
-  const captchaRef = useRef(null);
+  const captchaRef = useRef<Captcha>(null);
 
   // ------ FORM HANDLING ------
   const passwordCheck = new RegExp(
@@ -81,6 +81,16 @@ export default function SignUpComponent() {
   async function verifyInputThenTriggerSignUp(event: SyntheticEvent) {
     event.preventDefault();
 
+    console.log(captchaRef);
+
+    const token = captchaRef.current?.getValue();
+
+    console.log(token);
+
+    captchaRef.current?.reset();
+
+    verifyCaptcha(token);
+
     setSignUpError({
       state: false,
       message: "",
@@ -98,10 +108,6 @@ export default function SignUpComponent() {
         message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
       });
     } else {
-      // const token = captchaRef.current.getValue();
-      // captchaRef.current.reset();
-      // verifyCaptcha(token);
-
       if (passwordCheck.test(newSpendilowUser.password)) {
         setIsLoading(true);
         await signUp();

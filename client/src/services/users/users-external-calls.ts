@@ -51,8 +51,9 @@ const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) 
         })
 }
 
-const verifyCaptcha = async function (token: string) {
+const verifyCaptcha = async function (token: string | null | undefined) {
     try {
+        console.log("Ciao")
         // Sending secret key and response token to Google Recaptcha API for authentication.
         const response = await axios.post(
             `https://www.google.com/recaptcha/api/siteverify?secret=${import.meta.env.VITE_CAPTCHA_SITE_KEY}&response=${token}`
