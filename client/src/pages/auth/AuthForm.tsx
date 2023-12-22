@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 // ------ COMPONENTS & PAGES ------
 import SignUpComponent from "../../components/auth/SignUpComponent";
 import LoginComponent from "../../components/auth/LoginComponent";
+import MFAComponent from "../../components/auth/MFAComponent";
 
 export default function AuthForm() {
   const { mode } = useParams();
@@ -12,11 +13,11 @@ export default function AuthForm() {
 
   return (
     <>
-      {authMode === "login" ? (
-        <LoginComponent></LoginComponent>
-      ) : (
-        <SignUpComponent></SignUpComponent>
-      )}
+      {authMode === "login" && <LoginComponent></LoginComponent>}
+
+      {authMode === "sign-up" && <SignUpComponent></SignUpComponent>}
+
+      {authMode === "mfa" && <MFAComponent></MFAComponent>}
     </>
   );
-} 
+}

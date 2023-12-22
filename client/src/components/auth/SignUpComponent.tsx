@@ -20,6 +20,7 @@ export default function SignUpComponent() {
     profileImage: "",
     workfield: "",
     username: "",
+    isMFAActive: false,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -226,6 +227,19 @@ export default function SignUpComponent() {
               {signUpError.state && (
                 <ErrorComponent message={signUpError.message}></ErrorComponent>
               )}
+            </div>
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">
+                  Attiva autenticazione a due fattori
+                </span>
+                <input
+                  type="checkbox"
+                  onChange={handleChange}
+                  name="isMFAActive"
+                  className="checkbox checkbox-accent"
+                />
+              </label>
             </div>
             <div className="form-control">
               {isLoading ? (

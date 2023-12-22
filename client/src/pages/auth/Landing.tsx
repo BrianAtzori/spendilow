@@ -34,14 +34,14 @@ export default function Landing() {
             <div className="form-control mt-6">
               <Link
                 to="/auth/login"
-                className="btn btn-primary font-primary font-bold text-neutral"
+                className="btn btn-accent font-primary font-bold text-neutral"
               >
                 Accedi
               </Link>
               <div className="form-control mt-6">
                 <Link
                   to="/auth/sign-up"
-                  className="btn btn-primary font-primary font-bold text-neutral"
+                  className="btn btn-accent font-primary font-bold text-neutral"
                 >
                   Registrati
                 </Link>

@@ -19,6 +19,7 @@ interface newSpendilowUser {
     profileImage: string,
     workfield: string,
     username: string
+    isMFAActive: boolean
 }
 
 interface spendilowUserLogin {
@@ -32,7 +33,18 @@ const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUse
         .post(baseURL + route + "/new", newSpendilowUser)
         .then((res) => {
             console.log(res.data);
-            window.location.href = "/auth/login";
+            switch (newSpendilowUser.isMFAActive) {
+                case true:
+                    window.location.href = "/auth/mfa";
+                    break;
+                case false:
+                    window.location.href = "/auth/login";
+                    break;
+                default:
+                    window.location.href = "/auth/login";
+                    break;
+            }
+
         })
         .catch(function (error) {
             apiErrorResponseHandler(error.response.status);
