@@ -1,5 +1,5 @@
 // ------ REACT ------
-import React, { SyntheticEvent, useState, useRef } from "react";
+import React, { SyntheticEvent, useState } from "react";
 
 // ------ ASSETS ------
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
@@ -8,11 +8,7 @@ import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 import ErrorComponent from "../shared/ErrorComponent";
 
 // ------ SERVICES ------
-import {
-  signUpNewSpendilowUser,
-  verifyCaptcha,
-} from "../../services/users/users-external-calls";
-import Captcha from "react-google-recaptcha";
+import { signUpNewSpendilowUser } from "../../services/users/users-external-calls";
 
 export default function SignUpComponent() {
   // ------ HOOKS ------
@@ -32,8 +28,6 @@ export default function SignUpComponent() {
     state: false,
     message: "Errore in fase di registrazione",
   });
-
-  const captchaRef = useRef<Captcha>(null);
 
   // ------ FORM HANDLING ------
   const passwordCheck = new RegExp(
@@ -80,16 +74,6 @@ export default function SignUpComponent() {
 
   async function verifyInputThenTriggerSignUp(event: SyntheticEvent) {
     event.preventDefault();
-
-    console.log(captchaRef);
-
-    const token = captchaRef.current?.getValue();
-
-    console.log(token);
-
-    captchaRef.current?.reset();
-
-    verifyCaptcha(token);
 
     setSignUpError({
       state: false,
@@ -242,12 +226,6 @@ export default function SignUpComponent() {
               {signUpError.state && (
                 <ErrorComponent message={signUpError.message}></ErrorComponent>
               )}
-            </div>
-            <div className="form-control">
-              <Captcha
-                sitekey={import.meta.env.VITE_CAPTCHA_SITE_KEY}
-                ref={captchaRef}
-              />
             </div>
             <div className="form-control">
               {isLoading ? (

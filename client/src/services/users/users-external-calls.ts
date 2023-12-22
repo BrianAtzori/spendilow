@@ -51,27 +51,7 @@ const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) 
         })
 }
 
-const verifyCaptcha = async function (token: string | null | undefined) {
-    try {
-        console.log("Ciao")
-        // Sending secret key and response token to Google Recaptcha API for authentication.
-        const response = await axios.post(
-            `https://www.google.com/recaptcha/api/siteverify?secret=${import.meta.env.VITE_CAPTCHA_SITE_KEY}&response=${token}`
-        );
-        // Check response status and send back to the client-side
-        if (response.data.success) {
-            alert("Human 👨 👩");
-        } else {
-            alert("Robot 🤖");
-        }
-    } catch (error) {
-        // Handle any errors that occur during the reCAPTCHA verification process
-        alert(error);
-    }
-}
-
 export {
     signUpNewSpendilowUser,
     loginSpendilowUser,
-    verifyCaptcha
 }
