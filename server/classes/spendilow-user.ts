@@ -12,8 +12,9 @@ class SpendilowUser {
     public profileImage: string;
     public workfield: string;
     public username: string;
+    public isMFAActive: boolean
 
-    constructor({ id, email, password, savings, salary, profileImage, workfield, username }: any) {
+    constructor({ id, email, password, isMFAActive, savings, salary, profileImage, workfield, username }: any) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -22,6 +23,7 @@ class SpendilowUser {
         this.profileImage = profileImage;
         this.workfield = workfield;
         this.username = username;
+        this.isMFAActive = isMFAActive;
     }
 
     idGeneration(): string {

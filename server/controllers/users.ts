@@ -82,7 +82,7 @@ const loginUser = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).
         cookie("spendilow-refresh-token", refreshToken, { httpOnly: true }).
         header("Authorization", accessToken).
-        json({ id: spendilowUser.id, email: spendilowUser.email })
+        json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive })
 }
 
 // ------ MODIFY USER ------

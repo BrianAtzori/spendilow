@@ -36,10 +36,17 @@ export default function SignUpComponent() {
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewSpendilowUser({
-      ...newSpendilowUser,
-      [event.target.name]: event.target.value,
-    });
+    if (event.target.name === "isMFAActive") {
+      setNewSpendilowUser({
+        ...newSpendilowUser,
+        [event.target.name]: !newSpendilowUser.isMFAActive,
+      });
+    } else {
+      setNewSpendilowUser({
+        ...newSpendilowUser,
+        [event.target.name]: event.target.value,
+      });
+    }
   };
 
   const handleProfileImageChange = (
@@ -108,7 +115,6 @@ export default function SignUpComponent() {
 
   // ------ FUNCTIONS ------
   async function signUp() {
-    console.log(newSpendilowUser);
     await signUpNewSpendilowUser(newSpendilowUser).then(() => {
       setIsLoading(false);
     });
@@ -231,7 +237,7 @@ export default function SignUpComponent() {
             <div className="form-control">
               <label className="label cursor-pointer">
                 <span className="label-text">
-                  Attiva autenticazione a due fattori
+                  Attiva autenticazione a due fattori <br></br>(Verrai redirettə dopo la registrazione)
                 </span>
                 <input
                   type="checkbox"

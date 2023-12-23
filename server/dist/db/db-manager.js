@@ -52,13 +52,13 @@ const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, 
 // ------ REGISTER SPENDILOW USER ------
 const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `
-        INSERT INTO \`splusers\` (\`id\`, \`email\`, \`password\`, \`savings\`, \`salary\`, \`profileimage\`, \`workfield\`, \`username\`)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO \`splusers\` (\`id\`, \`email\`, \`password\`, \`isMFAActive\`, \`savings\`, \`salary\`, \`profileimage\`, \`workfield\`, \`username\`)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
     let result;
-    let { id, email, password, savings, salary, profileImage, workfield, username } = spendilowUser;
+    let { id, email, password, isMFAActive, savings, salary, profileImage, workfield, username } = spendilowUser;
     try {
-        result = yield connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
+        result = yield connection.query(query, [id, email, password, isMFAActive, savings, salary, profileImage, workfield, username]);
     }
     catch (error) {
         throw new mariadb_1.SqlError("Errore durante il salvataggio dei dati dell'utente, ricontrolla i dati inseriti oppure contatta il supporto utente.");

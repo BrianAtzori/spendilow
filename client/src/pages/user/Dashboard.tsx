@@ -2,7 +2,6 @@
 import React from "react";
 
 /**
- * !VERIFY AUTH O ACCESS DENIED
  * !MODIFICARE USER LOGGED PER FAR USCIRE L'HEADER
  * */
 

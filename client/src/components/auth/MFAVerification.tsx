@@ -8,54 +8,45 @@ import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 import ErrorComponent from "../shared/ErrorComponent";
 
 // ------ SERVICES ------
-import { loginSpendilowUser } from "../../services/users/users-external-calls";
+import { verifyMFA } from "../../services/users/users-external-calls";
 
-export default function LoginComponent() {
+export default function MFAVerification() {
   // ------ HOOKS ------
-  const [userCredentials, setUserCredentials] = useState({
-    email: "",
-    password: "",
-  });
+  const [userChallenge, setUserChallenge] = useState("");
 
-  const [loginError, setLoginError] = useState({
+  const [mfaError, setMfaError] = useState({
     state: false,
-    message: "Errore in fase di login",
+    message: "Errore in fase di verifica del codice numerico.",
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
   // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserCredentials({
-      ...userCredentials,
-      [event.target.name]: event.target.value,
-    });
+    setUserChallenge(event.target.value);
   };
 
-  async function verifyInputThenTriggerLogin(event: SyntheticEvent) {
+  async function verifyInputThenTriggerMFAVerification(event: SyntheticEvent) {
     event.preventDefault();
-    console.log("qui");
-    setLoginError({
+    setMfaError({
       state: false,
       message: "",
     });
 
-    if (userCredentials.email === "" || userCredentials.password === "") {
-      setLoginError({
+    if (userChallenge === null) {
+      setMfaError({
         state: true,
         message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
       });
     } else {
       setIsLoading(true);
-      await login();
+      await MFAChallengeVerification();
     }
   }
 
   // ------ FUNCTIONS ------
-  async function login() {
-    await loginSpendilowUser(userCredentials).then(() => {
-      setIsLoading(false);
-    });
+  async function MFAChallengeVerification() {
+    await verifyMFA(userChallenge);
   }
 
   return (
@@ -63,50 +54,47 @@ export default function LoginComponent() {
       <div className="hero-content flex-col desktop:flex-row-reverse">
         <div className="text-center desktop:text-left">
           <h1 className="text-5xl font-bold font-primary text-neutral">
-            Accedi
+            Verifica la tua identità
           </h1>
-          <p className="py-6 text-neutral font-heading">
-            “Gli uomini non riescono a capire quale gran rendita costituisca il
-            risparmio.” - Cicerone
-          </p>
+          <ul className="font-heading py-6">
+            <li>
+              1. Scarica l'applicazione "Google Authenticator" per mettere in
+              sicurezza il tuo account.
+            </li>
+            <li>
+              2. Apri l'applicazione e aggiungi un nuovo codice premendo il
+              tasto in basso a destra con il simbolo "+".
+            </li>
+            <li>3. Selezione l'opzione "Scansiona un codice QR".</li>
+            <li>
+              4. Nella tua applicazione verrà aggiunta un timer che genererà i
+              tuoi codici di sicurezza da inserire in fase di Login."
+            </li>
+          </ul>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form
             className="card-body font-body"
-            onSubmit={verifyInputThenTriggerLogin}
+            onSubmit={verifyInputThenTriggerMFAVerification}
           >
             <img src={spendilowLogo} />
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">Il tuo codice</span>
               </label>
               <input
                 id="email"
                 name="email"
-                type="email"
-                placeholder="iltuoindirizzo@peraccedere.com"
+                type="number"
+                placeholder="123456"
                 className="input input-bordered"
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="form-control">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="La tua password"
-                className="input input-bordered"
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="form-control">
-              {loginError.state && (
-                <ErrorComponent message={loginError.message}></ErrorComponent>
+              {mfaError.state && (
+                <ErrorComponent message={mfaError.message}></ErrorComponent>
               )}
             </div>
             <div className="form-control mt-6">
@@ -122,7 +110,7 @@ export default function LoginComponent() {
                     <input
                       type="submit"
                       className="btn btn-accent font-primary bg-accent"
-                      value="Accedi"
+                      value="Verifica"
                     ></input>
                   </>
                 )}

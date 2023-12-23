@@ -70,7 +70,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(http_status_codes_1.StatusCodes.OK).
         cookie("spendilow-refresh-token", refreshToken, { httpOnly: true }).
         header("Authorization", accessToken).
-        json({ id: spendilowUser.id, email: spendilowUser.email });
+        json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive });
 });
 // ------ MODIFY USER ------
 const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

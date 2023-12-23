@@ -1,13 +1,25 @@
 // ------ REACT ------
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 // ------ ASSETS ------
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 
-//*! To Do: Chiamata per generazione QR + Ristrutturazione DB e chiamate */
+// ------ SERVICES ------
+import { activateMFA } from "../../services/users/users-external-calls";
 
 export default function MFAComponent() {
+  useEffect(() => {
+    generateQR();
+  }, []);
+
+  const [QRCode, setQRCode] = useState();
+
+  async function generateQR() {
+    const generatedQR = await activateMFA();
+    setQRCode(generatedQR);
+  }
+
   return (
     <div className="hero min-h-screen text-neutral py-10">
       <div className="hero-content flex-col desktop:flex-row-reverse">
@@ -44,14 +56,18 @@ export default function MFAComponent() {
             <div className="form-control">
               <div className="mockup-phone border-primary mx-0 my-2">
                 <div className="camera"></div>
-                <div className="display">
-                  <div className="artboard artboard-demo phone-1">Hi.</div>
+                <div className="display w-full">
+                  <div className="artboard artboard-demo phone-1 bg-base-100">
+                    <div>
+                      <img src={QRCode} className="rounded" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div className="form-control mt-6">
               <Link
-                to="/auth/login"
+                to="/"
                 className="btn btn-accent font-primary font-bold text-neutral"
               >
                 Vai alla Login

@@ -49,16 +49,16 @@ const databaseInteraction = async (operation: string, queryData: any) => {
 const createSplUser = async (spendilowUser: any, connection: any) => {
 
     const query = `
-        INSERT INTO \`splusers\` (\`id\`, \`email\`, \`password\`, \`savings\`, \`salary\`, \`profileimage\`, \`workfield\`, \`username\`)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO \`splusers\` (\`id\`, \`email\`, \`password\`, \`isMFAActive\`, \`savings\`, \`salary\`, \`profileimage\`, \`workfield\`, \`username\`)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
     let result;
 
-    let { id, email, password, savings, salary, profileImage, workfield, username } = spendilowUser
+    let { id, email, password, isMFAActive, savings, salary, profileImage, workfield, username } = spendilowUser
 
     try {
-        result = await connection.query(query, [id, email, password, savings, salary, profileImage, workfield, username]);
+        result = await connection.query(query, [id, email, password, isMFAActive, savings, salary, profileImage, workfield, username]);
     }
     catch (error: any) {
         throw new SqlError("Errore durante il salvataggio dei dati dell'utente, ricontrolla i dati inseriti oppure contatta il supporto utente.");

@@ -16,7 +16,7 @@ const crypto_1 = __importDefault(require("crypto"));
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 class SpendilowUser {
-    constructor({ id, email, password, savings, salary, profileImage, workfield, username }) {
+    constructor({ id, email, password, isMFAActive, savings, salary, profileImage, workfield, username }) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -25,6 +25,7 @@ class SpendilowUser {
         this.profileImage = profileImage;
         this.workfield = workfield;
         this.username = username;
+        this.isMFAActive = isMFAActive;
     }
     idGeneration() {
         return crypto_1.default.randomUUID();
