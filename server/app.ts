@@ -6,7 +6,7 @@ import { Express, Request, Response, RequestHandler, Router } from 'express' //T
 const express = require('express');
 const app: Express = express();
 require("express-async-errors");
-app.use(express.json({limit:'10mb'}));
+app.use(express.json({ limit: '10mb' }));
 
 // ----- DB IMPORT ------
 const dbConnectionPool = require('./db/db-connector')
@@ -27,7 +27,8 @@ const cookieParser = require('cookie-parser');
 //Activation
 app.use(helmet());
 app.use(cors({
-    origin: '*'
+    origin: 'http://localhost:5173',
+    credentials: true
 }));
 app.use(xss());
 app.set("Trust Proxy", 1);
@@ -40,6 +41,7 @@ app.use(cookieParser());
 // ------ MIDDLEWARE SETUP ------
 //Imports
 const errorHandlerMiddleware: RequestHandler = require("./middleware/error-handler");
+const authenticationMiddleware = require("./middleware/authentication");
 
 //Activation
 app.use(errorHandlerMiddleware);
@@ -47,9 +49,11 @@ app.use(errorHandlerMiddleware);
 //------ ROUTES SETUP ------
 const usersRouter: Router = require("./routes/users");
 const utilitiesRouter: Router = require("./routes/utilities");
+const authenticatedUsersRouter: Router = require("./routes/authenticated-users")
 
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
+app.use("/api/v1/authenticated-users", authenticationMiddleware, authenticatedUsersRouter)
 app.use('/api-docs/', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 
@@ -60,7 +64,7 @@ const start = async () => {
     try {
         connection = await dbConnectionPool.getConnection();
         if (connection) {
-    app.listen(process.env.PORT, () => {
+            app.listen(process.env.PORT, () => {
                 console.log(`Server connected to DB and running at http://localhost:${process.env.PORT}`);
             });
         }

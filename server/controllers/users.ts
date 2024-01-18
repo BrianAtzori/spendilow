@@ -49,7 +49,7 @@ const registerUser = async (req: Request, res: Response) => {
     res.
         status(StatusCodes.CREATED).
         cookie("spendilow-refresh-token", refreshToken, { httpOnly: true, }).
-        header('Authorization', accessToken).
+        cookie("spendilow-access-token", accessToken, { httpOnly: true }).
         json({ id: newAccount.id, account: newAccount.email });
 }
 
@@ -81,7 +81,7 @@ const loginUser = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).
         cookie("spendilow-refresh-token", refreshToken, { httpOnly: true }).
-        header("Authorization", accessToken).
+        cookie("spendilow-access-token", accessToken, { httpOnly: true }).
         json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive })
 }
 
@@ -133,7 +133,7 @@ const refreshUserTokens = async (req: Request, res: Response) => {
 
         const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
         res.
-            header('Authorization', accessToken)
+            cookie('spendilow-access-token', accessToken)
             .json({ id: decodedData.id, email: decodedData.email });
     }
     catch (error) {

@@ -47,7 +47,7 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     res.
         status(http_status_codes_1.StatusCodes.CREATED).
         cookie("spendilow-refresh-token", refreshToken, { httpOnly: true, }).
-        header('Authorization', accessToken).
+        cookie("spendilow-access-token", accessToken, { httpOnly: true }).
         json({ id: newAccount.id, account: newAccount.email });
 });
 // ------ LOGIN USER ------
@@ -69,7 +69,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const accessToken = spendilowUser.JWTGeneration('access');
     res.status(http_status_codes_1.StatusCodes.OK).
         cookie("spendilow-refresh-token", refreshToken, { httpOnly: true }).
-        header("Authorization", accessToken).
+        cookie("spendilow-access-token", accessToken, { httpOnly: true }).
         json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive });
 });
 // ------ MODIFY USER ------
@@ -113,7 +113,7 @@ const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, functi
         const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
         const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
         res.
-            header('Authorization', accessToken)
+            cookie('spendilow-access-token', accessToken)
             .json({ id: decodedData.id, email: decodedData.email });
     }
     catch (error) {

@@ -32,7 +32,7 @@ const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUse
     axios
         .post(baseURL + route + "/new", newSpendilowUser)
         .then((res) => {
-            console.log(res.data);
+            console.log(res.data)
             switch (newSpendilowUser.isMFAActive) {
                 case true:
                     window.location.href = "/auth/mfa";
@@ -53,7 +53,7 @@ const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUse
 
 const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) {
     axios
-        .post(baseURL + route + "/login", userCredentials)
+        .post(baseURL + route + "/login", userCredentials, {withCredentials: true})
         .then((res) => {
             console.log(res.data);
             switch (res.data.toBeVerified) {
@@ -105,9 +105,22 @@ const verifyMFA = async function (otp: string) {
         })
 }
 
+//! DA SPOSTARE
+const dummyAuth = async function (){
+    axios
+    .get(baseURL + "/authenticated-users" + "/dummy", {withCredentials: true})
+    .then((res) => {
+        alert(res.data)
+    })
+    .catch(function (error) {
+        apiErrorResponseHandler(error.response.status);
+    }) 
+}
+
 export {
     signUpNewSpendilowUser,
     loginSpendilowUser,
     activateMFA,
-    verifyMFA
+    verifyMFA,
+    dummyAuth
 }

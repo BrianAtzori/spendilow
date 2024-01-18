@@ -1,11 +1,22 @@
 // ------ REACT ------
-import React from "react";
+import React, { useEffect } from "react";
+
+import { dummyAuth } from "../../services/users/users-external-calls";
 
 /**
  * !MODIFICARE USER LOGGED PER FAR USCIRE L'HEADER
  * */
 
 export default function Dashboard() {
+
+  useEffect( () =>{
+    tryDummy()
+  },[])
+
+  async function tryDummy(){
+    dummyAuth();
+  }
+
   return (
     <div className="hero min-h-screen text-neutral">
       <div className="hero-content text-center">

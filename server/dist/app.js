@@ -31,7 +31,8 @@ const cookieParser = require('cookie-parser');
 //Activation
 app.use(helmet());
 app.use(cors({
-    origin: '*'
+    origin: 'http://localhost:5173',
+    credentials: true
 }));
 app.use(xss());
 app.set("Trust Proxy", 1);
@@ -43,13 +44,16 @@ app.use(cookieParser());
 // ------ MIDDLEWARE SETUP ------
 //Imports
 const errorHandlerMiddleware = require("./middleware/error-handler");
+const authenticationMiddleware = require("./middleware/authentication");
 //Activation
 app.use(errorHandlerMiddleware);
 //------ ROUTES SETUP ------
 const usersRouter = require("./routes/users");
 const utilitiesRouter = require("./routes/utilities");
+const authenticatedUsersRouter = require("./routes/authenticated-users");
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
+app.use("/api/v1/authenticated-users", authenticationMiddleware, authenticatedUsersRouter);
 app.use('/api-docs/', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 //------- Try DB Connection or throw error ------
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
