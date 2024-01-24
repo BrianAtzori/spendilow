@@ -1,20 +1,29 @@
 // ------ REACT ------
 import React, { useEffect } from "react";
 
+//------ REDUX ------
+import { useAppDispatch } from "../../redux/hooks";
+import { changeUserLoggedState } from "../../redux/reducers/auth/userLoggedSlice";
+
+//------ SERVICES ------
 import { dummyAuth } from "../../services/users/users-external-calls";
 
-/**
- * !MODIFICARE USER LOGGED PER FAR USCIRE L'HEADER
- * */
-
 export default function Dashboard() {
+  //------ HOOKS ------
+  useEffect(() => {
+    tryDummy();
+    console.log("Test")
+  }, []);
 
-  useEffect( () =>{
-    tryDummy()
-  },[])
+  const dispatch = useAppDispatch();
 
-  async function tryDummy(){
-    dummyAuth();
+  //------ FUNCTIONS ------
+  async function tryDummy() {
+    const dummyTestAuth = await dummyAuth();
+
+    if (dummyTestAuth) {
+      dispatch(changeUserLoggedState());
+    }
   }
 
   return (

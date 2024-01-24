@@ -7,13 +7,13 @@ import Splash from "./pages/general/Splash";
 import Header from "./components/shared/HeaderComponent";
 import Footer from "./components/shared/FooterComponent";
 import AuthForm from "./pages/auth/AuthForm";
-
-// ------ REDUX ------
-import { useSelector } from "react-redux";
 import Dashboard from "./pages/user/Dashboard";
 
+// ------ REDUX ------
+import { useAppSelector } from "./redux/hooks";
+
 function App() {
-  const userLogged: boolean = useSelector((state) => state.userLogged.value);
+  const userLogged: boolean = useAppSelector(state => state.userLogged.value);
 
   return (
     <>

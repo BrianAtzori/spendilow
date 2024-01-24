@@ -106,15 +106,22 @@ const verifyMFA = async function (otp: string) {
 }
 
 //! DA SPOSTARE
-const dummyAuth = async function () {
-    axios
+const dummyAuth = async (): Promise<boolean> => {
+
+    let result: boolean = false
+
+    result = await axios
         .get(baseURL + "/authenticated-users" + "/dummy", { withCredentials: true })
         .then((res) => {
-            alert(res.data)
+            alert("LOGIN OK: " + res.data)
+            return true
         })
         .catch(function (error) {
             apiErrorResponseHandler(error.response.status);
+            return false
         })
+
+    return result
 }
 
 export {
