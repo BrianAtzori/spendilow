@@ -47,9 +47,9 @@ const registerUser = async (req: Request, res: Response) => {
     }
 
     res.
-        status(StatusCodes.CREATED).
-        cookie("spendilow-refresh-token", refreshToken, { httpOnly: true, }).
-        cookie("spendilow-access-token", accessToken, { httpOnly: true }).
+        status(StatusCodes.CREATED)
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000 })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 }).
         json({ id: newAccount.id, account: newAccount.email });
 }
 
@@ -79,9 +79,9 @@ const loginUser = async (req: Request, res: Response) => {
     const refreshToken = spendilowUser.JWTGeneration('refresh');
     const accessToken = spendilowUser.JWTGeneration('access');
 
-    res.status(StatusCodes.OK).
-        cookie("spendilow-refresh-token", refreshToken, { httpOnly: true }).
-        cookie("spendilow-access-token", accessToken, { httpOnly: true }).
+    res.status(StatusCodes.OK)
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000 })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 }).
         json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive })
 }
 
@@ -132,8 +132,8 @@ const refreshUserTokens = async (req: Request, res: Response) => {
         const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
 
         const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
-        res.
-            cookie('spendilow-access-token', accessToken)
+        res
+            .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 })
             .json({ id: decodedData.id, email: decodedData.email });
     }
     catch (error) {
@@ -143,3 +143,4 @@ const refreshUserTokens = async (req: Request, res: Response) => {
 
 // ------ Exports ------
 module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA, refreshUserTokens }
+

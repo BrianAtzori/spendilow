@@ -45,9 +45,9 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.");
     }
     res.
-        status(http_status_codes_1.StatusCodes.CREATED).
-        cookie("spendilow-refresh-token", refreshToken, { httpOnly: true, }).
-        cookie("spendilow-access-token", accessToken, { httpOnly: true }).
+        status(http_status_codes_1.StatusCodes.CREATED)
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000 })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 }).
         json({ id: newAccount.id, account: newAccount.email });
 });
 // ------ LOGIN USER ------
@@ -67,9 +67,9 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const refreshToken = spendilowUser.JWTGeneration('refresh');
     const accessToken = spendilowUser.JWTGeneration('access');
-    res.status(http_status_codes_1.StatusCodes.OK).
-        cookie("spendilow-refresh-token", refreshToken, { httpOnly: true }).
-        cookie("spendilow-access-token", accessToken, { httpOnly: true }).
+    res.status(http_status_codes_1.StatusCodes.OK)
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000 })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 }).
         json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive });
 });
 // ------ MODIFY USER ------
@@ -112,8 +112,8 @@ const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, functi
     try {
         const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
         const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
-        res.
-            cookie('spendilow-access-token', accessToken)
+        res
+            .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 })
             .json({ id: decodedData.id, email: decodedData.email });
     }
     catch (error) {

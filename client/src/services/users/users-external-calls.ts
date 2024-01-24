@@ -30,7 +30,7 @@ interface spendilowUserLogin {
 // ------ CALLS ------
 const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUser) {
     axios
-        .post(baseURL + route + "/new", newSpendilowUser)
+        .post(baseURL + route + "/new", newSpendilowUser, { withCredentials: true })
         .then((res) => {
             console.log(res.data)
             switch (newSpendilowUser.isMFAActive) {
@@ -53,7 +53,7 @@ const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUse
 
 const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) {
     axios
-        .post(baseURL + route + "/login", userCredentials, {withCredentials: true})
+        .post(baseURL + route + "/login", userCredentials, { withCredentials: true })
         .then((res) => {
             console.log(res.data);
             switch (res.data.toBeVerified) {
@@ -106,15 +106,15 @@ const verifyMFA = async function (otp: string) {
 }
 
 //! DA SPOSTARE
-const dummyAuth = async function (){
+const dummyAuth = async function () {
     axios
-    .get(baseURL + "/authenticated-users" + "/dummy", {withCredentials: true})
-    .then((res) => {
-        alert(res.data)
-    })
-    .catch(function (error) {
-        apiErrorResponseHandler(error.response.status);
-    }) 
+        .get(baseURL + "/authenticated-users" + "/dummy", { withCredentials: true })
+        .then((res) => {
+            alert(res.data)
+        })
+        .catch(function (error) {
+            apiErrorResponseHandler(error.response.status);
+        })
 }
 
 export {
