@@ -2,7 +2,7 @@
 require("dotenv").config();
 
 // ------ EXPRESS SETUP ------
-import { Express, Request, Response, RequestHandler, Router } from 'express' //TS Import
+import { Express, Router } from 'express' //TS Import
 const express = require('express');
 const app: Express = express();
 require("express-async-errors");
@@ -40,11 +40,8 @@ app.use(cookieParser());
 
 // ------ MIDDLEWARE SETUP ------
 //Imports
-const errorHandlerMiddleware: RequestHandler = require("./middleware/error-handler");
 const authenticationMiddleware = require("./middleware/authentication");
-
-//Activation
-app.use(errorHandlerMiddleware);
+const errorHandlerMiddleware = require("./middleware/error-handler");
 
 //------ ROUTES SETUP ------
 const usersRouter: Router = require("./routes/users");
@@ -55,6 +52,9 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
 app.use("/api/v1/authenticated-users", authenticationMiddleware, authenticatedUsersRouter)
 app.use('/api-docs/', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
+//Activation for Error Middleware
+app.use(errorHandlerMiddleware);
 
 
 //------- Try DB Connection or throw error ------

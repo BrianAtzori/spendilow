@@ -43,10 +43,8 @@ app.use(rateLimiter({
 app.use(cookieParser());
 // ------ MIDDLEWARE SETUP ------
 //Imports
-const errorHandlerMiddleware = require("./middleware/error-handler");
 const authenticationMiddleware = require("./middleware/authentication");
-//Activation
-app.use(errorHandlerMiddleware);
+const errorHandlerMiddleware = require("./middleware/error-handler");
 //------ ROUTES SETUP ------
 const usersRouter = require("./routes/users");
 const utilitiesRouter = require("./routes/utilities");
@@ -55,6 +53,8 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
 app.use("/api/v1/authenticated-users", authenticationMiddleware, authenticatedUsersRouter);
 app.use('/api-docs/', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+//Activation for Error Middleware
+app.use(errorHandlerMiddleware);
 //------- Try DB Connection or throw error ------
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     let connection;

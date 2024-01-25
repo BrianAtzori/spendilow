@@ -34,7 +34,6 @@ export default function LoginComponent() {
 
   async function verifyInputThenTriggerLogin(event: SyntheticEvent) {
     event.preventDefault();
-    console.log("qui");
     setLoginError({
       state: false,
       message: "",
@@ -87,7 +86,7 @@ export default function LoginComponent() {
                 placeholder="iltuoindirizzo@peraccedere.com"
                 className="input input-bordered"
                 onChange={handleChange}
-                required
+                
               />
             </div>
             <div className="form-control">
@@ -101,7 +100,7 @@ export default function LoginComponent() {
                 placeholder="La tua password"
                 className="input input-bordered"
                 onChange={handleChange}
-                required
+                
               />
             </div>
             <div className="form-control">

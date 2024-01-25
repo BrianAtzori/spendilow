@@ -31,8 +31,8 @@ interface spendilowUserLogin {
 const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUser) {
     axios
         .post(baseURL + route + "/new", newSpendilowUser, { withCredentials: true })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .then((res) => {
-            console.log(res.data)
             switch (newSpendilowUser.isMFAActive) {
                 case true:
                     window.location.href = "/auth/mfa";
@@ -46,8 +46,8 @@ const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUse
             }
 
         })
-        .catch(function (error) {
-            apiErrorResponseHandler(error.response.status);
+        .catch((error) => {
+            apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
         })
 }
 
@@ -68,8 +68,8 @@ const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) 
                     break;
             }
         })
-        .catch(function (error) {
-            apiErrorResponseHandler(error.response.status);
+        .catch((error) => {
+            apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
         })
 }
 
@@ -79,8 +79,8 @@ const activateMFA = async function () {
         .then((res) => {
             return res.data
         })
-        .catch(function (error) {
-            apiErrorResponseHandler(error.response.status);
+        .catch((error) => {
+            apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
         })
 }
 
@@ -100,12 +100,12 @@ const verifyMFA = async function (otp: string) {
                     break;
             }
         })
-        .catch(function (error) {
-            apiErrorResponseHandler(error.response.status);
+        .catch((error) => {
+            apiErrorResponseHandler(error.response.status, "Codice errato, riprova ad inserire la password temporanea o contatta il supporto!");
         })
 }
 
-//! DA SPOSTARE
+//TODO: Spostare/Fixare/Rivedere
 const dummyAuth = async (): Promise<boolean> => {
 
     let result: boolean = false
@@ -113,11 +113,12 @@ const dummyAuth = async (): Promise<boolean> => {
     result = await axios
         .get(baseURL + "/authenticated-users" + "/dummy", { withCredentials: true })
         .then((res) => {
-            alert("LOGIN OK: " + res.data)
+            console.log("LOGIN OK: " + res.data)
             return true
         })
-        .catch(function (error) {
-            apiErrorResponseHandler(error.response.status);
+        .catch((error) => {
+            apiErrorResponseHandler(error.response.status, "Non siamo riusciti a recuperare una sessione di accesso, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo.");
+            window.location.href = "/";
             return false
         })
 

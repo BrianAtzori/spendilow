@@ -1,5 +1,6 @@
-const apiErrorResponseHandler = function (errorCode: number) {
-    console.log(errorCode)
+const apiErrorResponseHandler = function (errorCode: number, problem: string) {
+    console.log(errorCode);
+    alert(problem);
 }
 
 export {

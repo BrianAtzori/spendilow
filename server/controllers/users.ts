@@ -40,8 +40,6 @@ const registerUser = async (req: Request, res: Response) => {
 
     const createdUser = await dbManager.databaseInteraction('CREATE_USER', newAccount);
 
-    console.log(createdUser)
-
     if (!createdUser) {
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.")
     }

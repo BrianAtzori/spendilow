@@ -12,7 +12,6 @@ export default function Dashboard() {
   //------ HOOKS ------
   useEffect(() => {
     tryDummy();
-    console.log("Test")
   }, []);
 
   const dispatch = useAppDispatch();
