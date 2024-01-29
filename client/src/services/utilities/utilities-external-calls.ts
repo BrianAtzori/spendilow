@@ -4,9 +4,6 @@ import axios from "axios";
 // ------ ASSETS ------
 import { baseURL } from "..";
 
-// ------ SERVICES ------
-// import { apiErrorResponseHandler } from "../general/apiErrorResponseHandler";
-
 const route: string = "/utilities"
 
 const checkServerAlive = async function (): Promise<boolean> {

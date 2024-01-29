@@ -52,9 +52,16 @@ export default function LoginComponent() {
 
   // ------ FUNCTIONS ------
   async function login() {
-    await loginSpendilowUser(userCredentials).then(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const externalCallResult: any = await loginSpendilowUser(
+      userCredentials
+    ).finally(() => {
       setIsLoading(false);
     });
+
+    externalCallResult.startsWith("/")
+      ? (window.location.href = externalCallResult)
+      : setLoginError({ state: true, message: externalCallResult });
   }
 
   return (
@@ -86,7 +93,6 @@ export default function LoginComponent() {
                 placeholder="iltuoindirizzo@peraccedere.com"
                 className="input input-bordered"
                 onChange={handleChange}
-                
               />
             </div>
             <div className="form-control">
@@ -100,7 +106,6 @@ export default function LoginComponent() {
                 placeholder="La tua password"
                 className="input input-bordered"
                 onChange={handleChange}
-                
               />
             </div>
             <div className="form-control">

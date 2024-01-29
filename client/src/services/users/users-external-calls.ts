@@ -28,81 +28,95 @@ interface spendilowUserLogin {
 }
 
 // ------ CALLS ------
-const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUser) {
-    axios
+const signUpNewSpendilowUser = async function (newSpendilowUser: newSpendilowUser): Promise<string> {
+
+    let result: string = "";
+
+    result = await axios
         .post(baseURL + route + "/new", newSpendilowUser, { withCredentials: true })
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .then((res) => {
             switch (newSpendilowUser.isMFAActive) {
                 case true:
-                    window.location.href = "/auth/mfa";
+                    return "/auth/mfa";
                     break;
                 case false:
-                    window.location.href = "/auth/login";
+                    return "/auth/login";
                     break;
                 default:
-                    window.location.href = "/auth/login";
+                    return "/auth/login";
                     break;
             }
-
         })
         .catch((error) => {
-            apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
+            return apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
         })
+
+    return result
 }
 
-const loginSpendilowUser = async function (userCredentials: spendilowUserLogin) {
-    axios
+const loginSpendilowUser = async function (userCredentials: spendilowUserLogin): Promise<string> {
+
+    let result: string = "";
+
+    result = await axios
         .post(baseURL + route + "/login", userCredentials, { withCredentials: true })
         .then((res) => {
             console.log(res.data);
             switch (res.data.toBeVerified) {
                 case 1:
-                    window.location.href = "/auth/mfa-verification";
+                    return "/auth/mfa-verification";
                     break;
                 case 0:
-                    window.location.href = "/user/dashboard";
+                    return "/user/dashboard";
                     break;
                 default:
-                    window.location.href = "/user/dashboard";
+                    return "/user/dashboard";
                     break;
             }
         })
         .catch((error) => {
-            apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
+            return apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
         })
+
+    return result
 }
 
-const activateMFA = async function () {
-    return axios
+const activateMFA = async function (): Promise<string> {
+    let result: string = "";
+
+    result = await axios
         .get(baseURL + route + "/mfa-activation")
         .then((res) => {
             return res.data
         })
         .catch((error) => {
-            apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
+            return apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
         })
+
+    return result
 }
 
-const verifyMFA = async function (otp: string) {
-    axios
+const verifyMFA = async function (otp: string): Promise<string> {
+    let result: string = "";
+
+    result = await axios
         .post(baseURL + route + "/mfa-verification/", { otp })
         .then((res) => {
             switch (res.data.verified) {
                 case true:
-                    window.location.href = "/user/dashboard"
-                    break;
-                case false:
-                    alert("Codice errato, riprova ad inserire la password temporanea o contatta il supporto!")
+                    return "/user/dashboard"
                     break;
                 default:
-                    window.location.href = "/";
+                    return window.location.href = "/";
                     break;
             }
         })
         .catch((error) => {
-            apiErrorResponseHandler(error.response.status, "Codice errato, riprova ad inserire la password temporanea o contatta il supporto!");
+            return apiErrorResponseHandler(error.response.status, "Codice errato, riprova ad inserire la password temporanea o contatta il supporto!");
         })
+
+    return result
 }
 
 //TODO: Spostare/Fixare/Rivedere

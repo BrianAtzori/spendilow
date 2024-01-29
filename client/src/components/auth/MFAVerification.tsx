@@ -46,7 +46,16 @@ export default function MFAVerification() {
 
   // ------ FUNCTIONS ------
   async function MFAChallengeVerification() {
-    await verifyMFA(userChallenge);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const externalCallResult: any = await verifyMFA(userChallenge).finally(
+      () => {
+        setIsLoading(false);
+      }
+    );
+
+    externalCallResult.startsWith("/")
+      ? (window.location.href = externalCallResult)
+      : alert(externalCallResult);
   }
 
   return (

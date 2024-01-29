@@ -115,9 +115,16 @@ export default function SignUpComponent() {
 
   // ------ FUNCTIONS ------
   async function signUp() {
-    await signUpNewSpendilowUser(newSpendilowUser).then(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const externalCallResult: any = await signUpNewSpendilowUser(
+      newSpendilowUser
+    ).finally(() => {
       setIsLoading(false);
     });
+
+    externalCallResult.startsWith("/")
+      ? (window.location.href = externalCallResult)
+      : setSignUpError({ state: true, message: externalCallResult });
   }
 
   return (
@@ -234,7 +241,8 @@ export default function SignUpComponent() {
             <div className="form-control">
               <label className="label cursor-pointer">
                 <span className="label-text">
-                  Attiva autenticazione a due fattori <br></br>(Verrai redirettə dopo la registrazione)
+                  Attiva autenticazione a due fattori <br></br>(Verrai redirettə
+                  dopo la registrazione)
                 </span>
                 <input
                   type="checkbox"

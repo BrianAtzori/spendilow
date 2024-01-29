@@ -1,6 +1,5 @@
-const apiErrorResponseHandler = function (errorCode: number, problem: string) {
-    console.log(errorCode);
-    alert(problem);
+const apiErrorResponseHandler = (errorCode: number, problem: string): string => {
+    return (`Non siamo riusciti a completare l'operazione, errore #${errorCode.toString()} - ${problem}`)
 }
 
 export {
