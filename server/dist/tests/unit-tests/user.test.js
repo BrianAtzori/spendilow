@@ -14,7 +14,6 @@ const crypto_1 = __importDefault(require("crypto"));
 // ------ ENV SETUP ------
 let baseURL = "http://localhost:5132/";
 let spendilowTestingUser;
-let spendilowRefreshToken;
 describe('Spendilow API 💰', function () {
     before(function () {
         console.log("Inizio dei test 🧪");
@@ -23,6 +22,7 @@ describe('Spendilow API 💰', function () {
             id,
             "email": "testing-user@spendilow-testing.test",
             "password": "Sp3ndTest87!",
+            "isMFAActive": false,
             "savings": 0.00,
             "salary": 0.00,
             "profileImage": "https://i.pravatar.cc/150",
@@ -61,7 +61,6 @@ describe('Spendilow API 💰', function () {
             res.should.have.status(201);
             res.should.be.json;
             should.exist(res.header['set-cookie']);
-            should.exist(res.header.authorization);
             res.body.should.have.property('id');
             res.body.should.have.property('account');
             should.exist(res.body.id);
@@ -81,23 +80,6 @@ describe('Spendilow API 💰', function () {
             res.should.have.status(200);
             res.should.be.json;
             should.exist(res.header['set-cookie']);
-            spendilowRefreshToken = res.header['set-cookie'][0].split(';')[0];
-            should.exist(res.header.authorization);
-            res.body.should.have.property('id');
-            res.body.should.have.property('email');
-            should.exist(res.body.id);
-            should.exist(res.body.email);
-            done();
-        });
-    });
-    // ------ REFRESH USER TOKENS ------
-    it('should refresh user keys on /users/refresh-auth/ GET', function (done) {
-        chaiTests.request(baseURL)
-            .get('api/v1/users/refresh-auth/')
-            .set('Cookie', spendilowRefreshToken)
-            .end(function (err, res) {
-            res.should.have.status(200);
-            should.exist(res.header.authorization);
             res.body.should.have.property('id');
             res.body.should.have.property('email');
             should.exist(res.body.id);
