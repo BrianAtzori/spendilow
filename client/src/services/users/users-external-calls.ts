@@ -131,7 +131,7 @@ const dummyAuth = async (): Promise<boolean> => {
             return true
         })
         .catch((error) => {
-            apiErrorResponseHandler(error.response.status, "Non siamo riusciti a recuperare una sessione di accesso, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo.");
+            alert(apiErrorResponseHandler(error.response.status, "Non siamo riusciti a recuperare una sessione di accesso, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo."));
             window.location.href = "/";
             return false
         })
