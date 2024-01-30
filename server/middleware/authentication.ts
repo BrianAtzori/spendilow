@@ -27,8 +27,8 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
             const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE })
 
             res
-                .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000 })
-                .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 })
+                .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, domain: "spendilow.netlify.app" })
+                .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, domain: "spendilow.netlify.app" })
                 .send(decodedData.user);
         } catch (error) {
             return res.status(StatusCodes.UNAUTHORIZED).send('Accesso negato. Non è stato fornito alcun token, riprovare ad effettuare il login o contattare il supporto.');
