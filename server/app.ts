@@ -29,7 +29,7 @@ app.use(helmet());
 app.use(cors({
     // origin: 'http://localhost:5173',
     // origin: '*',
-    origin: 'https://spendilow.netlify.app/',
+    origin: 'https://spendilow.netlify.app',
     credentials: true
 }));
 app.use(xss());
