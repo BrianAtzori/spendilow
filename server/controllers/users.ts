@@ -80,7 +80,7 @@ const loginUser = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK)
         .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, domain: "spendilow.netlify.app" })
         .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, domain: "spendilow.netlify.app" }).
-        json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive })
+        json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive  })
 }
 
 // ------ MODIFY USER ------
