@@ -78,8 +78,8 @@ const loginUser = async (req: Request, res: Response) => {
     const accessToken = spendilowUser.JWTGeneration('access');
 
     res.status(StatusCodes.OK)
-        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, domain: "spendilow.netlify.app", sameSite:'none' })
-        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, domain: "spendilow.netlify.app",sameSite:'none' }).
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, domain: "spendilow.netlify.app", sameSite:'none', secure:true })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, domain: "spendilow.netlify.app",sameSite:'none', secure:true }).
         json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive  })
 }
 
