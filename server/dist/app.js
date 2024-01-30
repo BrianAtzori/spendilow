@@ -31,7 +31,8 @@ const cookieParser = require('cookie-parser');
 //Activation
 app.use(helmet());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    // origin: 'http://localhost:5173',
+    origin: '*',
     credentials: true
 }));
 app.use(xss());
