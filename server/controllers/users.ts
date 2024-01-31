@@ -46,8 +46,8 @@ const registerUser = async (req: Request, res: Response) => {
 
     res.
         status(StatusCodes.CREATED)
-        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, domain: "https://spendilow.netlify.app/" })
-        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, domain: "https://spendilow.netlify.app/" }).
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000,  }).
         json({ id: newAccount.id, account: newAccount.email });
 }
 
@@ -78,8 +78,8 @@ const loginUser = async (req: Request, res: Response) => {
     const accessToken = spendilowUser.JWTGeneration('access');
 
     res.status(StatusCodes.OK)
-        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, domain: "render.com", sameSite:'none', secure:true })
-        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, domain: "render.com",sameSite:'none', secure:true }).
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000,  }).
         json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive  })
 }
 
