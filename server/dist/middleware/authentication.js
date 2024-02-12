@@ -23,8 +23,8 @@ const auth = (req, res, next) => {
             const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
             const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
             res
-                .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000 })
-                .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 })
+                .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, sameSite: 'none', secure: true })
+                .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, sameSite: 'none', secure: true })
                 .send(decodedData.user);
         }
         catch (error) {

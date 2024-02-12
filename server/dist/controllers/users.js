@@ -45,8 +45,8 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
     res.
         status(http_status_codes_1.StatusCodes.CREATED)
-        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000 })
-        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 }).
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, sameSite: 'none', secure: true })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, sameSite: 'none', secure: true }).
         json({ id: newAccount.id, account: newAccount.email });
 });
 // ------ LOGIN USER ------
@@ -67,8 +67,8 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const refreshToken = spendilowUser.JWTGeneration('refresh');
     const accessToken = spendilowUser.JWTGeneration('access');
     res.status(http_status_codes_1.StatusCodes.OK)
-        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000 })
-        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 }).
+        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, sameSite: 'none', secure: true })
+        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, sameSite: 'none', secure: true }).
         json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive });
 });
 // ------ MODIFY USER ------
