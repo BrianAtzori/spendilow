@@ -5,7 +5,7 @@ const BadRequestError = require("../errors");
 const dbConnectionPool = require("./db-connector");
 
 // ------ DB ACTIONS MANAGER ------
-const databaseInteraction = async (operation: string, queryData: any) => {
+const databaseInteraction = async (operation: string, queryData: any, id: any) => {
 
     let connection;
     let queryResult;
@@ -21,6 +21,14 @@ const databaseInteraction = async (operation: string, queryData: any) => {
                 }
                 case 'GET_USER': {
                     queryResult = await readSplUser(queryData, connection);
+                    break;
+                }
+                case 'GET_USER_BY_ID': {
+                    queryResult = await readSplUserByID(queryData, connection);
+                    break;
+                }
+                case 'UPDATE_USER': {
+                    queryResult = await updateUserByID(queryData, connection, id);
                     break;
                 }
                 case 'DELETE_USER': {
@@ -53,17 +61,13 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-    let result;
+    let rows;
 
     let { id, email, password, isMFAActive, savings, salary, profileImage, workfield, username } = spendilowUser
 
-    try {
-        result = await connection.query(query, [id, email, password, isMFAActive, savings, salary, profileImage, workfield, username]);
-    }
-    catch (error: any) {
-        throw new SqlError("Errore durante il salvataggio dei dati dell'utente, ricontrolla i dati inseriti oppure contatta il supporto utente.");
-    }
-    return result;
+    rows = await connection.query(query, [id, email, password, isMFAActive, savings, salary, profileImage, workfield, username]);
+
+    return rows;
 }
 
 // ------ RETRIEVE SPENDILOW USER ------
@@ -76,6 +80,45 @@ const readSplUser = async (spendilowUser: any, connection: any) => {
     let rows = await connection.query(query, [email]);
 
     return rows[0]
+}
+
+// ------ RETRIEVE SPENDILOW USER BY ID ------
+const readSplUserByID = async (spendilowUserID: any, connection: any) => {
+
+    const query = `SELECT * FROM \`splusers\` WHERE \`id\`=? LIMIT 1`
+
+    let rows = await connection.query(query, [spendilowUserID])
+
+    return rows[0]
+}
+
+// ------ UPDATE SPENDILOW USER ------
+const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
+
+    let rows
+
+    const query = `
+    UPDATE \`splusers\` 
+    SET 
+      email = ?,
+      savings = ?,
+      salary = ?,
+      profileimage = ?,
+      workfield = ?,
+      username = ?
+    WHERE id = ?
+  `;
+
+    let { email, savings, salary, profileImage, workfield, username } = spendilowUser
+
+    try {
+        rows = await connection.query(query, [email, savings, salary, profileImage, workfield, username, id])
+    }
+    catch (error) {
+        console.log(error)
+    }
+
+    return rows
 }
 
 // ------ DELETE SPENDILOW USER ------

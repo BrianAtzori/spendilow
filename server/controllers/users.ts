@@ -85,7 +85,25 @@ const loginUser = async (req: Request, res: Response) => {
 
 // ------ MODIFY USER ------
 const modifyUser = async (req: Request, res: Response) => {
-    ("Mod User")
+
+    if (!req.body) {
+        throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.")
+    }
+
+    if (!req.params.id) {
+        throw new BadRequestError("L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente.")
+    }
+
+    const existingSpendilowUser = await dbManager.databaseInteraction('GET_USER_BY_ID', req.params.id);
+
+    if (!existingSpendilowUser) {
+        throw new BadRequestError("L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.")
+    }
+
+    const modifiedUser = await dbManager.databaseInteraction('UPDATE_USER', req.body, existingSpendilowUser.id)
+
+    console.log(modifiedUser)
+
     res.json("OK");
 }
 

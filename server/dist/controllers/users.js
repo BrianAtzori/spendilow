@@ -73,7 +73,18 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 // ------ MODIFY USER ------
 const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    ("Mod User");
+    if (!req.body) {
+        throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.");
+    }
+    if (!req.params.id) {
+        throw new BadRequestError("L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente.");
+    }
+    const existingSpendilowUser = yield dbManager.databaseInteraction('GET_USER_BY_ID', req.params.id);
+    if (!existingSpendilowUser) {
+        throw new BadRequestError("L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
+    }
+    const modifiedUser = yield dbManager.databaseInteraction('UPDATE_USER', req.body, existingSpendilowUser.id);
+    console.log(modifiedUser);
     res.json("OK");
 });
 // ------ DELETE USER ------
