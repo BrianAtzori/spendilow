@@ -20,23 +20,23 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
         connection = yield dbConnectionPool.getConnection();
         if (connection) {
             switch (operation) {
-                case 'CREATE_USER': {
+                case "CREATE_USER": {
                     queryResult = yield createSplUser(queryData, connection);
                     break;
                 }
-                case 'GET_USER': {
+                case "GET_USER": {
                     queryResult = yield readSplUser(queryData, connection);
                     break;
                 }
-                case 'GET_USER_BY_ID': {
+                case "GET_USER_BY_ID": {
                     queryResult = yield readSplUserByID(queryData, connection);
                     break;
                 }
-                case 'UPDATE_USER': {
+                case "UPDATE_USER": {
                     queryResult = yield updateUserByID(queryData, connection, id);
                     break;
                 }
-                case 'DELETE_USER': {
+                case "DELETE_USER": {
                     queryResult = yield deleteSplUser(queryData, connection);
                     break;
                 }
@@ -63,8 +63,23 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
     let rows;
-    let { id, email, password, isMFAActive, savings, salary, profileImage, workfield, username } = spendilowUser;
-    rows = yield connection.query(query, [id, email, password, isMFAActive, savings, salary, profileImage, workfield, username]);
+    let { id, email, password, isMFAActive, savings, salary, profileImage, workfield, username, } = spendilowUser;
+    try {
+        rows = yield connection.query(query, [
+            id,
+            email,
+            password,
+            isMFAActive,
+            savings,
+            salary,
+            profileImage,
+            workfield,
+            username,
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
     return rows;
 });
 // ------ RETRIEVE SPENDILOW USER ------
@@ -96,7 +111,15 @@ const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void
   `;
     let { email, savings, salary, profileImage, workfield, username } = spendilowUser;
     try {
-        rows = yield connection.query(query, [email, savings, salary, profileImage, workfield, username, id]);
+        rows = yield connection.query(query, [
+            email,
+            savings,
+            salary,
+            profileImage,
+            workfield,
+            username,
+            id,
+        ]);
     }
     catch (error) {
         console.log(error);
@@ -107,10 +130,10 @@ const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void
 const deleteSplUser = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`;
     let result = yield connection.query(query, [spendilowUserId]);
-    ("RESULT: " + result);
+    "RESULT: " + result;
     return result;
 });
 // ------ Exports ------
 module.exports = {
-    databaseInteraction
+    databaseInteraction,
 };
