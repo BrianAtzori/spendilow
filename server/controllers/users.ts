@@ -117,68 +117,6 @@ const loginUser = async (req: Request, res: Response) => {
     });
 };
 
-// ------ MODIFY USER ------
-const modifyUser = async (req: Request, res: Response) => {
-  if (!req.body) {
-    throw new BadRequestError(
-      "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
-    );
-  }
-
-  if (!req.params.id) {
-    throw new BadRequestError(
-      "L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente."
-    );
-  }
-
-  const existingSpendilowUser = await dbManager.databaseInteraction(
-    "GET_USER_BY_ID",
-    req.params.id
-  );
-
-  if (!existingSpendilowUser) {
-    throw new BadRequestError(
-      "L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
-    );
-  }
-
-  const modifiedUser = await dbManager.databaseInteraction(
-    "UPDATE_USER",
-    req.body,
-    existingSpendilowUser.id
-  );
-
-  res.status(StatusCodes.NO_CONTENT).json();
-};
-
-// ------ DELETE USER ------
-const deleteUser = async (req: Request, res: Response) => {
-  const userId = req.params.id;
-
-  if (!userId) {
-    throw new BadRequestError(
-      "L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
-    );
-  }
-
-  const existingSpendilowUser = await dbManager.databaseInteraction(
-    "GET_USER_BY_ID",
-    req.params.id
-  );
-
-  if (!existingSpendilowUser) {
-    throw new BadRequestError(
-      "L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
-    );
-  }
-
-  dbManager.databaseInteraction("DELETE_USER", userId);
-
-  res
-    .status(StatusCodes.OK)
-    .json({ message: "Utente eliminato correttamente!" });
-};
-
 // ------ ACTIVATE MFA FOR USER ------
 const activateMFA = async (req: Request, res: Response) => {
   let qrForUser: string = await qrCodeGenerator();
@@ -233,8 +171,6 @@ const refreshUserTokens = async (req: Request, res: Response) => {
 module.exports = {
   registerUser,
   loginUser,
-  modifyUser,
-  deleteUser,
   activateMFA,
   verifyMFA,
   refreshUserTokens,

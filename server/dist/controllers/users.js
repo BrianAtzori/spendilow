@@ -88,36 +88,6 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         toBeVerified: spendilowUser.isMFAActive,
     });
 });
-// ------ MODIFY USER ------
-const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body) {
-        throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.");
-    }
-    if (!req.params.id) {
-        throw new BadRequestError("L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente.");
-    }
-    const existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.params.id);
-    if (!existingSpendilowUser) {
-        throw new BadRequestError("L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
-    }
-    const modifiedUser = yield dbManager.databaseInteraction("UPDATE_USER", req.body, existingSpendilowUser.id);
-    res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json();
-});
-// ------ DELETE USER ------
-const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.params.id;
-    if (!userId) {
-        throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
-    }
-    const existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.params.id);
-    if (!existingSpendilowUser) {
-        throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
-    }
-    dbManager.databaseInteraction("DELETE_USER", userId);
-    res
-        .status(http_status_codes_1.StatusCodes.OK)
-        .json({ message: "Utente eliminato correttamente!" });
-});
 // ------ ACTIVATE MFA FOR USER ------
 const activateMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let qrForUser = yield qrCodeGenerator();
@@ -162,8 +132,6 @@ const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, functi
 module.exports = {
     registerUser,
     loginUser,
-    modifyUser,
-    deleteUser,
     activateMFA,
     verifyMFA,
     refreshUserTokens,

@@ -99,10 +99,11 @@ describe("Spendilow API 💰", function () {
   });
 
   // ------ MODIFY USER ------
-  it("should modify an user on /user/mod/:id PATCH", function (done) {
+  it("should modify an user on /authenticated-users/mod/:id PATCH", function (done) {
     chaiTests
       .request(baseURL)
-      .patch(`api/v1/users/mod/${spendilowTestingUser.id}`)
+      .patch(`api/v1/authenticated-users/mod/${spendilowTestingUser.id}`)
+      .set("Cookie", cookie)
       .send({
         email: "testing-user-edited@spendilow-testing.test",
         isMFAActive: false,
@@ -159,10 +160,11 @@ describe("Spendilow API 💰", function () {
   });
 
   // ------ DELETE USER ------
-  it("should delete an user on /users/del/:id", function (done) {
+  it("should delete an user on /authenticated-users/del/:id", function (done) {
     chaiTests
       .request(baseURL)
-      .delete(`api/v1/users/del/${spendilowTestingUser.id}`)
+      .delete(`api/v1/authenticated-users/del/${spendilowTestingUser.id}`)
+      .set("Cookie", cookie)
       .end(function (err: Error, res: any) {
         res.should.have.status(200);
         done();
