@@ -14,6 +14,7 @@ const crypto_1 = __importDefault(require("crypto"));
 // ------ ENV SETUP ------
 let baseURL = "http://localhost:5132/";
 let spendilowTestingUser;
+let cookie;
 describe("Spendilow API 💰", function () {
     before(function () {
         console.log("Inizio dei test 🧪");
@@ -63,6 +64,8 @@ describe("Spendilow API 💰", function () {
             res.should.have.status(201);
             res.should.be.json;
             should.exist(res.header["set-cookie"]);
+            cookie =
+                res.header["set-cookie"][0] + ";" + res.header["set-cookie"][1];
             res.body.should.have.property("id");
             res.body.should.have.property("account");
             should.exist(res.body.id);
@@ -106,6 +109,36 @@ describe("Spendilow API 💰", function () {
         })
             .end(function (err, res) {
             res.should.have.status(204);
+            done();
+        });
+    });
+    // ------ GET USER PROFILE ------
+    it("should get user profile on /authenticated-users/get-profile/:id", function (done) {
+        chaiTests
+            .request(baseURL)
+            .get(`api/v1/authenticated-users/get-profile/${spendilowTestingUser.id}`)
+            .set("Cookie", cookie)
+            .end(function (err, res) {
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.should.have.property("id");
+            should.exist(res.body.id);
+            res.body.should.have.property("email");
+            should.exist(res.body.email);
+            res.body.should.have.property("isMFAActive");
+            should.exist(res.body.isMFAActive);
+            res.body.should.have.property("isMFAActive");
+            should.exist(res.body.isMFAActive);
+            res.body.should.have.property("savings");
+            should.exist(res.body.savings);
+            res.body.should.have.property("salary");
+            should.exist(res.body.salary);
+            res.body.should.have.property("profileimage");
+            should.exist(res.body.profileimage);
+            res.body.should.have.property("workfield");
+            should.exist(res.body.workfield);
+            res.body.should.have.property("username");
+            should.exist(res.body.username);
             done();
         });
     });

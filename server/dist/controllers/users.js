@@ -107,15 +107,16 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.id;
     if (!userId) {
-        thorw;
-        new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
+        throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
     const existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.params.id);
     if (!existingSpendilowUser) {
         throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
     dbManager.databaseInteraction("DELETE_USER", userId);
-    res.status(http_status_codes_1.StatusCodes.OK).json({ message: "Utente eliminato correttamente!" });
+    res
+        .status(http_status_codes_1.StatusCodes.OK)
+        .json({ message: "Utente eliminato correttamente!" });
 });
 // ------ ACTIVATE MFA FOR USER ------
 const activateMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
