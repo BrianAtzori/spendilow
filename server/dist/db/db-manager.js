@@ -130,7 +130,6 @@ const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void
 const deleteSplUser = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`;
     let result = yield connection.query(query, [spendilowUserId]);
-    "RESULT: " + result;
     return result;
 });
 // ------ Exports ------

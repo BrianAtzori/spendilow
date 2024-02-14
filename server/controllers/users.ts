@@ -154,8 +154,25 @@ const modifyUser = async (req: Request, res: Response) => {
 // ------ DELETE USER ------
 const deleteUser = async (req: Request, res: Response) => {
   const userId = req.params.id;
+
+  if(!userId){
+    thorw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.")
+  }
+
+  const existingSpendilowUser = await dbManager.databaseInteraction(
+    "GET_USER_BY_ID",
+    req.params.id
+  );
+
+    if (!existingSpendilowUser) {
+    throw new BadRequestError(
+      "L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
+    );
+  }
+
   dbManager.databaseInteraction("DELETE_USER", userId);
-  res.json("OK");
+
+  res.status(StatusCodes.OK).json({message: "Utente eliminato correttamente!"});
 };
 
 // ------ ACTIVATE MFA FOR USER ------
