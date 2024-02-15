@@ -16,7 +16,7 @@ interface spendilowUserProfile {
   isMFAActive: boolean;
   savings: number;
   salary: number;
-  profileImage: string;
+  profileimage: string;
   workfield: string;
   username: string;
 }
@@ -28,7 +28,7 @@ const getSpendilowUserProfile = async (): Promise<spendilowUserProfile> => {
     isMFAActive: false,
     savings: 0,
     salary: 0,
-    profileImage: "",
+    profileimage: "",
     workfield: "",
     username: "",
   };
@@ -46,8 +46,7 @@ const getSpendilowUserProfile = async (): Promise<spendilowUserProfile> => {
         "Non siamo riusciti a recuperare una sessione di accesso per caricare il tuo profilo, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo."
       );
     });
-
-  console.log(result);
+     
   return result;
 };
 

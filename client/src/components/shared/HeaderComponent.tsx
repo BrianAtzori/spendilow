@@ -5,7 +5,14 @@ import React from "react";
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 import { TiThMenu } from "react-icons/ti";
 
+// ------ REDUX ------
+import { useAppSelector } from "../../redux/hooks";
+
 export default function HeaderComponent() {
+  const userProfilePic: string = useAppSelector(
+    (state) => state.userProfile.value.profileimage
+  );
+
   return (
     <>
       <div className="drawer font-heading text-neutral bg-base-100 z-10">
@@ -33,6 +40,11 @@ export default function HeaderComponent() {
                   <a>Navbar Item 2</a>
                 </li>
               </ul>
+            </div>
+            <div className="avatar">
+              <div className="w-16 m-2 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src={userProfilePic} />
+              </div>
             </div>
           </div>
           {/* Page content here */}

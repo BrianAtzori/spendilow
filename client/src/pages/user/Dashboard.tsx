@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 //------ REDUX ------
 import { useAppDispatch } from "../../redux/hooks";
 import { changeUserLoggedState } from "../../redux/reducers/auth/userLoggedSlice";
+import { updateUserProfile } from "../../redux/reducers/user/userProfileSlice";
 
 //------ SERVICES ------
 import { getSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
@@ -11,17 +12,18 @@ import { getSpendilowUserProfile } from "../../services/authenticated-users/auth
 export default function Dashboard() {
   //------ HOOKS ------
   useEffect(() => {
-    tryDummy();
+    loadDashboard();
   }, []);
 
   const dispatch = useAppDispatch();
 
   //------ FUNCTIONS ------
-  async function tryDummy() {
-    const dummyTestAuth = await getSpendilowUserProfile();
+  async function loadDashboard() {
+    const spendilowUserProfile = await getSpendilowUserProfile();
 
-    if (dummyTestAuth) {
+    if (spendilowUserProfile) {
       dispatch(changeUserLoggedState());
+      dispatch(updateUserProfile(spendilowUserProfile))
     }
   }
 
