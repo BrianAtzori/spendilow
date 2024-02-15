@@ -7,7 +7,15 @@
 @tailwind utilities;
 
 
-body{
+*{
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html{
     scroll-behavior: smooth;
+}
+
+body{
     background-image: url("./assets/pattern/ffflux.svg");
 }
