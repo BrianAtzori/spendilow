@@ -119,30 +119,9 @@ const verifyMFA = async function (otp: string): Promise<string> {
     return result
 }
 
-//TODO: Spostare/Fixare/Rivedere
-const dummyAuth = async (): Promise<boolean> => {
-
-    let result: boolean = false
-
-    result = await axios
-        .get(baseURL + "/authenticated-users" + "/dummy", { withCredentials: true })
-        .then((res) => {
-            console.log("LOGIN OK: " + res.data)
-            return true
-        })
-        .catch((error) => {
-            apiErrorResponseHandler(error.response.status, "Non siamo riusciti a recuperare una sessione di accesso, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo.");
-            window.location.href = "/";
-            return false
-        })
-
-    return result
-}
-
 export {
     signUpNewSpendilowUser,
     loginSpendilowUser,
     activateMFA,
-    verifyMFA,
-    dummyAuth
+    verifyMFA, 
 }

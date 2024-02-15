@@ -11,9 +11,9 @@
 ### Route /authenticated-users
 | Path | Function |
 | ----------- | ----------- |
-| /get-profile/:id | Get a user profile (id, email, profile pic and other information ) |
-| /mod/:id | Modify a user profile |
-| /del/:id | Delete a user account |
+| /get-profile/ | Get a user profile (id, email, profile pic and other information ) |
+| /mod/ | Modify a user profile |
+| /del/ | Delete a user account |
 
 ### Route /utilities
 | Path | Function |
