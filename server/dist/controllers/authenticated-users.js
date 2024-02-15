@@ -17,7 +17,7 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (!req.body) {
         throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.");
     }
-    if (!req.params.id) {
+    if (!req.user.id) {
         throw new BadRequestError("L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente.");
     }
     //For Email Duplication
@@ -27,7 +27,7 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         throw new BadRequestError("L'email che si sta inserendo é giá utilizzata da un altro account e non puó essere usata per modificare quella dell'account in uso.");
     }
     //For Account Editing
-    existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.params.id);
+    existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.user.id);
     if (!existingSpendilowUser) {
         throw new BadRequestError("L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
@@ -36,11 +36,11 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 // ------ DELETE USER ------
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.params.id;
+    const userId = req.user.id;
     if (!userId) {
         throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
-    const existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.params.id);
+    const existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", userId);
     if (!existingSpendilowUser) {
         throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
@@ -51,13 +51,13 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 // ------ GET USER PROFILE ------
 const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const requestId = req.params.id;
+    const requestId = req.user.id;
     if (!requestId) {
         throw new BadRequestError("Il profilo cercato non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
-    const userProfile = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.params.id);
+    const userProfile = yield dbManager.databaseInteraction("GET_USER_BY_ID", requestId);
     if (!userProfile) {
-        throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
+        throw new BadRequestError("L'utente che si sta cercando non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
     const { id, email, isMFAActive, savings, salary, profileimage, workfield, username, } = userProfile;
     res.status(http_status_codes_1.StatusCodes.OK).json({

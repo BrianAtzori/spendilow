@@ -13,6 +13,7 @@ const auth = (req, res, next) => {
     }
     try {
         const decodedData = jwt.verify(accessToken, process.env.JW_SEC);
+        req.user = { id: decodedData.id, email: decodedData.email };
         next();
     }
     catch (error) {

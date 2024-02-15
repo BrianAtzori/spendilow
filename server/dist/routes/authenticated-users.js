@@ -5,10 +5,10 @@ const authenticatedUsersRouter = express.Router();
 // ------ Controllers imports and setup ------
 const { modifyUser, deleteUser, getUserProfile, } = require("../controllers/authenticated-users");
 // ------ MODIFY USER ------
-authenticatedUsersRouter.patch("/mod/:id", modifyUser);
+authenticatedUsersRouter.patch("/mod/", modifyUser);
 // ------ DELETE USER ------
-authenticatedUsersRouter.delete("/del/:id", deleteUser);
+authenticatedUsersRouter.delete("/del/", deleteUser);
 // ------ GET AUTHENTICATED USER PROFILE ------
-authenticatedUsersRouter.get("/get-profile/:id", getUserProfile);
+authenticatedUsersRouter.get("/get-profile/", getUserProfile);
 // ------ Exports ------
 module.exports = authenticatedUsersRouter;

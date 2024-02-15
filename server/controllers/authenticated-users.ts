@@ -5,14 +5,14 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 
 // ------ MODIFY USER ------
-const modifyUser = async (req: Request, res: Response) => {
+const modifyUser = async (req: any, res: Response) => {
   if (!req.body) {
     throw new BadRequestError(
       "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
     );
   }
 
-  if (!req.params.id) {
+  if (!req.user.id) {
     throw new BadRequestError(
       "L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente."
     );
@@ -30,10 +30,11 @@ const modifyUser = async (req: Request, res: Response) => {
       "L'email che si sta inserendo é giá utilizzata da un altro account e non puó essere usata per modificare quella dell'account in uso."
     );
   }
+
   //For Account Editing
   existingSpendilowUser = await dbManager.databaseInteraction(
     "GET_USER_BY_ID",
-    req.params.id
+    req.user.id
   );
 
   if (!existingSpendilowUser) {
@@ -52,8 +53,8 @@ const modifyUser = async (req: Request, res: Response) => {
 };
 
 // ------ DELETE USER ------
-const deleteUser = async (req: Request, res: Response) => {
-  const userId = req.params.id;
+const deleteUser = async (req: any, res: Response) => {
+  const userId = req.user.id;
 
   if (!userId) {
     throw new BadRequestError(
@@ -63,7 +64,7 @@ const deleteUser = async (req: Request, res: Response) => {
 
   const existingSpendilowUser = await dbManager.databaseInteraction(
     "GET_USER_BY_ID",
-    req.params.id
+    userId
   );
 
   if (!existingSpendilowUser) {
@@ -80,8 +81,8 @@ const deleteUser = async (req: Request, res: Response) => {
 };
 
 // ------ GET USER PROFILE ------
-const getUserProfile = async (req: Request, res: Response) => {
-  const requestId = req.params.id;
+const getUserProfile = async (req: any, res: Response) => {
+  const requestId = req.user.id;
 
   if (!requestId) {
     throw new BadRequestError(
@@ -91,12 +92,12 @@ const getUserProfile = async (req: Request, res: Response) => {
 
   const userProfile = await dbManager.databaseInteraction(
     "GET_USER_BY_ID",
-    req.params.id
+    requestId
   );
 
   if (!userProfile) {
     throw new BadRequestError(
-      "L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
+      "L'utente che si sta cercando non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
   }
 

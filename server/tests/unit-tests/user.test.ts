@@ -99,10 +99,10 @@ describe("Spendilow API 💰", function () {
   });
 
   // ------ MODIFY USER ------
-  it("should modify an user on /authenticated-users/mod/:id PATCH", function (done) {
+  it("should modify an user on /authenticated-users/mod/ PATCH", function (done) {
     chaiTests
       .request(baseURL)
-      .patch(`api/v1/authenticated-users/mod/${spendilowTestingUser.id}`)
+      .patch(`api/v1/authenticated-users/mod/`)
       .set("Cookie", cookie)
       .send({
         email: "testing-user-edited@spendilow-testing.test",
@@ -120,10 +120,10 @@ describe("Spendilow API 💰", function () {
   });
 
   // ------ GET USER PROFILE ------
-  it("should get user profile on /authenticated-users/get-profile/:id", function (done) {
+  it("should get user profile on /authenticated-users/get-profile/", function (done) {
     chaiTests
       .request(baseURL)
-      .get(`api/v1/authenticated-users/get-profile/${spendilowTestingUser.id}`)
+      .get(`api/v1/authenticated-users/get-profile/`)
       .set("Cookie", cookie)
       .end(function (err: Error, res: any) {
         res.should.have.status(200);
@@ -160,10 +160,10 @@ describe("Spendilow API 💰", function () {
   });
 
   // ------ DELETE USER ------
-  it("should delete an user on /authenticated-users/del/:id", function (done) {
+  it("should delete an user on /authenticated-users/del/", function (done) {
     chaiTests
       .request(baseURL)
-      .delete(`api/v1/authenticated-users/del/${spendilowTestingUser.id}`)
+      .delete(`api/v1/authenticated-users/del/`)
       .set("Cookie", cookie)
       .end(function (err: Error, res: any) {
         res.should.have.status(200);

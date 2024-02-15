@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 const jwt = require("jsonwebtoken");
 
 //------ MIDDLEWARE ------
-const auth = (req: Request, res: Response, next: NextFunction) => {
+const auth = (req: any, res: Response, next: NextFunction) => {
   const accessToken = req.cookies["spendilow-access-token"];
   const refreshToken = req.cookies["spendilow-refresh-token"];
 
@@ -18,6 +18,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const decodedData = jwt.verify(accessToken, process.env.JW_SEC);
+    req.user = { id: decodedData.id, email: decodedData.email };
     next();
   } catch (error) {
     if (!refreshToken) {
