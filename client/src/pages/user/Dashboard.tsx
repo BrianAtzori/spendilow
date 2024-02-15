@@ -6,7 +6,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { changeUserLoggedState } from "../../redux/reducers/auth/userLoggedSlice";
 
 //------ SERVICES ------
-import { dummyAuth } from "../../services/users/users-external-calls";
+import { getSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
 
 export default function Dashboard() {
   //------ HOOKS ------
@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   //------ FUNCTIONS ------
   async function tryDummy() {
-    const dummyTestAuth = await dummyAuth();
+    const dummyTestAuth = await getSpendilowUserProfile();
 
     if (dummyTestAuth) {
       dispatch(changeUserLoggedState());
