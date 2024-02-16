@@ -109,13 +109,13 @@ const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void
       username = ?
     WHERE id = ?
   `;
-    let { email, savings, salary, profileImage, workfield, username } = spendilowUser;
+    let { email, savings, salary, profileimage, workfield, username } = spendilowUser;
     try {
         rows = yield connection.query(query, [
             email,
             savings,
             salary,
-            profileImage,
+            profileimage,
             workfield,
             username,
             id,

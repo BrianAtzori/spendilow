@@ -133,7 +133,7 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
     WHERE id = ?
   `;
 
-  let { email, savings, salary, profileImage, workfield, username } =
+  let { email, savings, salary, profileimage, workfield, username } =
     spendilowUser;
 
   try {
@@ -141,7 +141,7 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
       email,
       savings,
       salary,
-      profileImage,
+      profileimage,
       workfield,
       username,
       id,
