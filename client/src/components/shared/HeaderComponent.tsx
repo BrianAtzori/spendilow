@@ -1,5 +1,6 @@
 // ------ REACT ------
 import React from "react";
+import { Link } from "react-router-dom";
 
 // ------ ASSETS ------
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
@@ -34,16 +35,18 @@ export default function HeaderComponent() {
             <div className="flex-none hidden desktop:block">
               <ul className="menu menu-horizontal">
                 <li>
-                  <a>Navbar Item 1</a>
+                  <Link to="/user/dashboard">Dashboard</Link>
                 </li>
                 <li>
-                  <a>Navbar Item 2</a>
+                  <Link to="/user/settings">Impostazioni </Link>
                 </li>
               </ul>
             </div>
             <div className="avatar">
               <div className="w-16 m-2 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                <img src={userProfilePic} />
+                <Link to="/user/settings">
+                  <img src={userProfilePic} />{" "}
+                </Link>
               </div>
             </div>
           </div>
@@ -58,8 +61,11 @@ export default function HeaderComponent() {
           <ul className="menu p-4 w-80 min-h-full bg-base-100">
             {/* Sidebar content here */}
             <li>
-              <a>Sidebar Item 1</a>
-            </li>
+                  <Link to="/user/dashboard">Dashboard</Link>
+                </li>
+                <li>
+                  <Link to="/user/settings">Impostazioni </Link>
+                </li>
           </ul>
         </div>
       </div>

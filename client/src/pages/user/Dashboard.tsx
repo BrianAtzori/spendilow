@@ -43,7 +43,7 @@ export default function Dashboard() {
 
     //TODO: ERROR HANDLING
     if (spendilowUserProfile) {
-      dispatch(changeUserLoggedState());
+      dispatch(changeUserLoggedState(true));
       dispatch(updateUserProfile(spendilowUserProfile));
     }
   }

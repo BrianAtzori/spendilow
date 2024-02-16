@@ -46,8 +46,30 @@ const getSpendilowUserProfile = async (): Promise<spendilowUserProfile> => {
         "Non siamo riusciti a recuperare una sessione di accesso per caricare il tuo profilo, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo."
       );
     });
-     
+
   return result;
 };
 
-export { getSpendilowUserProfile };
+const editSpendilowUserProfile = async (
+  editedSpendilowUser: spendilowUserProfile
+) => {
+  let result: string = "";
+
+  result = await axios
+    .patch(baseURL + route + "/mod/", editedSpendilowUser, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return apiErrorResponseHandler(
+        error.response.status,
+        error.response.data.errorMessage
+      );
+    });
+
+  return result;
+};
+
+export { getSpendilowUserProfile, editSpendilowUserProfile };
