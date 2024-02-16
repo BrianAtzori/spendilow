@@ -74,7 +74,7 @@ export default function Settings() {
       );
     }
   };
-
+//TODO: FIX DUPLICATE EMAIL ISSUE
   async function verifyInputThenTriggerEditProfile(event: SyntheticEvent) {
     event.preventDefault();
 
