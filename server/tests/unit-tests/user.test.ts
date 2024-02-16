@@ -15,7 +15,19 @@ let cookie: any;
 
 describe("Spendilow API 💰", function () {
   before(function () {
-    console.log("Inizio dei test 🧪");
+    const currentDate = new Date();
+
+    console.log(
+      "Inizio dei test 🧪 - " +
+        currentDate.getDate() +
+        "/" +
+        (currentDate.getMonth() + 1) +
+        " - " +
+        currentDate.getHours() +
+        ":" +
+        currentDate.getMinutes()
+    );
+
     const id: string = crypto.randomUUID();
     spendilowTestingUser = {
       id,
@@ -120,7 +132,7 @@ describe("Spendilow API 💰", function () {
   });
 
   // ------ GET USER PROFILE ------
-  it("should get user profile on /authenticated-users/get-profile/", function (done) {
+  it("should get user profile on /authenticated-users/get-profile/ GET", function (done) {
     chaiTests
       .request(baseURL)
       .get(`api/v1/authenticated-users/get-profile/`)
@@ -160,7 +172,7 @@ describe("Spendilow API 💰", function () {
   });
 
   // ------ DELETE USER ------
-  it("should delete an user on /authenticated-users/del/", function (done) {
+  it("should delete an user on /authenticated-users/del/ DELETE", function (done) {
     chaiTests
       .request(baseURL)
       .delete(`api/v1/authenticated-users/del/`)
