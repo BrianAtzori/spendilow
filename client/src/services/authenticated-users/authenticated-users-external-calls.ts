@@ -72,4 +72,61 @@ const editSpendilowUserProfile = async (
   return result;
 };
 
-export { getSpendilowUserProfile, editSpendilowUserProfile };
+const logoutSpendilowUserProfile = async (target: string) => {
+  let result: string = "";
+
+  result = await axios
+    .get(baseURL + route + "/logout/", { withCredentials: true })
+    .then((res) => {
+      if (res.data["logged-out"]) {
+        switch (target) {
+          case "change":
+            return "/auth/login";
+            break;
+          case "logout":
+            return "/";
+            break;
+          default:
+            return "/auth/sign-up";
+            break;
+        }
+      } else {
+        return "/auth/sign-up";
+      }
+    })
+    .catch((error) => {
+      return apiErrorResponseHandler(
+        error.response.status,
+        error.response.data.errorMessage
+      );
+    });
+
+  return result;
+};
+
+const deleteSpendilowUserProfile = async () => {
+  let result: string = "";
+
+  result = await axios
+    .delete(baseURL + route + "/del/", {
+      withCredentials: true,
+    })
+    .then(() => {
+      return "/";
+    })
+    .catch((error) => {
+      return apiErrorResponseHandler(
+        error.response.status,
+        error.response.data.errorMessage
+      );
+    });
+
+  return result;
+};
+
+export {
+  getSpendilowUserProfile,
+  editSpendilowUserProfile,
+  logoutSpendilowUserProfile,
+  deleteSpendilowUserProfile,
+};

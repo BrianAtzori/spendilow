@@ -71,9 +71,21 @@ const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function*
         username,
     });
 });
+// ------ LOGOUT USER PROFILE ------
+const logoutUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.user.id) {
+        throw new BadRequestError("L'account da cui si sta cercando di fare il logout non esiste o l'ID é errato, contatta il supporto utente.");
+    }
+    res
+        .status(http_status_codes_1.StatusCodes.OK)
+        .clearCookie("spendilow-refresh-token")
+        .clearCookie("spendilow-access-token")
+        .json({ "logged-out": true });
+});
 // ------ Exports ------
 module.exports = {
     modifyUser,
     deleteUser,
     getUserProfile,
+    logoutUserProfile,
 };

@@ -151,6 +151,21 @@ describe("Spendilow API 💰", function () {
             done();
         });
     });
+    it("should logout an user on /authenticated-users/logout/ GET", function (done) {
+        chaiTests
+            .request(baseURL)
+            .get(`api/v1/authenticated-users/logout/`)
+            .set('Cookie', cookie)
+            .end(function (err, res) {
+            res.should.have.status(200);
+            res.should.be.json;
+            should.exist(res.header["set-cookie"]);
+            res.body.should.have.property("logged-out");
+            should.exist(res.body['logged-out']);
+            res.body['logged-out'].should.be.equal(true);
+            done();
+        });
+    });
     // ------ DELETE USER ------
     it("should delete an user on /authenticated-users/del/ DELETE", function (done) {
         chaiTests

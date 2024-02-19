@@ -6,7 +6,7 @@ interface errorProps {
   message: string;
 }
 
-export default function ErrorScreenComponent({ message }: errorProps) {
+export default function ErrorComponent({ message }: errorProps) {
   return (
     <div
       role="alert"

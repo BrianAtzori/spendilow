@@ -124,9 +124,25 @@ const getUserProfile = async (req: any, res: Response) => {
   });
 };
 
+// ------ LOGOUT USER PROFILE ------
+const logoutUserProfile = async (req: any, res: Response) => {
+  if (!req.user.id) {
+    throw new BadRequestError(
+      "L'account da cui si sta cercando di fare il logout non esiste o l'ID é errato, contatta il supporto utente."
+    );
+  }
+
+  res
+    .status(StatusCodes.OK)
+    .clearCookie("spendilow-refresh-token")
+    .clearCookie("spendilow-access-token")
+    .json({ "logged-out": true });
+};
+
 // ------ Exports ------
 module.exports = {
   modifyUser,
   deleteUser,
   getUserProfile,
+  logoutUserProfile,
 };
