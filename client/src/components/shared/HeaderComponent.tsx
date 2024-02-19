@@ -38,6 +38,12 @@ export default function HeaderComponent() {
                   <Link to="/user/dashboard">Dashboard</Link>
                 </li>
                 <li>
+                  <Link to="/user/expenses">Spese</Link>
+                </li>
+                <li>
+                  <Link to="/user/budget">Budget</Link>
+                </li>
+                <li>
                   <Link to="/user/settings">Impostazioni </Link>
                 </li>
               </ul>
@@ -61,11 +67,21 @@ export default function HeaderComponent() {
           <ul className="menu p-4 w-80 min-h-full bg-base-100">
             {/* Sidebar content here */}
             <li>
-                  <Link to="/user/dashboard">Dashboard</Link>
-                </li>
-                <li>
-                  <Link to="/user/settings">Impostazioni </Link>
-                </li>
+              <Link to="/user/dashboard">Dashboard</Link>
+            </li>
+            <li>
+              <Link to="/user/expenses">Spese</Link>
+            </li>
+            <li>
+              <Link to="/user/budget">Budget</Link>
+            </li>
+            <li>
+              <Link to="/user/settings">Impostazioni </Link>
+            </li>
+            <div className="flex-1 px-2 mx-2">
+              <div className="divider"></div>
+              <img src={spendilowLogo} className="" />
+            </div>
           </ul>
         </div>
       </div>
