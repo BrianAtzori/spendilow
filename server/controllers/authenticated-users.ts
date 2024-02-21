@@ -24,8 +24,8 @@ const modifyUser = async (req: any, res: Response) => {
     req.body
   );
 
-  //Check if user exists
-  if (existingSpendilowUser) {
+  //Check if user exists with that email
+  if (existingSpendilowUser && existingSpendilowUser.id != req.user.id) {
     throw new BadRequestError(
       "L'email che si sta inserendo é giá utilizzata da un altro account e non puó essere usata per modificare quella dell'account in uso."
     );

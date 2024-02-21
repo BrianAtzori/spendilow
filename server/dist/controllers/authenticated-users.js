@@ -22,8 +22,8 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     //For Email Duplication
     let existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER", req.body);
-    //Check if user exists
-    if (existingSpendilowUser) {
+    //Check if user exists with that email
+    if (existingSpendilowUser && existingSpendilowUser.id != req.user.id) {
         throw new BadRequestError("L'email che si sta inserendo é giá utilizzata da un altro account e non puó essere usata per modificare quella dell'account in uso.");
     }
     //For Account Editing

@@ -4,6 +4,10 @@ import React, { useState } from "react";
 // ------ COMPONENTS & PAGES ------
 import ErrorComponent from "../shared/ErrorComponent";
 
+// ------ REDUX ------
+import { useAppDispatch } from "../../redux/hooks";
+import { changeUserLoggedState } from "../../redux/reducers/auth/userLoggedSlice";
+
 // ------ SERVICES ------
 import { logoutSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
 
@@ -15,6 +19,8 @@ export default function ChangeOrLogoutComponent() {
     state: false,
     message: "Errore durante l'uscita dal profilo",
   });
+
+  const dispatch = useAppDispatch();
 
   // ------ FUNCTIONS ------
   async function deleteCookiesAndLogout(operation: string) {
@@ -29,11 +35,12 @@ export default function ChangeOrLogoutComponent() {
         setIsLoading(false);
       });
 
-      //TODO: userlogged a false
-
-      externalCallResult.startsWith("/")
-        ? (window.location.href = externalCallResult)
-        : setProfileError({ state: true, message: externalCallResult });
+      if (externalCallResult.startsWith("/")) {
+        dispatch(changeUserLoggedState(false));
+        window.location.href = externalCallResult;
+      } else {
+        setProfileError({ state: true, message: externalCallResult });
+      }
     } else {
       setIsLoading(false);
     }

@@ -77,10 +77,6 @@ export default function UserEditProfileComponent() {
     }
   };
 
-  //TODO: FIX DUPLICATE EMAIL ISSUE
-  // TODO: RELOAD PROFILE AFTER EDITING
-  // TODO: ERROR HANDLING
-
   async function verifyInputThenTriggerEditProfile(event: SyntheticEvent) {
     event.preventDefault();
 
@@ -107,7 +103,7 @@ export default function UserEditProfileComponent() {
 
   // ------ FUNCTIONS ------
   async function editProfile() {
-    const response = confirm("Vuoi eliminare il tuo profilo?");
+    const response = confirm("Vuoi modificare il tuo profilo?");
     setIsLoading(true);
 
     if (response) {

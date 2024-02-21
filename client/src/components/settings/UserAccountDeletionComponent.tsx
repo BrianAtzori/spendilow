@@ -4,6 +4,10 @@ import React, { useState } from "react";
 // ------- PAGES & COMPONENTS ------
 import ErrorComponent from "../../components/shared/ErrorComponent";
 
+// ------ REDUX ------
+import { useAppDispatch } from "../../redux/hooks";
+import { changeUserLoggedState } from "../../redux/reducers/auth/userLoggedSlice";
+
 // ------ SERVICES ------
 import { deleteSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
 
@@ -15,6 +19,8 @@ export default function UserAccountDeletionComponent() {
     state: false,
     message: "Errore durante l'uscita dal profilo",
   });
+
+  const dispatch = useAppDispatch();
 
   // ------ FUNCTIONS ------
   async function deleteProfile() {
@@ -28,11 +34,12 @@ export default function UserAccountDeletionComponent() {
           setIsLoading(false);
         });
 
-      //TODO: userlogged a false
-
-      externalCallResult.startsWith("/")
-        ? (window.location.href = externalCallResult)
-        : setProfileError({ state: true, message: externalCallResult });
+      if (externalCallResult.startsWith("/")) {
+        dispatch(changeUserLoggedState(false));
+        window.location.href = externalCallResult;
+      } else {
+        setProfileError({ state: true, message: externalCallResult });
+      }
     } else {
       setIsLoading(false);
     }
