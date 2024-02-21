@@ -41,10 +41,14 @@ const auth = (req: any, res: Response, next: NextFunction) => {
         .cookie("spendilow-refresh-token", refreshToken, {
           httpOnly: true,
           maxAge: 518400000,
+          sameSite: "none",
+          secure: true,
         })
         .cookie("spendilow-access-token", accessToken, {
           httpOnly: true,
           maxAge: 21600000,
+          sameSite: "none",
+          secure: true,
         })
         .send(decodedData.user);
     } catch (error) {

@@ -62,10 +62,14 @@ const registerUser = async (req: Request, res: Response) => {
     .cookie("spendilow-refresh-token", refreshToken, {
       httpOnly: true,
       maxAge: 518400000,
+      sameSite: "none",
+      secure: true,
     })
     .cookie("spendilow-access-token", accessToken, {
       httpOnly: true,
       maxAge: 21600000,
+      sameSite: "none",
+      secure: true,
     })
     .json({ id: newAccount.id, account: newAccount.email });
 };
@@ -105,10 +109,14 @@ const loginUser = async (req: Request, res: Response) => {
     .cookie("spendilow-refresh-token", refreshToken, {
       httpOnly: true,
       maxAge: 518400000,
+      sameSite: "none",
+      secure: true,
     })
     .cookie("spendilow-access-token", accessToken, {
       httpOnly: true,
       maxAge: 21600000,
+      sameSite: "none",
+      secure: true,
     })
     .json({
       id: spendilowUser.id,
