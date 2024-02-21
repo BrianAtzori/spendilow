@@ -1,11 +1,19 @@
 // ------ REACT ------
 import React from "react";
+import { Link } from "react-router-dom";
 
 // ------ ASSETS ------
 import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
 import { TiThMenu } from "react-icons/ti";
 
+// ------ REDUX ------
+import { useAppSelector } from "../../redux/hooks";
+
 export default function HeaderComponent() {
+  const userProfilePic: string = useAppSelector(
+    (state) => state.userProfile.value.profileimage
+  );
+
   return (
     <>
       <div className="drawer font-heading text-neutral bg-base-100 z-10">
@@ -27,12 +35,25 @@ export default function HeaderComponent() {
             <div className="flex-none hidden desktop:block">
               <ul className="menu menu-horizontal">
                 <li>
-                  <a>Navbar Item 1</a>
+                  <Link to="/user/dashboard">Dashboard</Link>
                 </li>
                 <li>
-                  <a>Navbar Item 2</a>
+                  <Link to="/user/expenses">Spese</Link>
+                </li>
+                <li>
+                  <Link to="/user/budget">Budget</Link>
+                </li>
+                <li>
+                  <Link to="/user/settings">Impostazioni </Link>
                 </li>
               </ul>
+            </div>
+            <div className="avatar">
+              <div className="w-16 m-2 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <Link to="/user/settings">
+                  <img src={userProfilePic} />{" "}
+                </Link>
+              </div>
             </div>
           </div>
           {/* Page content here */}
@@ -46,8 +67,21 @@ export default function HeaderComponent() {
           <ul className="menu p-4 w-80 min-h-full bg-base-100">
             {/* Sidebar content here */}
             <li>
-              <a>Sidebar Item 1</a>
+              <Link to="/user/dashboard">Dashboard</Link>
             </li>
+            <li>
+              <Link to="/user/expenses">Spese</Link>
+            </li>
+            <li>
+              <Link to="/user/budget">Budget</Link>
+            </li>
+            <li>
+              <Link to="/user/settings">Impostazioni </Link>
+            </li>
+            <div className="flex-1 px-2 mx-2">
+              <div className="divider"></div>
+              <img src={spendilowLogo} className="" />
+            </div>
           </ul>
         </div>
       </div>

@@ -5,10 +5,16 @@
 | ----------- | ----------- |
 | /new | Sign up with a new profile |
 | /login | Login with user credentials |
-| /mod/:id | Modify a user profile |
-| /del/:id | Delete a user account |
 | /mfa-activation | Activate MFA for a profile |
 | /mfa-verification | Verify MFA sent by user |
+
+### Route /authenticated-users
+| Path | Function |
+| ----------- | ----------- |
+| /get-profile/ | Get a user profile (id, email, profile pic and other information ) |
+| /mod/ | Modify a user profile |
+| /del/ | Delete a user account |
+| /logout/ | Logout a user account |
 
 ### Route /utilities
 | Path | Function |

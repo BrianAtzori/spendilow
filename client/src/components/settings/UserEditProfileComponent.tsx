@@ -1,52 +1,49 @@
-// ------ REACT ------
+//------ REACT ------
 import React, { SyntheticEvent, useState } from "react";
 
-// ------ ASSETS ------
-import spendilowLogo from "../../assets/logo/spendilow-logo-svg.svg";
+//------ REDUX ------
+import { useAppSelector } from "../../redux/hooks";
 
 // ------ COMPONENTS & PAGES ------
 import ErrorComponent from "../shared/ErrorComponent";
 
 // ------ SERVICES ------
-import { signUpNewSpendilowUser } from "../../services/users/users-external-calls";
+import { editSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
 
-export default function SignUpComponent() {
+// ------ TYPESCRIPT ------
+interface spendilowUserProfile {
+  id: string;
+  email: string;
+  isMFAActive: boolean;
+  savings: number;
+  salary: number;
+  profileimage: string;
+  workfield: string;
+  username: string;
+}
+
+export default function UserEditProfileComponent() {
   // ------ HOOKS ------
-  const [newSpendilowUser, setNewSpendilowUser] = useState({
-    email: "",
-    password: "",
-    savings: 0.0,
-    salary: 0.0,
-    profileImage: "",
-    workfield: "",
-    username: "",
-    isMFAActive: false,
-  });
+  const currentSpendilowUser: spendilowUserProfile = useAppSelector(
+    (state) => state.userProfile.value
+  );
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [signUpError, setSignUpError] = useState({
+  const [editError, setEditError] = useState({
     state: false,
-    message: "Errore in fase di registrazione",
+    message: "Errore durante la modifica del profilo",
   });
 
-  // ------ FORM HANDLING ------
-  const passwordCheck = new RegExp(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])(?=.*[a-zA-Z\d@#$%^&+=]).{8,}$/
-  );
+  const [inEditSpendilowUser, setInEditSpendilowUser] =
+    useState(currentSpendilowUser);
 
+  // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.name === "isMFAActive") {
-      setNewSpendilowUser({
-        ...newSpendilowUser,
-        [event.target.name]: !newSpendilowUser.isMFAActive,
-      });
-    } else {
-      setNewSpendilowUser({
-        ...newSpendilowUser,
-        [event.target.name]: event.target.value,
-      });
-    }
+    setInEditSpendilowUser({
+      ...inEditSpendilowUser,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleProfileImageChange = (
@@ -59,9 +56,9 @@ export default function SignUpComponent() {
 
       reader.onload = () => {
         const base64String = reader.result as string;
-        setNewSpendilowUser({
-          ...newSpendilowUser,
-          profileImage: base64String,
+        setInEditSpendilowUser({
+          ...inEditSpendilowUser,
+          profileimage: base64String,
         });
       };
 
@@ -80,69 +77,67 @@ export default function SignUpComponent() {
     }
   };
 
-  async function verifyInputThenTriggerSignUp(event: SyntheticEvent) {
+  async function verifyInputThenTriggerEditProfile(event: SyntheticEvent) {
     event.preventDefault();
 
-    setSignUpError({
+    setEditError({
       state: false,
       message: "",
     });
 
     if (
-      newSpendilowUser.email === "" ||
-      newSpendilowUser.password === "" ||
-      newSpendilowUser.profileImage === "" ||
-      newSpendilowUser.workfield === "" ||
-      newSpendilowUser.username === ""
+      inEditSpendilowUser.email === "" ||
+      inEditSpendilowUser.profileimage === "" ||
+      inEditSpendilowUser.workfield === "" ||
+      inEditSpendilowUser.username === ""
     ) {
-      setSignUpError({
+      setEditError({
         state: true,
         message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
       });
     } else {
-      if (passwordCheck.test(newSpendilowUser.password)) {
-        setIsLoading(true);
-        await signUp();
-      } else {
-        setSignUpError({
-          state: true,
-          message:
-            "La password deve contenere almeno 8 caratteri e almeno una lettera minuscola, una lettera maiuscola, un numero e un carattere speciale tra @, #, $, %, ^, &, + e =",
-        });
-      }
+      setIsLoading(true);
+      await editProfile();
     }
   }
 
   // ------ FUNCTIONS ------
-  async function signUp() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await signUpNewSpendilowUser(
-      newSpendilowUser
-    ).finally(() => {
-      setIsLoading(false);
-    });
+  async function editProfile() {
+    const response = confirm("Vuoi modificare il tuo profilo?");
+    setIsLoading(true);
 
-    externalCallResult.startsWith("/")
-      ? (window.location.href = externalCallResult)
-      : setSignUpError({ state: true, message: externalCallResult });
+    if (response) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const externalCallResult: any = await editSpendilowUserProfile(
+        inEditSpendilowUser
+      ).finally(() => {
+        setIsLoading(false);
+      });
+
+      externalCallResult.startsWith("/")
+        ? (window.location.href = externalCallResult)
+        : setEditError({ state: true, message: externalCallResult });
+    } else {
+      setIsLoading(false);
+    }
   }
 
   return (
-    <div className="hero min-h-screen text-neutral">
+    <div className="hero min-h-screen text-neutral py-6">
       <div className="hero-content flex-col desktop:flex-row-reverse">
         <div className="text-center desktop:text-left">
-          <h1 className="text-5xl font-bold font-primary">Registrati</h1>
-          <p className="py-6 font-heading">
-            “Se aggiungi poco al poco, ma lo farai di frequente, presto il poco
-            diventerà molto.” - Esiodo
-          </p>
+          <h1 className="text-5xl font-bold font-primary">Impostazioni</h1>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form
             className="card-body font-body"
-            onSubmit={verifyInputThenTriggerSignUp}
+            onSubmit={verifyInputThenTriggerEditProfile}
           >
-            <img src={spendilowLogo} />
+            <div className="text-center desktop:text-left">
+              <h2 className="font-bold font-heading text-left">
+                Modifica il tuo profilo
+              </h2>
+            </div>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Indirizzo Email</span>
@@ -154,19 +149,7 @@ export default function SignUpComponent() {
                 name="email"
                 placeholder="Indirizzo Email"
                 onChange={handleChange}
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Password"
-                className="input input-bordered"
-                onChange={handleChange}
+                defaultValue={inEditSpendilowUser.email}
               />
             </div>
             <div className="form-control">
@@ -180,6 +163,7 @@ export default function SignUpComponent() {
                 placeholder="Risparmi"
                 onChange={handleChange}
                 type="number"
+                defaultValue={inEditSpendilowUser.savings}
               />
             </div>
             <div className="form-control">
@@ -193,6 +177,7 @@ export default function SignUpComponent() {
                 placeholder="Stipendio"
                 onChange={handleChange}
                 type="number"
+                defaultValue={inEditSpendilowUser.salary}
               />
             </div>
             <div className="form-control">
@@ -201,8 +186,8 @@ export default function SignUpComponent() {
               </label>
               <input
                 type="file"
-                id="image"
-                name="image"
+                id="profileimage"
+                name="profileimage"
                 accept="image/png, image/jpeg"
                 placeholder="Foto profilo"
                 className="file-input file-input-bordered file-input-accent w-full max-w-xs"
@@ -219,6 +204,7 @@ export default function SignUpComponent() {
                 name="workfield"
                 placeholder="Ambito lavoro"
                 onChange={handleChange}
+                defaultValue={inEditSpendilowUser.workfield}
               />
             </div>
             <div className="form-control">
@@ -231,26 +217,13 @@ export default function SignUpComponent() {
                 name="username"
                 placeholder="Username"
                 onChange={handleChange}
+                defaultValue={inEditSpendilowUser.username}
               />
             </div>
             <div className="form-control">
-              {signUpError.state && (
-                <ErrorComponent message={signUpError.message}></ErrorComponent>
+              {editError.state && (
+                <ErrorComponent message={editError.message}></ErrorComponent>
               )}
-            </div>
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text">
-                  Attiva autenticazione a due fattori <br></br>(Verrai redirettə
-                  dopo la registrazione)
-                </span>
-                <input
-                  type="checkbox"
-                  onChange={handleChange}
-                  name="isMFAActive"
-                  className="checkbox checkbox-accent"
-                />
-              </label>
             </div>
             <div className="form-control">
               {isLoading ? (
@@ -264,7 +237,7 @@ export default function SignUpComponent() {
                   <input
                     type="submit"
                     className="btn btn-accent font-primary"
-                    value="Registrati"
+                    value="Modifica il profilo"
                   ></input>
                 </>
               )}

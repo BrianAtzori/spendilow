@@ -9,27 +9,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mariadb_1 = require("mariadb");
 // ------ Imports ------
 const BadRequestError = require("../errors");
 const dbConnectionPool = require("./db-connector");
 // ------ DB ACTIONS MANAGER ------
-const databaseInteraction = (operation, queryData) => __awaiter(void 0, void 0, void 0, function* () {
+const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void 0, void 0, function* () {
     let connection;
     let queryResult;
     try {
         connection = yield dbConnectionPool.getConnection();
         if (connection) {
             switch (operation) {
-                case 'CREATE_USER': {
+                case "CREATE_USER": {
                     queryResult = yield createSplUser(queryData, connection);
                     break;
                 }
-                case 'GET_USER': {
+                case "GET_USER": {
                     queryResult = yield readSplUser(queryData, connection);
                     break;
                 }
-                case 'DELETE_USER': {
+                case "GET_USER_BY_ID": {
+                    queryResult = yield readSplUserByID(queryData, connection);
+                    break;
+                }
+                case "UPDATE_USER": {
+                    queryResult = yield updateUserByID(queryData, connection, id);
+                    break;
+                }
+                case "DELETE_USER": {
                     queryResult = yield deleteSplUser(queryData, connection);
                     break;
                 }
@@ -55,15 +62,25 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
         INSERT INTO \`splusers\` (\`id\`, \`email\`, \`password\`, \`isMFAActive\`, \`savings\`, \`salary\`, \`profileimage\`, \`workfield\`, \`username\`)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-    let result;
-    let { id, email, password, isMFAActive, savings, salary, profileImage, workfield, username } = spendilowUser;
+    let rows;
+    let { id, email, password, isMFAActive, savings, salary, profileImage, workfield, username, } = spendilowUser;
     try {
-        result = yield connection.query(query, [id, email, password, isMFAActive, savings, salary, profileImage, workfield, username]);
+        rows = yield connection.query(query, [
+            id,
+            email,
+            password,
+            isMFAActive,
+            savings,
+            salary,
+            profileImage,
+            workfield,
+            username,
+        ]);
     }
     catch (error) {
-        throw new mariadb_1.SqlError("Errore durante il salvataggio dei dati dell'utente, ricontrolla i dati inseriti oppure contatta il supporto utente.");
+        console.log(error);
     }
-    return result;
+    return rows;
 });
 // ------ RETRIEVE SPENDILOW USER ------
 const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, void 0, function* () {
@@ -72,14 +89,50 @@ const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, voi
     let rows = yield connection.query(query, [email]);
     return rows[0];
 });
+// ------ RETRIEVE SPENDILOW USER BY ID ------
+const readSplUserByID = (spendilowUserID, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `SELECT * FROM \`splusers\` WHERE \`id\`=? LIMIT 1`;
+    let rows = yield connection.query(query, [spendilowUserID]);
+    return rows[0];
+});
+// ------ UPDATE SPENDILOW USER ------
+const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void 0, void 0, function* () {
+    let rows;
+    const query = `
+    UPDATE \`splusers\` 
+    SET 
+      email = ?,
+      savings = ?,
+      salary = ?,
+      profileimage = ?,
+      workfield = ?,
+      username = ?
+    WHERE id = ?
+  `;
+    let { email, savings, salary, profileimage, workfield, username } = spendilowUser;
+    try {
+        rows = yield connection.query(query, [
+            email,
+            savings,
+            salary,
+            profileimage,
+            workfield,
+            username,
+            id,
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return rows;
+});
 // ------ DELETE SPENDILOW USER ------
 const deleteSplUser = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`;
     let result = yield connection.query(query, [spendilowUserId]);
-    ("RESULT: " + result);
     return result;
 });
 // ------ Exports ------
 module.exports = {
-    databaseInteraction
+    databaseInteraction,
 };

@@ -29,7 +29,7 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     if (!email) {
         throw new BadRequestError("Email non valida, ricontrolla i dati inseriti o contatta il supporto utente.");
     }
-    const spendilowUser = yield dbManager.databaseInteraction('GET_USER', req.body);
+    const spendilowUser = yield dbManager.databaseInteraction("GET_USER", req.body);
     //Check if user exists
     if (spendilowUser) {
         throw new BadRequestError("Errore nella creazione dell'account, l'email inserita è già associata ad un account.");
@@ -37,17 +37,23 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     let id = crypto_1.default.randomUUID();
     const newAccount = new SpendilowUser(Object.assign({ id }, req.body));
     yield newAccount.hashPassword();
-    const refreshToken = newAccount.JWTGeneration('refresh');
-    const accessToken = newAccount.JWTGeneration('access');
-    const createdUser = yield dbManager.databaseInteraction('CREATE_USER', newAccount);
+    const refreshToken = newAccount.JWTGeneration("refresh");
+    const accessToken = newAccount.JWTGeneration("access");
+    const createdUser = yield dbManager.databaseInteraction("CREATE_USER", newAccount);
     if (!createdUser) {
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.");
     }
-    res.
-        status(http_status_codes_1.StatusCodes.CREATED)
-        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, sameSite: 'none', secure: true })
-        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, sameSite: 'none', secure: true }).
-        json({ id: newAccount.id, account: newAccount.email });
+    res
+        .status(http_status_codes_1.StatusCodes.CREATED)
+        .cookie("spendilow-refresh-token", refreshToken, {
+        httpOnly: true,
+        maxAge: 518400000,
+    })
+        .cookie("spendilow-access-token", accessToken, {
+        httpOnly: true,
+        maxAge: 21600000,
+    })
+        .json({ id: newAccount.id, account: newAccount.email });
 });
 // ------ LOGIN USER ------
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,7 +61,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!email || !password) {
         throw new BadRequestError("Email o password non validi");
     }
-    const retrievedUser = yield dbManager.databaseInteraction('GET_USER', req.body);
+    const retrievedUser = yield dbManager.databaseInteraction("GET_USER", req.body);
     if (!retrievedUser) {
         throw new UnauthenticatedError("L'indirizzo email fornito non è associato ad alcun account.");
     }
@@ -64,23 +70,23 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!isPasswordCorrect) {
         throw new UnauthenticatedError("La password fornita è errata.");
     }
-    const refreshToken = spendilowUser.JWTGeneration('refresh');
-    const accessToken = spendilowUser.JWTGeneration('access');
-    res.status(http_status_codes_1.StatusCodes.OK)
-        .cookie('spendilow-refresh-token', refreshToken, { httpOnly: true, maxAge: 518400000, sameSite: 'none', secure: true })
-        .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000, sameSite: 'none', secure: true }).
-        json({ id: spendilowUser.id, email: spendilowUser.email, toBeVerified: spendilowUser.isMFAActive });
-});
-// ------ MODIFY USER ------
-const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    ("Mod User");
-    res.json("OK");
-});
-// ------ DELETE USER ------
-const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.params.id;
-    dbManager.databaseInteraction('DELETE_USER', userId);
-    res.json("OK");
+    const refreshToken = spendilowUser.JWTGeneration("refresh");
+    const accessToken = spendilowUser.JWTGeneration("access");
+    res
+        .status(http_status_codes_1.StatusCodes.OK)
+        .cookie("spendilow-refresh-token", refreshToken, {
+        httpOnly: true,
+        maxAge: 518400000,
+    })
+        .cookie("spendilow-access-token", accessToken, {
+        httpOnly: true,
+        maxAge: 21600000,
+    })
+        .json({
+        id: spendilowUser.id,
+        email: spendilowUser.email,
+        toBeVerified: spendilowUser.isMFAActive,
+    });
 });
 // ------ ACTIVATE MFA FOR USER ------
 const activateMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -104,7 +110,7 @@ const verifyMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 // ------ REFRESH USER TOKENS ------
 const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const refreshToken = req.cookies['spendilow-refresh-token'];
+    const refreshToken = req.cookies["spendilow-refresh-token"];
     if (!refreshToken) {
         throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.");
     }
@@ -112,7 +118,10 @@ const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, functi
         const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
         const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
         res
-            .cookie('spendilow-access-token', accessToken, { httpOnly: true, maxAge: 21600000 })
+            .cookie("spendilow-access-token", accessToken, {
+            httpOnly: true,
+            maxAge: 21600000,
+        })
             .json({ id: decodedData.id, email: decodedData.email });
     }
     catch (error) {
@@ -120,4 +129,10 @@ const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 // ------ Exports ------
-module.exports = { registerUser, loginUser, modifyUser, deleteUser, activateMFA, verifyMFA, refreshUserTokens };
+module.exports = {
+    registerUser,
+    loginUser,
+    activateMFA,
+    verifyMFA,
+    refreshUserTokens,
+};

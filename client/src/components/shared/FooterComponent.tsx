@@ -21,13 +21,13 @@ export default function FooterComponent() {
         </aside>
         <nav className="text-neutral text-2xl" >
           <div className="grid grid-flow-col gap-4">
-            <a>
+            <a href="https://github.com/BrianAtzori" target="_blank" rel="noopener">
               <IoLogoGithub />
             </a>
-            <a>
+            <a href="https://www.linkedin.com/in/brian-atzori/" target="_blank" rel="noopener">
               <IoLogoLinkedin />
             </a>
-            <a>
+            <a href="https://linktr.ee/brianatzori" target="_blank" rel="noopener">
               <SiLinktree />
             </a>
           </div>

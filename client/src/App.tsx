@@ -8,12 +8,15 @@ import Header from "./components/shared/HeaderComponent";
 import Footer from "./components/shared/FooterComponent";
 import AuthForm from "./pages/auth/AuthForm";
 import Dashboard from "./pages/user/Dashboard";
+import Settings from "./pages/user/Settings";
+import Expenses from "./pages/functions/Expenses";
+import Budget from "./pages/functions/Budget";
 
 // ------ REDUX ------
 import { useAppSelector } from "./redux/hooks";
 
 function App() {
-  const userLogged: boolean = useAppSelector(state => state.userLogged.value);
+  const userLogged: boolean = useAppSelector((state) => state.userLogged.value);
 
   return (
     <>
@@ -23,8 +26,12 @@ function App() {
           {/* LANDING & AUTH */}
           <Route path="/" element={<Splash />}></Route>
           <Route path="/auth/:mode" element={<AuthForm />}></Route>
-          {/* USER GENERAL */}
+          {/* USER */}
           <Route path="/user/dashboard" element={<Dashboard />}></Route>
+          <Route path="/user/settings" element={<Settings></Settings>}></Route>
+          {/* FUNCTIONS */}
+          <Route path="/user/expenses" element={<Expenses />}></Route>
+          <Route path="/user/budget" element={<Budget></Budget>}></Route>
         </Routes>
         <Footer></Footer>
       </div>

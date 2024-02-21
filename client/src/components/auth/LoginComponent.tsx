@@ -65,7 +65,7 @@ export default function LoginComponent() {
   }
 
   return (
-    <div className="hero min-h-screen text-neutral p-10">
+    <div className="hero min-h-screen text-neutral">
       <div className="hero-content flex-col desktop:flex-row-reverse">
         <div className="text-center desktop:text-left">
           <h1 className="text-5xl font-bold font-primary text-neutral">
