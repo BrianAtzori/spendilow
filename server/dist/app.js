@@ -11,14 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 // ------ ENV SETUP ------
 require("dotenv").config();
-const express = require('express');
+const express = require("express");
 const app = express();
 require("express-async-errors");
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
 // ----- DB IMPORT ------
-const dbConnectionPool = require('./db/db-connector');
+const dbConnectionPool = require("./db/db-connector");
 // ------ SWAGGER ------
-const swaggerUI = require('swagger-ui-express');
+const swaggerUI = require("swagger-ui-express");
 const YAML = require("yamljs");
 const swaggerDocument = YAML.load("./swagger.yaml");
 //------ SECURITY SETUP ------
@@ -27,13 +27,14 @@ const helmet = require("helmet");
 const cors = require("cors");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
-const cookieParser = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 //Activation
 app.use(helmet());
 app.use(cors({
     // origin: 'http://localhost:5173',
-    origin: '*',
-    credentials: true
+    // origin: '*',
+    origin: "https://spendilow-frontend.onrender.com",
+    credentials: true,
 }));
 app.use(xss());
 app.set("Trust Proxy", 1);
@@ -50,10 +51,12 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 const usersRouter = require("./routes/users");
 const utilitiesRouter = require("./routes/utilities");
 const authenticatedUsersRouter = require("./routes/authenticated-users");
+const transactionsRouter = require("./routes/transactions");
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
 app.use("/api/v1/authenticated-users", authenticationMiddleware, authenticatedUsersRouter);
-app.use('/api-docs/', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use("/api/v1/authenticated-users/transactions", authenticationMiddleware, transactionsRouter);
+app.use("/api-docs/", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 //Activation for Error Middleware
 app.use(errorHandlerMiddleware);
 //------- Try DB Connection or throw error ------

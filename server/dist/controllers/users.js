@@ -48,10 +48,14 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         .cookie("spendilow-refresh-token", refreshToken, {
         httpOnly: true,
         maxAge: 518400000,
+        sameSite: "none",
+        secure: true,
     })
         .cookie("spendilow-access-token", accessToken, {
         httpOnly: true,
         maxAge: 21600000,
+        sameSite: "none",
+        secure: true,
     })
         .json({ id: newAccount.id, account: newAccount.email });
 });
@@ -77,10 +81,14 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         .cookie("spendilow-refresh-token", refreshToken, {
         httpOnly: true,
         maxAge: 518400000,
+        sameSite: "none",
+        secure: true,
     })
         .cookie("spendilow-access-token", accessToken, {
         httpOnly: true,
         maxAge: 21600000,
+        sameSite: "none",
+        secure: true,
     })
         .json({
         id: spendilowUser.id,
@@ -108,31 +116,10 @@ const verifyMFA = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({ verified });
     }
 });
-// ------ REFRESH USER TOKENS ------
-const refreshUserTokens = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const refreshToken = req.cookies["spendilow-refresh-token"];
-    if (!refreshToken) {
-        throw new UnauthenticatedError("I token di autenticazione forniti non sono validi, accesso negato.");
-    }
-    try {
-        const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
-        const accessToken = jwt.sign({ id: decodedData.id, email: decodedData.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
-        res
-            .cookie("spendilow-access-token", accessToken, {
-            httpOnly: true,
-            maxAge: 21600000,
-        })
-            .json({ id: decodedData.id, email: decodedData.email });
-    }
-    catch (error) {
-        return res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).send({ token: "Invalid" });
-    }
-});
 // ------ Exports ------
 module.exports = {
     registerUser,
     loginUser,
     activateMFA,
     verifyMFA,
-    refreshUserTokens,
 };

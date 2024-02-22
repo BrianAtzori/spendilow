@@ -40,6 +40,31 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     queryResult = yield deleteSplUser(queryData, connection);
                     break;
                 }
+                case "CREATE_TRANSACTION": {
+                    queryResult = yield createTransactionQuery(queryData, connection);
+                    break;
+                }
+                case "GET_ALL_TRANSACTIONS": {
+                    queryResult = yield getAllTransactions(queryData, connection);
+                    return queryResult;
+                    break;
+                }
+                case "GET_SINGLE_TRANSACTION": {
+                    queryResult = getSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
+                    return queryResult;
+                    break;
+                }
+                case "UPDATE_TRANSACTION": {
+                    queryResult = updateSingleTransaction(queryData.spendilowUserId, queryData.transactionId, queryData.spendilowTransactionMod, connection);
+                    return queryResult;
+                    break;
+                }
+                case "DELETE_TRANSACTION": {
+                    queryResult = deleteSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
+                    return queryResult;
+                    break;
+                    break;
+                }
                 default: {
                     throw new BadRequestError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
@@ -131,6 +156,112 @@ const deleteSplUser = (spendilowUserId, connection) => __awaiter(void 0, void 0,
     const query = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`;
     let result = yield connection.query(query, [spendilowUserId]);
     return result;
+});
+// ------ CREATE TRANSACTION ------
+const createTransactionQuery = (transactionData, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  INSERT INTO transactions (id, user_id, transaction_date, title, notes, tags, transaction_type, target_id)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+`;
+    let rows;
+    let { id, user_id, transaction_date, title, notes, tags, transaction_type, target_id, } = transactionData;
+    try {
+        rows = yield connection.query(query, [
+            id,
+            user_id,
+            transaction_date,
+            title,
+            notes,
+            tags,
+            transaction_type,
+            target_id,
+            ,
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return rows;
+});
+// ------ GET ALL TRANSACTIONS ------
+const getAllTransactions = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  SELECT *
+  FROM transactions
+  WHERE user_id = ?
+`;
+    let rows;
+    try {
+        rows = yield connection.query(query, [spendilowUserId]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return rows;
+});
+// ------ GET SINGLE TRANSACTION ------
+const getSingleTransaction = (spendilowUserId, transactionId, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  SELECT *
+  FROM transactions
+  WHERE id = ? AND user_id = ?
+`;
+    let rows;
+    try {
+        rows = yield connection.query(query, [transactionId, spendilowUserId]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return rows;
+});
+// ------ UPDATE SINGLE TRANSACTION ------
+const updateSingleTransaction = (spendilowUserId, transactionId, spendilowTransactionMod, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  UPDATE transactions
+  SET
+    transaction_date = ?,
+    title = ?,
+    notes = ?,
+    tags = ?,
+    transaction_type = ?,
+    target_id = ?
+  WHERE id = ? AND user_id = ?
+`;
+    let rows;
+    let { transaction_date, title, notes, tags, transaction_type, target_id } = spendilowTransactionMod;
+    try {
+        rows = yield connection.query(query, [
+            transaction_date,
+            title,
+            notes,
+            tags,
+            transaction_type,
+            target_id,
+            transactionId,
+            spendilowUserId
+        ]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    console.log(rows);
+    return rows;
+});
+// ------ DELETE SINGLE TRANSACTION ------
+const deleteSingleTransaction = (spendilowUserId, transactionId, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  DELETE FROM transactions
+  WHERE id = ? AND user_id = ?
+`;
+    let rows;
+    try {
+        rows = yield connection.query(query, [transactionId, spendilowUserId]);
+    }
+    catch (error) {
+        console.log(error);
+    }
+    return rows;
 });
 // ------ Exports ------
 module.exports = {

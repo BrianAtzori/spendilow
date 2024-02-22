@@ -146,40 +146,10 @@ const verifyMFA = async (req: Request, res: Response) => {
   }
 };
 
-// ------ REFRESH USER TOKENS ------
-const refreshUserTokens = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies["spendilow-refresh-token"];
-
-  if (!refreshToken) {
-    throw new UnauthenticatedError(
-      "I token di autenticazione forniti non sono validi, accesso negato."
-    );
-  }
-
-  try {
-    const decodedData = jwt.verify(refreshToken, process.env.JW_SEC);
-
-    const accessToken = jwt.sign(
-      { id: decodedData.id, email: decodedData.email },
-      process.env.JW_SEC,
-      { expiresIn: process.env.WT_LIFE }
-    );
-    res
-      .cookie("spendilow-access-token", accessToken, {
-        httpOnly: true,
-        maxAge: 21600000,
-      })
-      .json({ id: decodedData.id, email: decodedData.email });
-  } catch (error) {
-    return res.status(StatusCodes.BAD_REQUEST).send({ token: "Invalid" });
-  }
-};
-
 // ------ Exports ------
 module.exports = {
   registerUser,
   loginUser,
   activateMFA,
   verifyMFA,
-  refreshUserTokens,
 };
