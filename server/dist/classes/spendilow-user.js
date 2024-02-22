@@ -16,13 +16,13 @@ const crypto_1 = __importDefault(require("crypto"));
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 class SpendilowUser {
-    constructor({ id, email, password, isMFAActive, savings, salary, profileImage, workfield, username }) {
+    constructor({ id, email, password, isMFAActive, savings, salary, profileimage, workfield, username, }) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.savings = savings;
         this.salary = salary;
-        this.profileImage = profileImage;
+        this.profileImage = profileimage;
         this.workfield = workfield;
         this.username = username;
         this.isMFAActive = isMFAActive;
@@ -38,10 +38,10 @@ class SpendilowUser {
     }
     JWTGeneration(mode) {
         switch (mode) {
-            case 'access': {
+            case "access": {
                 return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_LIFE });
             }
-            case 'refresh': {
+            case "refresh": {
                 return jwt.sign({ id: this.id, email: this.email }, process.env.JW_SEC, { expiresIn: process.env.WT_REFRESH_LIFE });
             }
             default: {

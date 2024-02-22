@@ -51,18 +51,19 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     break;
                 }
                 case "GET_SINGLE_TRANSACTION": {
-                    queryResult = yield getSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
+                    queryResult = getSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
                     return queryResult;
                     break;
                 }
                 case "UPDATE_TRANSACTION": {
-                    queryResult = yield updateSingleTransaction(queryData.spendilowUserId, queryData.transactionId, queryData.spendilowTransactionMod, connection);
+                    queryResult = updateSingleTransaction(queryData.spendilowUserId, queryData.transactionId, queryData.spendilowTransactionMod, connection);
                     return queryResult;
                     break;
                 }
                 case "DELETE_TRANSACTION": {
-                    queryResult = yield deleteSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
+                    queryResult = deleteSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
                     return queryResult;
+                    break;
                     break;
                 }
                 default: {

@@ -49,7 +49,7 @@ const databaseInteraction = async (
           break;
         }
         case "GET_SINGLE_TRANSACTION": {
-          queryResult = await getSingleTransaction(
+          queryResult = getSingleTransaction(
             queryData.spendilowUserId,
             queryData.transactionId,
             connection
@@ -58,7 +58,7 @@ const databaseInteraction = async (
           break;
         }
         case "UPDATE_TRANSACTION": {
-          queryResult = await updateSingleTransaction(
+          queryResult = updateSingleTransaction(
             queryData.spendilowUserId,
             queryData.transactionId,
             queryData.spendilowTransactionMod,
@@ -68,12 +68,13 @@ const databaseInteraction = async (
           break;
         }
         case "DELETE_TRANSACTION": {
-          queryResult = await deleteSingleTransaction(
+          queryResult = deleteSingleTransaction(
             queryData.spendilowUserId,
             queryData.transactionId,
             connection
           );
           return queryResult;
+          break;
           break;
         }
         default: {
@@ -285,6 +286,7 @@ const getSingleTransaction = async (
 };
 
 // ------ UPDATE SINGLE TRANSACTION ------
+
 const updateSingleTransaction = async (
   spendilowUserId: any,
   transactionId: any,

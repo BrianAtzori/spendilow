@@ -143,7 +143,7 @@ const bulkDataCreation = (req, res) => __awaiter(void 0, void 0, void 0, functio
             target_id: randomTargetID,
         });
     }
-    res.status(http_status_codes_1.StatusCodes.OK).json({ message: "OK" });
+    res.status(http_status_codes_1.StatusCodes.CREATED).json({ message: "OK" });
 });
 // ------ Exports ------
 module.exports = {

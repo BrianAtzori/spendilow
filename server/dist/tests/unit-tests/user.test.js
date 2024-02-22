@@ -15,7 +15,7 @@ const crypto_1 = __importDefault(require("crypto"));
 let baseURL = "http://localhost:5132/";
 let spendilowTestingUser;
 let cookie;
-describe("Spendilow API 💰", function () {
+describe("Spendilow API 💰 - Users Tests", function () {
     before(function () {
         const currentDate = new Date();
         console.log("Inizio dei test 🧪 - " +
@@ -34,7 +34,7 @@ describe("Spendilow API 💰", function () {
             isMFAActive: false,
             savings: 0.0,
             salary: 0.0,
-            profileImage: "https://i.pravatar.cc/150",
+            profileimage: "https://i.pravatar.cc/150",
             workfield: "Testing",
             username: "SpendilowTestingUser",
         };
@@ -112,7 +112,7 @@ describe("Spendilow API 💰", function () {
             isMFAActive: false,
             savings: 1,
             salary: 2,
-            profileImage: "https://i.pravatar.cc/150",
+            profileimage: "https://i.pravatar.cc/150",
             workfield: "Testing after editing",
             username: "SpendilowTestingUser",
         })
@@ -151,18 +151,19 @@ describe("Spendilow API 💰", function () {
             done();
         });
     });
+    // ------ LOGOUT USER PROFILE ------
     it("should logout an user on /authenticated-users/logout/ GET", function (done) {
         chaiTests
             .request(baseURL)
             .get(`api/v1/authenticated-users/logout/`)
-            .set('Cookie', cookie)
+            .set("Cookie", cookie)
             .end(function (err, res) {
             res.should.have.status(200);
             res.should.be.json;
             should.exist(res.header["set-cookie"]);
             res.body.should.have.property("logged-out");
-            should.exist(res.body['logged-out']);
-            res.body['logged-out'].should.be.equal(true);
+            should.exist(res.body["logged-out"]);
+            res.body["logged-out"].should.be.equal(true);
             done();
         });
     });

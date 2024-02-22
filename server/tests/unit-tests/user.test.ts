@@ -13,7 +13,7 @@ let baseURL: string = "http://localhost:5132/";
 let spendilowTestingUser: any;
 let cookie: any;
 
-describe("Spendilow API 💰", function () {
+describe("Spendilow API 💰 - Users Tests", function () {
   before(function () {
     const currentDate = new Date();
 
@@ -36,7 +36,7 @@ describe("Spendilow API 💰", function () {
       isMFAActive: false,
       savings: 0.0,
       salary: 0.0,
-      profileImage: "https://i.pravatar.cc/150",
+      profileimage: "https://i.pravatar.cc/150",
       workfield: "Testing",
       username: "SpendilowTestingUser",
     };
@@ -121,7 +121,7 @@ describe("Spendilow API 💰", function () {
         isMFAActive: false,
         savings: 1,
         salary: 2,
-        profileImage: "https://i.pravatar.cc/150",
+        profileimage: "https://i.pravatar.cc/150",
         workfield: "Testing after editing",
         username: "SpendilowTestingUser",
       })
@@ -172,21 +172,22 @@ describe("Spendilow API 💰", function () {
       });
   });
 
-  it("should logout an user on /authenticated-users/logout/ GET", function(done){
+  // ------ LOGOUT USER PROFILE ------
+  it("should logout an user on /authenticated-users/logout/ GET", function (done) {
     chaiTests
-    .request(baseURL)
-    .get(`api/v1/authenticated-users/logout/`)
-    .set('Cookie', cookie)
-    .end(function(err: Error, res: any){
-      res.should.have.status(200);
-      res.should.be.json;
-      should.exist(res.header["set-cookie"]);
-      res.body.should.have.property("logged-out")
-      should.exist(res.body['logged-out']);
-      res.body['logged-out'].should.be.equal(true)
-      done()
-    })
-  })
+      .request(baseURL)
+      .get(`api/v1/authenticated-users/logout/`)
+      .set("Cookie", cookie)
+      .end(function (err: Error, res: any) {
+        res.should.have.status(200);
+        res.should.be.json;
+        should.exist(res.header["set-cookie"]);
+        res.body.should.have.property("logged-out");
+        should.exist(res.body["logged-out"]);
+        res.body["logged-out"].should.be.equal(true);
+        done();
+      });
+  });
 
   // ------ DELETE USER ------
   it("should delete an user on /authenticated-users/del/ DELETE", function (done) {
@@ -200,3 +201,4 @@ describe("Spendilow API 💰", function () {
       });
   });
 });
+

@@ -189,7 +189,7 @@ const bulkDataCreation = async (req: any, res: any) => {
     });
   }
 
-  res.status(StatusCodes.OK).json({ message: "OK" });
+  res.status(StatusCodes.CREATED).json({ message: "OK" });
 };
 
 // ------ Exports ------
