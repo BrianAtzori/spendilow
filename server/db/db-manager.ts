@@ -40,6 +40,7 @@ const databaseInteraction = async (
         }
         case "CREATE_TRANSACTION": {
           queryResult = await createTransactionQuery(queryData, connection);
+          return queryResult;
           break;
         }
         case "GET_ALL_TRANSACTIONS": {
@@ -48,7 +49,7 @@ const databaseInteraction = async (
           break;
         }
         case "GET_SINGLE_TRANSACTION": {
-          queryResult = getSingleTransaction(
+          queryResult = await getSingleTransaction(
             queryData.spendilowUserId,
             queryData.transactionId,
             connection
@@ -57,7 +58,7 @@ const databaseInteraction = async (
           break;
         }
         case "UPDATE_TRANSACTION": {
-          queryResult = updateSingleTransaction(
+          queryResult = await updateSingleTransaction(
             queryData.spendilowUserId,
             queryData.transactionId,
             queryData.spendilowTransactionMod,
@@ -67,13 +68,12 @@ const databaseInteraction = async (
           break;
         }
         case "DELETE_TRANSACTION": {
-          queryResult = deleteSingleTransaction(
+          queryResult = await deleteSingleTransaction(
             queryData.spendilowUserId,
             queryData.transactionId,
             connection
           );
           return queryResult;
-          break;
           break;
         }
         default: {
@@ -285,7 +285,6 @@ const getSingleTransaction = async (
 };
 
 // ------ UPDATE SINGLE TRANSACTION ------
-
 const updateSingleTransaction = async (
   spendilowUserId: any,
   transactionId: any,
@@ -318,13 +317,13 @@ const updateSingleTransaction = async (
       transaction_type,
       target_id,
       transactionId,
-      spendilowUserId
+      spendilowUserId,
     ]);
   } catch (error) {
     console.log(error);
   }
 
-  console.log(rows)
+  console.log(rows);
 
   return rows;
 };

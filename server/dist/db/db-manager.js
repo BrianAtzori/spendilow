@@ -42,6 +42,7 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                 }
                 case "CREATE_TRANSACTION": {
                     queryResult = yield createTransactionQuery(queryData, connection);
+                    return queryResult;
                     break;
                 }
                 case "GET_ALL_TRANSACTIONS": {
@@ -50,19 +51,18 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     break;
                 }
                 case "GET_SINGLE_TRANSACTION": {
-                    queryResult = getSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
+                    queryResult = yield getSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
                     return queryResult;
                     break;
                 }
                 case "UPDATE_TRANSACTION": {
-                    queryResult = updateSingleTransaction(queryData.spendilowUserId, queryData.transactionId, queryData.spendilowTransactionMod, connection);
+                    queryResult = yield updateSingleTransaction(queryData.spendilowUserId, queryData.transactionId, queryData.spendilowTransactionMod, connection);
                     return queryResult;
                     break;
                 }
                 case "DELETE_TRANSACTION": {
-                    queryResult = deleteSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
+                    queryResult = yield deleteSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
                     return queryResult;
-                    break;
                     break;
                 }
                 default: {
@@ -239,7 +239,7 @@ const updateSingleTransaction = (spendilowUserId, transactionId, spendilowTransa
             transaction_type,
             target_id,
             transactionId,
-            spendilowUserId
+            spendilowUserId,
         ]);
     }
     catch (error) {

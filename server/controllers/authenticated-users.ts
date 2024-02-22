@@ -13,7 +13,7 @@ const modifyUser = async (req: any, res: Response) => {
   }
 
   if (!req.user.id) {
-    throw new BadRequestError(
+    throw new UnauthenticatedError(
       "L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente."
     );
   }
@@ -57,7 +57,7 @@ const deleteUser = async (req: any, res: Response) => {
   const userId = req.user.id;
 
   if (!userId) {
-    throw new BadRequestError(
+    throw new UnauthenticatedError(
       "L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
   }
@@ -85,7 +85,7 @@ const getUserProfile = async (req: any, res: Response) => {
   const requestId = req.user.id;
 
   if (!requestId) {
-    throw new BadRequestError(
+    throw new UnauthenticatedError(
       "Il profilo cercato non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
   }
@@ -127,7 +127,7 @@ const getUserProfile = async (req: any, res: Response) => {
 // ------ LOGOUT USER PROFILE ------
 const logoutUserProfile = async (req: any, res: Response) => {
   if (!req.user.id) {
-    throw new BadRequestError(
+    throw new UnauthenticatedError(
       "L'account da cui si sta cercando di fare il logout non esiste o l'ID é errato, contatta il supporto utente."
     );
   }

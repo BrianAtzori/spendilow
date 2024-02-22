@@ -18,7 +18,7 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.");
     }
     if (!req.user.id) {
-        throw new BadRequestError("L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente.");
+        throw new UnauthenticatedError("L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente.");
     }
     //For Email Duplication
     let existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER", req.body);
@@ -38,7 +38,7 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.user.id;
     if (!userId) {
-        throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
+        throw new UnauthenticatedError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
     const existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", userId);
     if (!existingSpendilowUser) {
@@ -53,7 +53,7 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const requestId = req.user.id;
     if (!requestId) {
-        throw new BadRequestError("Il profilo cercato non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
+        throw new UnauthenticatedError("Il profilo cercato non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
     const userProfile = yield dbManager.databaseInteraction("GET_USER_BY_ID", requestId);
     if (!userProfile) {
@@ -74,7 +74,7 @@ const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function*
 // ------ LOGOUT USER PROFILE ------
 const logoutUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user.id) {
-        throw new BadRequestError("L'account da cui si sta cercando di fare il logout non esiste o l'ID é errato, contatta il supporto utente.");
+        throw new UnauthenticatedError("L'account da cui si sta cercando di fare il logout non esiste o l'ID é errato, contatta il supporto utente.");
     }
     res
         .status(http_status_codes_1.StatusCodes.OK)

@@ -43,7 +43,7 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
 // ------ GET ALL TRANSACTIONS ------
 const getAllTransactions = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user.id) {
-        throw new BadRequestError("L'utente di cui si sta cercando di ottenere le transazioni non esiste o l'ID é errato, contatta il supporto utente.");
+        throw new UnauthenticatedError("L'utente di cui si sta cercando di ottenere le transazioni non esiste o l'ID é errato, contatta il supporto utente.");
     }
     let transactions = yield dbManager.databaseInteraction("GET_ALL_TRANSACTIONS", req.user.id);
     res.status(http_status_codes_1.StatusCodes.OK).json({ transactions });
@@ -54,7 +54,7 @@ const getSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, fun
         throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.");
     }
     if (!req.user.id) {
-        throw new BadRequestError("Non posso cercare la transazione per questo utente perché l'ID é errato, contatta il supporto utente.");
+        throw new UnauthenticatedError("Non posso cercare la transazione per questo utente perché l'ID é errato, contatta il supporto utente.");
     }
     let transaction = yield dbManager.databaseInteraction("GET_SINGLE_TRANSACTION", { transactionId: req.params.id, spendilowUserId: req.user.id });
     res.status(http_status_codes_1.StatusCodes.OK).json({ transaction });
@@ -68,7 +68,7 @@ const updateSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, 
         throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.");
     }
     if (!req.user.id) {
-        throw new BadRequestError("L'utente con cui si sta cercando di modificare una transazione non esiste o l'ID é errato, contatta il supporto utente.");
+        throw new UnauthenticatedError("L'utente con cui si sta cercando di modificare una transazione non esiste o l'ID é errato, contatta il supporto utente.");
     }
     yield dbManager.databaseInteraction("UPDATE_TRANSACTION", {
         transactionId: req.params.id,
@@ -85,7 +85,7 @@ const deleteSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, 
         throw new BadRequestError("Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente.");
     }
     if (!req.user.id) {
-        throw new BadRequestError("Non posso eliminare la transazione per questo utente perché l'ID é errato, contatta il supporto utente.");
+        throw new UnauthenticatedError("Non posso eliminare la transazione per questo utente perché l'ID é errato, contatta il supporto utente.");
     }
     yield dbManager.databaseInteraction("DELETE_TRANSACTION", {
         transactionId: req.params.id,
@@ -95,6 +95,56 @@ const deleteSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, 
         .status(http_status_codes_1.StatusCodes.OK)
         .json({ message: "Transazione eliminata correttamente!" });
 });
+// ------ BULK TRANSACTIONS CREATION------
+const bulkDataCreation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let howMany = 10;
+    let userId = req.user.id;
+    for (let i = 0; howMany >= i; i++) {
+        // ------ Random UUID ------
+        let newTransactionID = crypto_1.default.randomUUID();
+        let randomTargetID = crypto_1.default.randomUUID();
+        // ------ Random Type ------
+        const transactionTypeArray = ["Income", "Expense", "Budget"];
+        let randomNumber = Math.floor(Math.random() * transactionTypeArray.length);
+        let transaction_type = transactionTypeArray[randomNumber];
+        // ------ Random Date ------
+        const dates = [
+            "2024-02-06",
+            "2024-02-05",
+            "2024-02-01",
+            "2024-01-28",
+            "2024-01-27",
+            "2023-12-20",
+            "2023-12-18",
+            "2023-11-14",
+            "2023-11-13",
+            "2023-11-05",
+            "2022-11-15",
+            "2022-10-30",
+            "2022-10-29",
+            "2022-10-13",
+            "2022-10-08",
+            "2021-07-23",
+            "2021-07-19",
+            "2021-06-02",
+            "2021-05-09",
+            "2020-06-15",
+        ];
+        let randomDate = Math.floor(Math.random() * dates.length);
+        let transaction_date = dates[randomDate];
+        yield dbManager.databaseInteraction("CREATE_TRANSACTION", {
+            id: newTransactionID,
+            user_id: userId,
+            transaction_date,
+            title: `Fake transaction #${i + 1}`,
+            notes: `For the user ${userId}`,
+            tags: "FakeTag1;FakeTag2;",
+            transaction_type,
+            target_id: randomTargetID,
+        });
+    }
+    res.status(http_status_codes_1.StatusCodes.OK).json({ message: "OK" });
+});
 // ------ Exports ------
 module.exports = {
     createTransaction,
@@ -102,4 +152,5 @@ module.exports = {
     getSingleTransaction,
     updateSingleTransaction,
     deleteSingleTransaction,
+    bulkDataCreation,
 };
