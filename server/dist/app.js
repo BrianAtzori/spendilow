@@ -31,9 +31,9 @@ const cookieParser = require("cookie-parser");
 //Activation
 app.use(helmet());
 app.use(cors({
-    // origin: 'http://localhost:5173',
+    origin: 'http://localhost:5173',
     // origin: '*',
-    origin: "https://spendilow-frontend.onrender.com",
+    // origin: "https://spendilow-frontend.onrender.com",
     credentials: true,
 }));
 app.use(xss());
