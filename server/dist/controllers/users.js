@@ -18,7 +18,6 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 const qrCodeGenerator = require("../ts-utilities/generate_qr_code");
 const speakeasy = require("speakeasy");
-const jwt = require("jsonwebtoken");
 const crypto_1 = __importDefault(require("crypto"));
 // ------ REGISTER USER ------
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,9 +28,9 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     if (!email) {
         throw new BadRequestError("Email non valida, ricontrolla i dati inseriti o contatta il supporto utente.");
     }
-    const spendilowUser = yield dbManager.databaseInteraction("GET_USER", req.body);
+    const { payload } = yield dbManager.databaseInteraction("GET_USER", req.body);
     //Check if user exists
-    if (spendilowUser) {
+    if (payload.length != 0) {
         throw new BadRequestError("Errore nella creazione dell'account, l'email inserita è già associata ad un account.");
     }
     let id = crypto_1.default.randomUUID();
@@ -39,25 +38,27 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     yield newAccount.hashPassword();
     const refreshToken = newAccount.JWTGeneration("refresh");
     const accessToken = newAccount.JWTGeneration("access");
-    const createdUser = yield dbManager.databaseInteraction("CREATE_USER", newAccount);
-    if (!createdUser) {
+    const { successState } = yield dbManager.databaseInteraction("CREATE_USER", newAccount);
+    if (successState) {
+        res
+            .status(http_status_codes_1.StatusCodes.CREATED)
+            .cookie("spendilow-refresh-token", refreshToken, {
+            httpOnly: true,
+            maxAge: 518400000,
+            sameSite: "none",
+            secure: true,
+        })
+            .cookie("spendilow-access-token", accessToken, {
+            httpOnly: true,
+            maxAge: 21600000,
+            sameSite: "none",
+            secure: true,
+        })
+            .json({ id: newAccount.id, account: newAccount.email });
+    }
+    else {
         throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.");
     }
-    res
-        .status(http_status_codes_1.StatusCodes.CREATED)
-        .cookie("spendilow-refresh-token", refreshToken, {
-        httpOnly: true,
-        maxAge: 518400000,
-        sameSite: "none",
-        secure: true,
-    })
-        .cookie("spendilow-access-token", accessToken, {
-        httpOnly: true,
-        maxAge: 21600000,
-        sameSite: "none",
-        secure: true,
-    })
-        .json({ id: newAccount.id, account: newAccount.email });
 });
 // ------ LOGIN USER ------
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -65,11 +66,11 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!email || !password) {
         throw new BadRequestError("Email o password non validi");
     }
-    const retrievedUser = yield dbManager.databaseInteraction("GET_USER", req.body);
-    if (!retrievedUser) {
+    const { successState, payload } = yield dbManager.databaseInteraction("GET_USER", req.body);
+    if (successState && payload.length === 0) {
         throw new UnauthenticatedError("L'indirizzo email fornito non è associato ad alcun account.");
     }
-    const spendilowUser = new SpendilowUser(retrievedUser);
+    const spendilowUser = new SpendilowUser(...payload);
     const isPasswordCorrect = yield spendilowUser.pwdCheck(password);
     if (!isPasswordCorrect) {
         throw new UnauthenticatedError("La password fornita è errata.");

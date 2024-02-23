@@ -21,18 +21,26 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         throw new UnauthenticatedError("L'utente che si sta cercando di modificare non esiste o l'ID é errato, contatta il supporto utente.");
     }
     //For Email Duplication
-    let existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER", req.body);
+    let databaseOperationResult = yield dbManager.databaseInteraction("GET_USER", req.body);
     //Check if user exists with that email
-    if (existingSpendilowUser && existingSpendilowUser.id != req.user.id) {
-        throw new BadRequestError("L'email che si sta inserendo é giá utilizzata da un altro account e non puó essere usata per modificare quella dell'account in uso.");
+    if (databaseOperationResult.successState &&
+        databaseOperationResult.payload.length > 0) {
+        if (databaseOperationResult.payload[0].id != req.user.id) {
+            throw new BadRequestError("L'email che si sta inserendo é giá utilizzata da un altro account e non puó essere usata per modificare quella dell'account in uso.");
+        }
     }
     //For Account Editing
-    existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.user.id);
-    if (!existingSpendilowUser) {
+    const { successState, payload } = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.user.id);
+    if (!successState) {
         throw new BadRequestError("L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
-    const modifiedUser = yield dbManager.databaseInteraction("UPDATE_USER", req.body, existingSpendilowUser.id);
-    res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json();
+    const userUpdateResult = yield dbManager.databaseInteraction("UPDATE_USER", req.body, payload[0].id);
+    if (userUpdateResult.successState) {
+        res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json();
+    }
+    else {
+        throw new Error("La modifica dell'utente non é andata a buon fine, riprova oppure contatta il supporto.");
+    }
 });
 // ------ DELETE USER ------
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -51,11 +59,10 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 // ------ GET USER PROFILE ------
 const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const requestId = req.user.id;
-    if (!requestId) {
+    if (!req.user.id) {
         throw new UnauthenticatedError("Il profilo cercato non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
-    const userProfile = yield dbManager.databaseInteraction("GET_USER_BY_ID", requestId);
+    const userProfile = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.user.id);
     if (!userProfile) {
         throw new BadRequestError("L'utente che si sta cercando non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }

@@ -16,6 +16,7 @@ const http_status_codes_1 = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 const crypto_1 = __importDefault(require("crypto"));
+const SpendilowTransaction = require("../classes/transaction");
 // ------ CREATE TRANSACTION ------
 const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body) {
@@ -25,17 +26,9 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
         throw new BadRequestError("L'utente con cui si sta cercando di creare una transazione non esiste o l'ID é errato, contatta il supporto utente.");
     }
     let newTransactionID = crypto_1.default.randomUUID();
-    let { transaction_date, title, notes, tags, transaction_type, target_id } = req.body;
-    dbManager.databaseInteraction("CREATE_TRANSACTION", {
-        id: newTransactionID,
-        user_id: req.user.id,
-        transaction_date,
-        title,
-        notes,
-        tags,
-        transaction_type,
-        target_id,
-    });
+    let userID = req.user.id;
+    let newSpendilowTransaction = new SpendilowTransaction(Object.assign({ id: newTransactionID, user_id: userID }, req.body));
+    dbManager.databaseInteraction("CREATE_TRANSACTION", newSpendilowTransaction);
     res
         .status(http_status_codes_1.StatusCodes.CREATED)
         .json({ message: "Nuova transazione aggiunta!" });
@@ -135,6 +128,7 @@ const bulkDataCreation = (req, res) => __awaiter(void 0, void 0, void 0, functio
         yield dbManager.databaseInteraction("CREATE_TRANSACTION", {
             id: newTransactionID,
             user_id: userId,
+            amount: 10.8,
             transaction_date,
             title: `Fake transaction #${i + 1}`,
             notes: `For the user ${userId}`,

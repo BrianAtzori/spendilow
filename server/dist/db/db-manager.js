@@ -22,22 +22,27 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
             switch (operation) {
                 case "CREATE_USER": {
                     queryResult = yield createSplUser(queryData, connection);
+                    return queryResult;
                     break;
                 }
                 case "GET_USER": {
                     queryResult = yield readSplUser(queryData, connection);
+                    return queryResult;
                     break;
                 }
                 case "GET_USER_BY_ID": {
                     queryResult = yield readSplUserByID(queryData, connection);
+                    return queryResult;
                     break;
                 }
                 case "UPDATE_USER": {
                     queryResult = yield updateUserByID(queryData, connection, id);
+                    return queryResult;
                     break;
                 }
                 case "DELETE_USER": {
                     queryResult = yield deleteSplUser(queryData, connection);
+                    return queryResult;
                     break;
                 }
                 case "CREATE_TRANSACTION": {
@@ -64,7 +69,6 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     queryResult = deleteSingleTransaction(queryData.spendilowUserId, queryData.transactionId, connection);
                     return queryResult;
                     break;
-                    break;
                 }
                 default: {
                     throw new BadRequestError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
@@ -88,10 +92,13 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
         INSERT INTO \`splusers\` (\`id\`, \`email\`, \`password\`, \`isMFAActive\`, \`savings\`, \`salary\`, \`profileimage\`, \`workfield\`, \`username\`)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-    let rows;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
     let { id, email, password, isMFAActive, savings, salary, profileImage, workfield, username, } = spendilowUser;
     try {
-        rows = yield connection.query(query, [
+        rows.payload = yield connection.query(query, [
             id,
             email,
             password,
@@ -102,9 +109,12 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
             workfield,
             username,
         ]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
     }
     catch (error) {
-        console.log(error);
+        rows.payload = error.sqlMessage;
     }
     return rows;
 });
@@ -112,18 +122,37 @@ const createSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, v
 const readSplUser = (spendilowUser, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `SELECT * FROM \`splusers\` WHERE \`email\`=? LIMIT 1`;
     const email = spendilowUser.email;
-    let rows = yield connection.query(query, [email]);
-    return rows[0];
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    try {
+        rows.payload = yield connection.query(query, [email]);
+        rows.successState = true;
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    return rows;
 });
 // ------ RETRIEVE SPENDILOW USER BY ID ------
-const readSplUserByID = (spendilowUserID, connection) => __awaiter(void 0, void 0, void 0, function* () {
+const readSplUserByID = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `SELECT * FROM \`splusers\` WHERE \`id\`=? LIMIT 1`;
-    let rows = yield connection.query(query, [spendilowUserID]);
-    return rows[0];
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    try {
+        rows.payload = yield connection.query(query, [spendilowUserId]);
+        rows.successState = true;
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    return rows;
 });
 // ------ UPDATE SPENDILOW USER ------
 const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void 0, void 0, function* () {
-    let rows;
     const query = `
     UPDATE \`splusers\` 
     SET 
@@ -135,9 +164,13 @@ const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void
       username = ?
     WHERE id = ?
   `;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
     let { email, savings, salary, profileimage, workfield, username } = spendilowUser;
     try {
-        rows = yield connection.query(query, [
+        rows.payload = yield connection.query(query, [
             email,
             savings,
             salary,
@@ -146,30 +179,49 @@ const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void
             username,
             id,
         ]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
     }
     catch (error) {
-        console.log(error);
+        rows.payload = error.sqlMessage;
     }
     return rows;
 });
 // ------ DELETE SPENDILOW USER ------
 const deleteSplUser = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`;
-    let result = yield connection.query(query, [spendilowUserId]);
-    return result;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    try {
+        rows.payload = yield connection.query(query, [spendilowUserId]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    return rows;
 });
 // ------ CREATE TRANSACTION ------
 const createTransactionQuery = (transactionData, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `
-  INSERT INTO transactions (id, user_id, transaction_date, title, notes, tags, transaction_type, target_id)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO transactions (id, user_id, amount, transaction_date, title, notes, tags, transaction_type, target_id)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
-    let rows;
-    let { id, user_id, transaction_date, title, notes, tags, transaction_type, target_id, } = transactionData;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    let { id, user_id, amount, transaction_date, title, notes, tags, transaction_type, target_id, } = transactionData;
     try {
-        rows = yield connection.query(query, [
+        rows.payload = yield connection.query(query, [
             id,
             user_id,
+            amount,
             transaction_date,
             title,
             notes,
@@ -178,9 +230,12 @@ const createTransactionQuery = (transactionData, connection) => __awaiter(void 0
             target_id,
             ,
         ]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
     }
     catch (error) {
-        console.log(error);
+        rows.payload = error.sqlMessage;
     }
     return rows;
 });
@@ -191,12 +246,16 @@ const getAllTransactions = (spendilowUserId, connection) => __awaiter(void 0, vo
   FROM transactions
   WHERE user_id = ?
 `;
-    let rows;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
     try {
-        rows = yield connection.query(query, [spendilowUserId]);
+        rows.payload = yield connection.query(query, [spendilowUserId]);
+        rows.successState = true;
     }
     catch (error) {
-        console.log(error);
+        rows.payload = error.sqlMessage;
     }
     return rows;
 });
@@ -207,12 +266,16 @@ const getSingleTransaction = (spendilowUserId, transactionId, connection) => __a
   FROM transactions
   WHERE id = ? AND user_id = ?
 `;
-    let rows;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
     try {
         rows = yield connection.query(query, [transactionId, spendilowUserId]);
+        rows.successState = true;
     }
     catch (error) {
-        console.log(error);
+        rows.payload = error.sqlMessage;
     }
     return rows;
 });
@@ -221,6 +284,7 @@ const updateSingleTransaction = (spendilowUserId, transactionId, spendilowTransa
     const query = `
   UPDATE transactions
   SET
+    amount = ?,
     transaction_date = ?,
     title = ?,
     notes = ?,
@@ -229,10 +293,14 @@ const updateSingleTransaction = (spendilowUserId, transactionId, spendilowTransa
     target_id = ?
   WHERE id = ? AND user_id = ?
 `;
-    let rows;
-    let { transaction_date, title, notes, tags, transaction_type, target_id } = spendilowTransactionMod;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    let { amount, transaction_date, title, notes, tags, transaction_type, target_id, } = spendilowTransactionMod;
     try {
         rows = yield connection.query(query, [
+            amount,
             transaction_date,
             title,
             notes,
@@ -242,9 +310,12 @@ const updateSingleTransaction = (spendilowUserId, transactionId, spendilowTransa
             transactionId,
             spendilowUserId,
         ]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
     }
     catch (error) {
-        console.log(error);
+        rows.payload = error.sqlMessage;
     }
     console.log(rows);
     return rows;
@@ -255,12 +326,18 @@ const deleteSingleTransaction = (spendilowUserId, transactionId, connection) => 
   DELETE FROM transactions
   WHERE id = ? AND user_id = ?
 `;
-    let rows;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
     try {
         rows = yield connection.query(query, [transactionId, spendilowUserId]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
     }
     catch (error) {
-        console.log(error);
+        rows.payload = error.sqlMessage;
     }
     return rows;
 });

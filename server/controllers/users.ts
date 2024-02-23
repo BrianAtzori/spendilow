@@ -6,7 +6,6 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 const qrCodeGenerator = require("../ts-utilities/generate_qr_code");
 const speakeasy = require("speakeasy");
-const jwt = require("jsonwebtoken");
 import crypto from "crypto";
 
 // ------ REGISTER USER ------
@@ -25,13 +24,10 @@ const registerUser = async (req: Request, res: Response) => {
     );
   }
 
-  const spendilowUser = await dbManager.databaseInteraction(
-    "GET_USER",
-    req.body
-  );
+  const { payload } = await dbManager.databaseInteraction("GET_USER", req.body);
 
   //Check if user exists
-  if (spendilowUser) {
+  if (payload.length != 0) {
     throw new BadRequestError(
       "Errore nella creazione dell'account, l'email inserita è già associata ad un account."
     );
@@ -46,32 +42,32 @@ const registerUser = async (req: Request, res: Response) => {
   const refreshToken = newAccount.JWTGeneration("refresh");
   const accessToken = newAccount.JWTGeneration("access");
 
-  const createdUser = await dbManager.databaseInteraction(
+  const { successState } = await dbManager.databaseInteraction(
     "CREATE_USER",
     newAccount
   );
 
-  if (!createdUser) {
+  if (successState) {
+    res
+      .status(StatusCodes.CREATED)
+      .cookie("spendilow-refresh-token", refreshToken, {
+        httpOnly: true,
+        maxAge: 518400000,
+        sameSite: "none",
+        secure: true,
+      })
+      .cookie("spendilow-access-token", accessToken, {
+        httpOnly: true,
+        maxAge: 21600000,
+        sameSite: "none",
+        secure: true,
+      })
+      .json({ id: newAccount.id, account: newAccount.email });
+  } else {
     throw new BadRequestError(
       "Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente."
     );
   }
-
-  res
-    .status(StatusCodes.CREATED)
-    .cookie("spendilow-refresh-token", refreshToken, {
-      httpOnly: true,
-      maxAge: 518400000,
-      sameSite: "none",
-      secure: true,
-    })
-    .cookie("spendilow-access-token", accessToken, {
-      httpOnly: true,
-      maxAge: 21600000,
-      sameSite: "none",
-      secure: true,
-    })
-    .json({ id: newAccount.id, account: newAccount.email });
 };
 
 // ------ LOGIN USER ------
@@ -82,18 +78,18 @@ const loginUser = async (req: Request, res: Response) => {
     throw new BadRequestError("Email o password non validi");
   }
 
-  const retrievedUser = await dbManager.databaseInteraction(
+  const { successState, payload } = await dbManager.databaseInteraction(
     "GET_USER",
     req.body
   );
 
-  if (!retrievedUser) {
+  if (successState && payload.length === 0) {
     throw new UnauthenticatedError(
       "L'indirizzo email fornito non è associato ad alcun account."
     );
   }
 
-  const spendilowUser = new SpendilowUser(retrievedUser);
+  const spendilowUser = new SpendilowUser(...payload);
 
   const isPasswordCorrect: boolean = await spendilowUser.pwdCheck(password);
 

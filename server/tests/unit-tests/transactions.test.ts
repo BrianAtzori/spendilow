@@ -44,6 +44,7 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
     };
 
     spendilowTestTransaction = {
+      amount: 10.8,
       transaction_date: "1970/01/01",
       title: "Transazione di test",
       notes: "Transazione generata per il testing",
@@ -168,6 +169,9 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
         res.body.transactions[0].should.have.property("user_id");
         should.exist(res.body.transactions[0].user_id);
 
+        res.body.transactions[0].should.have.property("amount");
+        should.exist(res.body.transactions[0].amount);
+
         res.body.transactions[0].should.have.property("transaction_date");
         should.exist(res.body.transactions[0].transaction_date);
 
@@ -206,7 +210,10 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
         should.exist(res.body.transaction[0].id);
 
         res.body.transaction[0].should.have.property("user_id");
-        should.exist(res.body.transaction[0].user_id);
+        should.exist(res.body.transaction[0]['user_id']);
+
+        res.body.transaction[0].should.have.property("amount");
+        should.exist(res.body.transaction[0].amount);
 
         res.body.transaction[0].should.have.property("transaction_date");
         should.exist(res.body.transaction[0].transaction_date);

@@ -19,37 +19,48 @@ const modifyUser = async (req: any, res: Response) => {
   }
 
   //For Email Duplication
-  let existingSpendilowUser = await dbManager.databaseInteraction(
+  let databaseOperationResult = await dbManager.databaseInteraction(
     "GET_USER",
     req.body
   );
 
   //Check if user exists with that email
-  if (existingSpendilowUser && existingSpendilowUser.id != req.user.id) {
-    throw new BadRequestError(
-      "L'email che si sta inserendo é giá utilizzata da un altro account e non puó essere usata per modificare quella dell'account in uso."
-    );
+  if (
+    databaseOperationResult.successState &&
+    databaseOperationResult.payload.length > 0
+  ) {
+    if (databaseOperationResult.payload[0].id != req.user.id) {
+      throw new BadRequestError(
+        "L'email che si sta inserendo é giá utilizzata da un altro account e non puó essere usata per modificare quella dell'account in uso."
+      );
+    }
   }
 
   //For Account Editing
-  existingSpendilowUser = await dbManager.databaseInteraction(
+  const { successState, payload } = await dbManager.databaseInteraction(
     "GET_USER_BY_ID",
     req.user.id
   );
 
-  if (!existingSpendilowUser) {
+  if (!successState) {
     throw new BadRequestError(
       "L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
   }
 
-  const modifiedUser = await dbManager.databaseInteraction(
+  const userUpdateResult = await dbManager.databaseInteraction(
     "UPDATE_USER",
     req.body,
-    existingSpendilowUser.id
+    payload[0].id
   );
 
-  res.status(StatusCodes.NO_CONTENT).json();
+  if (userUpdateResult.successState) {
+    res.status(StatusCodes.NO_CONTENT).json();
+  } else {
+    throw new Error(
+      "La modifica dell'utente non é andata a buon fine, riprova oppure contatta il supporto."
+    );
+  }
 };
 
 // ------ DELETE USER ------
@@ -82,9 +93,8 @@ const deleteUser = async (req: any, res: Response) => {
 
 // ------ GET USER PROFILE ------
 const getUserProfile = async (req: any, res: Response) => {
-  const requestId = req.user.id;
 
-  if (!requestId) {
+  if (!req.user.id) {
     throw new UnauthenticatedError(
       "Il profilo cercato non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
@@ -92,7 +102,7 @@ const getUserProfile = async (req: any, res: Response) => {
 
   const userProfile = await dbManager.databaseInteraction(
     "GET_USER_BY_ID",
-    requestId
+    req.user.id
   );
 
   if (!userProfile) {

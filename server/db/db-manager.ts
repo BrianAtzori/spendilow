@@ -20,22 +20,27 @@ const databaseInteraction = async (
       switch (operation) {
         case "CREATE_USER": {
           queryResult = await createSplUser(queryData, connection);
+          return queryResult;
           break;
         }
         case "GET_USER": {
           queryResult = await readSplUser(queryData, connection);
+          return queryResult;
           break;
         }
         case "GET_USER_BY_ID": {
           queryResult = await readSplUserByID(queryData, connection);
+          return queryResult;
           break;
         }
         case "UPDATE_USER": {
           queryResult = await updateUserByID(queryData, connection, id);
+          return queryResult;
           break;
         }
         case "DELETE_USER": {
           queryResult = await deleteSplUser(queryData, connection);
+          return queryResult;
           break;
         }
         case "CREATE_TRANSACTION": {
@@ -75,7 +80,6 @@ const databaseInteraction = async (
           );
           return queryResult;
           break;
-          break;
         }
         default: {
           throw new BadRequestError(
@@ -96,6 +100,11 @@ const databaseInteraction = async (
   }
 };
 
+interface databaseOperationResult {
+  successState: boolean;
+  payload: any;
+}
+
 // ------ REGISTER SPENDILOW USER ------
 const createSplUser = async (spendilowUser: any, connection: any) => {
   const query = `
@@ -103,7 +112,10 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-  let rows;
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
   let {
     id,
@@ -118,7 +130,7 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
   } = spendilowUser;
 
   try {
-    rows = await connection.query(query, [
+    rows.payload = await connection.query(query, [
       id,
       email,
       password,
@@ -129,8 +141,12 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
       workfield,
       username,
     ]);
-  } catch (error) {
-    console.log(error);
+
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
   }
 
   return rows;
@@ -142,24 +158,42 @@ const readSplUser = async (spendilowUser: any, connection: any) => {
 
   const email = spendilowUser.email;
 
-  let rows = await connection.query(query, [email]);
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
-  return rows[0];
+  try {
+    rows.payload = await connection.query(query, [email]);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  return rows;
 };
 
 // ------ RETRIEVE SPENDILOW USER BY ID ------
-const readSplUserByID = async (spendilowUserID: any, connection: any) => {
+const readSplUserByID = async (spendilowUserId: any, connection: any) => {
   const query = `SELECT * FROM \`splusers\` WHERE \`id\`=? LIMIT 1`;
 
-  let rows = await connection.query(query, [spendilowUserID]);
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
-  return rows[0];
+  try {
+    rows.payload = await connection.query(query, [spendilowUserId]);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  return rows;
 };
 
 // ------ UPDATE SPENDILOW USER ------
 const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
-  let rows;
-
   const query = `
     UPDATE \`splusers\` 
     SET 
@@ -172,11 +206,16 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
     WHERE id = ?
   `;
 
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
   let { email, savings, salary, profileimage, workfield, username } =
     spendilowUser;
 
   try {
-    rows = await connection.query(query, [
+    rows.payload = await connection.query(query, [
       email,
       savings,
       salary,
@@ -185,8 +224,12 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
       username,
       id,
     ]);
-  } catch (error) {
-    console.log(error);
+
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
   }
 
   return rows;
@@ -196,9 +239,21 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
 const deleteSplUser = async (spendilowUserId: any, connection: any) => {
   const query = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`;
 
-  let result = await connection.query(query, [spendilowUserId]);
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
-  return result;
+  try {
+    rows.payload = await connection.query(query, [spendilowUserId]);
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  return rows;
 };
 
 // ------ CREATE TRANSACTION ------
@@ -207,15 +262,19 @@ const createTransactionQuery = async (
   connection: any
 ) => {
   const query = `
-  INSERT INTO transactions (id, user_id, transaction_date, title, notes, tags, transaction_type, target_id)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO transactions (id, user_id, amount, transaction_date, title, notes, tags, transaction_type, target_id)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 
-  let rows;
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
   let {
     id,
     user_id,
+    amount,
     transaction_date,
     title,
     notes,
@@ -225,9 +284,10 @@ const createTransactionQuery = async (
   } = transactionData;
 
   try {
-    rows = await connection.query(query, [
+    rows.payload = await connection.query(query, [
       id,
       user_id,
+      amount,
       transaction_date,
       title,
       notes,
@@ -236,8 +296,12 @@ const createTransactionQuery = async (
       target_id,
       ,
     ]);
-  } catch (error) {
-    console.log(error);
+
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
   }
 
   return rows;
@@ -251,12 +315,16 @@ const getAllTransactions = async (spendilowUserId: any, connection: any) => {
   WHERE user_id = ?
 `;
 
-  let rows;
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
   try {
-    rows = await connection.query(query, [spendilowUserId]);
-  } catch (error) {
-    console.log(error);
+    rows.payload = await connection.query(query, [spendilowUserId]);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
   }
 
   return rows;
@@ -274,19 +342,22 @@ const getSingleTransaction = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows;
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
   try {
     rows = await connection.query(query, [transactionId, spendilowUserId]);
-  } catch (error) {
-    console.log(error);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
   }
 
   return rows;
 };
 
 // ------ UPDATE SINGLE TRANSACTION ------
-
 const updateSingleTransaction = async (
   spendilowUserId: any,
   transactionId: any,
@@ -296,6 +367,7 @@ const updateSingleTransaction = async (
   const query = `
   UPDATE transactions
   SET
+    amount = ?,
     transaction_date = ?,
     title = ?,
     notes = ?,
@@ -305,13 +377,24 @@ const updateSingleTransaction = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows;
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
-  let { transaction_date, title, notes, tags, transaction_type, target_id } =
-    spendilowTransactionMod;
+  let {
+    amount,
+    transaction_date,
+    title,
+    notes,
+    tags,
+    transaction_type,
+    target_id,
+  } = spendilowTransactionMod;
 
   try {
     rows = await connection.query(query, [
+      amount,
       transaction_date,
       title,
       notes,
@@ -321,8 +404,11 @@ const updateSingleTransaction = async (
       transactionId,
       spendilowUserId,
     ]);
-  } catch (error) {
-    console.log(error);
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
   }
 
   console.log(rows);
@@ -341,12 +427,18 @@ const deleteSingleTransaction = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows;
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
 
   try {
     rows = await connection.query(query, [transactionId, spendilowUserId]);
-  } catch (error) {
-    console.log(error);
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
   }
 
   return rows;

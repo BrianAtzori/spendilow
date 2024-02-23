@@ -1,9 +1,10 @@
 // ------ Imports ------
-import { Request, Response } from "express"; //TS Import
+import { Response } from "express"; //TS Import
 import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 import crypto from "crypto";
+const SpendilowTransaction = require("../classes/transaction");
 
 // ------ CREATE TRANSACTION ------
 const createTransaction = async (req: any, res: Response) => {
@@ -21,19 +22,15 @@ const createTransaction = async (req: any, res: Response) => {
 
   let newTransactionID: string = crypto.randomUUID();
 
-  let { transaction_date, title, notes, tags, transaction_type, target_id } =
-    req.body;
+  let userID: string = req.user.id;
 
-  dbManager.databaseInteraction("CREATE_TRANSACTION", {
+  let newSpendilowTransaction = new SpendilowTransaction({
     id: newTransactionID,
-    user_id: req.user.id,
-    transaction_date,
-    title,
-    notes,
-    tags,
-    transaction_type,
-    target_id,
+    user_id: userID,
+    ...req.body,
   });
+
+  dbManager.databaseInteraction("CREATE_TRANSACTION", newSpendilowTransaction);
 
   res
     .status(StatusCodes.CREATED)
@@ -180,6 +177,7 @@ const bulkDataCreation = async (req: any, res: any) => {
     await dbManager.databaseInteraction("CREATE_TRANSACTION", {
       id: newTransactionID,
       user_id: userId,
+      amount: 10.8,
       transaction_date,
       title: `Fake transaction #${i + 1}`,
       notes: `For the user ${userId}`,

@@ -40,6 +40,7 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             username: "SpendilowTestingUser",
         };
         spendilowTestTransaction = {
+            amount: 10.8,
             transaction_date: "1970/01/01",
             title: "Transazione di test",
             notes: "Transazione generata per il testing",
@@ -151,6 +152,8 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             singleSpendilowTestTransaction = res.body.transactions[0].id;
             res.body.transactions[0].should.have.property("user_id");
             should.exist(res.body.transactions[0].user_id);
+            res.body.transactions[0].should.have.property("amount");
+            should.exist(res.body.transactions[0].amount);
             res.body.transactions[0].should.have.property("transaction_date");
             should.exist(res.body.transactions[0].transaction_date);
             res.body.transactions[0].should.have.property("title");
@@ -178,7 +181,9 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             res.body.transaction[0].should.have.property("id");
             should.exist(res.body.transaction[0].id);
             res.body.transaction[0].should.have.property("user_id");
-            should.exist(res.body.transaction[0].user_id);
+            should.exist(res.body.transaction[0]['user_id']);
+            res.body.transaction[0].should.have.property("amount");
+            should.exist(res.body.transaction[0].amount);
             res.body.transaction[0].should.have.property("transaction_date");
             should.exist(res.body.transaction[0].transaction_date);
             res.body.transaction[0].should.have.property("title");
