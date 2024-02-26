@@ -81,6 +81,11 @@ const databaseInteraction = async (
           return queryResult;
           break;
         }
+        case "DELETE_USER_TRANSACTIONS": {
+          queryResult = deleteUserTransactions(queryData, connection);
+          return queryResult;
+          break;
+        }
         default: {
           throw new BadRequestError(
             `I dati non sono validi, ricontrollali o contatta il supporto utente.`
@@ -232,6 +237,8 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
     rows.payload = error.sqlMessage;
   }
 
+  console.log(rows);
+
   return rows;
 };
 
@@ -304,6 +311,8 @@ const createTransactionQuery = async (
     rows.payload = error.sqlMessage;
   }
 
+  console.log(rows);
+
   return rows;
 };
 
@@ -327,6 +336,8 @@ const getAllTransactions = async (spendilowUserId: any, connection: any) => {
     rows.payload = error.sqlMessage;
   }
 
+  console.log(rows);
+
   return rows;
 };
 
@@ -348,11 +359,16 @@ const getSingleTransaction = async (
   };
 
   try {
-    rows = await connection.query(query, [transactionId, spendilowUserId]);
+    rows.payload = await connection.query(query, [
+      transactionId,
+      spendilowUserId,
+    ]);
     rows.successState = true;
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
+
+  console.log(rows);
 
   return rows;
 };
@@ -393,7 +409,7 @@ const updateSingleTransaction = async (
   } = spendilowTransactionMod;
 
   try {
-    rows = await connection.query(query, [
+    rows.payload = await connection.query(query, [
       amount,
       transaction_date,
       title,
@@ -404,6 +420,7 @@ const updateSingleTransaction = async (
       transactionId,
       spendilowUserId,
     ]);
+
     if (rows.payload.affectedRows === 1) {
       rows.successState = true;
     }
@@ -433,13 +450,47 @@ const deleteSingleTransaction = async (
   };
 
   try {
-    rows = await connection.query(query, [transactionId, spendilowUserId]);
+    rows.payload = await connection.query(query, [
+      transactionId,
+      spendilowUserId,
+    ]);
     if (rows.payload.affectedRows === 1) {
       rows.successState = true;
     }
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
+
+  console.log(rows);
+
+  return rows;
+};
+
+// ------ DELETE SINGLE TRANSACTION ------
+const deleteUserTransactions = async (
+  spendilowUserId: any,
+  connection: any
+) => {
+  console.log(spendilowUserId);
+
+  const query = `
+  DELETE FROM transactions
+  WHERE user_id = ?
+`;
+
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
+  try {
+    rows.payload = await connection.query(query, [spendilowUserId]);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  console.log(rows);
 
   return rows;
 };

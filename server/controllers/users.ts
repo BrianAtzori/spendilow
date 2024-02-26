@@ -42,12 +42,12 @@ const registerUser = async (req: Request, res: Response) => {
   const refreshToken = newAccount.JWTGeneration("refresh");
   const accessToken = newAccount.JWTGeneration("access");
 
-  const { successState } = await dbManager.databaseInteraction(
+  const databaseOperationResult = await dbManager.databaseInteraction(
     "CREATE_USER",
     newAccount
   );
 
-  if (successState) {
+  if (databaseOperationResult.successState) {
     res
       .status(StatusCodes.CREATED)
       .cookie("spendilow-refresh-token", refreshToken, {
@@ -65,7 +65,7 @@ const registerUser = async (req: Request, res: Response) => {
       .json({ id: newAccount.id, account: newAccount.email });
   } else {
     throw new BadRequestError(
-      "Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente."
+      `Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente comunicando questo errore: ${databaseOperationResult.payload}`
     );
   }
 };

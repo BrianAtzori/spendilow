@@ -38,8 +38,8 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     yield newAccount.hashPassword();
     const refreshToken = newAccount.JWTGeneration("refresh");
     const accessToken = newAccount.JWTGeneration("access");
-    const { successState } = yield dbManager.databaseInteraction("CREATE_USER", newAccount);
-    if (successState) {
+    const databaseOperationResult = yield dbManager.databaseInteraction("CREATE_USER", newAccount);
+    if (databaseOperationResult.successState) {
         res
             .status(http_status_codes_1.StatusCodes.CREATED)
             .cookie("spendilow-refresh-token", refreshToken, {
@@ -57,7 +57,7 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             .json({ id: newAccount.id, account: newAccount.email });
     }
     else {
-        throw new BadRequestError("Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente.");
+        throw new BadRequestError(`Errore nella creazione dell'account, i dati non sono validi, ricontrollali o contatta il supporto utente comunicando questo errore: ${databaseOperationResult.payload}`);
     }
 });
 // ------ LOGIN USER ------

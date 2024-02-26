@@ -32,41 +32,52 @@ const modifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     //For Account Editing
     const { successState, payload } = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.user.id);
     if (!successState) {
-        throw new BadRequestError("L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
+        throw new BadRequestError("Qualcosa é andato storto durante la modifica, oppure l'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
     const userUpdateResult = yield dbManager.databaseInteraction("UPDATE_USER", req.body, payload[0].id);
     if (userUpdateResult.successState) {
         res.status(http_status_codes_1.StatusCodes.NO_CONTENT).json();
     }
     else {
-        throw new Error("La modifica dell'utente non é andata a buon fine, riprova oppure contatta il supporto.");
+        throw new BadRequestError(`La modifica dell'utente non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${userUpdateResult.payload}`);
     }
 });
 // ------ DELETE USER ------
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.user.id;
-    if (!userId) {
+    if (!req.user.id) {
         throw new UnauthenticatedError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
-    const existingSpendilowUser = yield dbManager.databaseInteraction("GET_USER_BY_ID", userId);
-    if (!existingSpendilowUser) {
+    const { successState } = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.user.id);
+    if (!successState) {
         throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
-    dbManager.databaseInteraction("DELETE_USER", userId);
-    res
-        .status(http_status_codes_1.StatusCodes.OK)
-        .json({ message: "Utente eliminato correttamente!" });
+    // First you delete every transaction for that user
+    const deleteUserTransactions = yield dbManager.databaseInteraction("DELETE_USER_TRANSACTIONS", req.user.id);
+    if (!deleteUserTransactions.successState) {
+        throw new BadRequestError("Qualcosa é andato storto durante l'eliminazione dei dati dell'utente e quindi non é stato possibile eliminare il suo profilo.");
+    }
+    const databaseOperationResult = yield dbManager.databaseInteraction("DELETE_USER", req.user.id);
+    if (databaseOperationResult.successState) {
+        res
+            .status(http_status_codes_1.StatusCodes.OK)
+            .clearCookie("spendilow-refresh-token")
+            .clearCookie("spendilow-access-token")
+            .json({ success: true, message: "Utente eliminato correttamente!" });
+    }
+    else {
+        throw new Error("L'eliminazione dell'utente non é andata a buon fine, riprova oppure contatta il supporto.");
+    }
 });
 // ------ GET USER PROFILE ------
 const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user.id) {
         throw new UnauthenticatedError("Il profilo cercato non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
-    const userProfile = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.user.id);
-    if (!userProfile) {
-        throw new BadRequestError("L'utente che si sta cercando non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
+    const { successState, payload } = yield dbManager.databaseInteraction("GET_USER_BY_ID", req.user.id);
+    if (payload.length === 0) {
+        throw new BadRequestError(`L'utente che si sta cercando non esiste e non corrisponde ad un account registrato, contatta il supporto utente.`);
     }
-    const { id, email, isMFAActive, savings, salary, profileimage, workfield, username, } = userProfile;
+    const { id, email, isMFAActive, savings, salary, profileimage, workfield, username, } = payload[0];
     res.status(http_status_codes_1.StatusCodes.OK).json({
         id,
         email,

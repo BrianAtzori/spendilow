@@ -30,11 +30,21 @@ const createTransaction = async (req: any, res: Response) => {
     ...req.body,
   });
 
-  dbManager.databaseInteraction("CREATE_TRANSACTION", newSpendilowTransaction);
+  const { successState, payload } = await dbManager.databaseInteraction(
+    "CREATE_TRANSACTION",
+    newSpendilowTransaction
+  );
 
-  res
-    .status(StatusCodes.CREATED)
-    .json({ message: "Nuova transazione aggiunta!" });
+  if (!successState) {
+    throw new BadRequestError(
+      `L'aggiunta della transazione non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+    );
+  }
+
+  res.status(StatusCodes.CREATED).json({
+    success: true,
+    message: "Nuova transazione aggiunta!",
+  });
 };
 
 // ------ GET ALL TRANSACTIONS ------
@@ -45,11 +55,18 @@ const getAllTransactions = async (req: any, res: Response) => {
     );
   }
 
-  let transactions = await dbManager.databaseInteraction(
+  const { successState, payload } = await dbManager.databaseInteraction(
     "GET_ALL_TRANSACTIONS",
     req.user.id
   );
-  res.status(StatusCodes.OK).json({ transactions });
+
+  if (successState) {
+    res.status(StatusCodes.OK).json({ transactions: payload });
+  } else {
+    throw new Error(
+      `La lettura delle transazioni non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+    );
+  }
 };
 
 // ------ GET SINGLE TRANSACTION ------
@@ -66,11 +83,18 @@ const getSingleTransaction = async (req: any, res: Response) => {
     );
   }
 
-  let transaction = await dbManager.databaseInteraction(
+  const { successState, payload } = await dbManager.databaseInteraction(
     "GET_SINGLE_TRANSACTION",
     { transactionId: req.params.id, spendilowUserId: req.user.id }
   );
-  res.status(StatusCodes.OK).json({ transaction });
+
+  if (successState) {
+    res.status(StatusCodes.OK).json({ transaction: payload[0] });
+  } else {
+    throw new BadRequestError(
+      `La lettura della transaziona non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+    );
+  }
 };
 
 // ------ UPDATE SINGLE TRANSACTION ------
@@ -93,15 +117,25 @@ const updateSingleTransaction = async (req: any, res: Response) => {
     );
   }
 
-  await dbManager.databaseInteraction("UPDATE_TRANSACTION", {
-    transactionId: req.params.id,
-    spendilowUserId: req.user.id,
-    spendilowTransactionMod: req.body,
-  });
+  const { successState, payload } = await dbManager.databaseInteraction(
+    "UPDATE_TRANSACTION",
+    {
+      transactionId: req.params.id,
+      spendilowUserId: req.user.id,
+      spendilowTransactionMod: req.body,
+    }
+  );
 
-  res
-    .status(StatusCodes.OK)
-    .json({ message: "Transazione modificata correttamente!" });
+  if (!successState) {
+    throw new BadRequestError(
+      `La modifica della transazione non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+    );
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Transazione modificata correttamente!",
+  });
 };
 
 // ------ DELETE SINGLE TRANSACTION ------
@@ -118,17 +152,26 @@ const deleteSingleTransaction = async (req: any, res: Response) => {
     );
   }
 
-  await dbManager.databaseInteraction("DELETE_TRANSACTION", {
-    transactionId: req.params.id,
-    spendilowUserId: req.user.id,
-  });
+  const databaseOperationResult = await dbManager.databaseInteraction(
+    "DELETE_TRANSACTION",
+    {
+      transactionId: req.params.id,
+      spendilowUserId: req.user.id,
+    }
+  );
 
-  res
-    .status(StatusCodes.OK)
-    .json({ message: "Transazione eliminata correttamente!" });
+  if (databaseOperationResult.successState) {
+    res
+      .status(StatusCodes.OK)
+      .json({ success: true, message: "Transazione eliminata correttamente!" });
+  } else {
+    throw new BadRequestError(
+      `L'eliminazione della transazione non é andata a buon fine, riprova oppure contatta il supporto.`
+    );
+  }
 };
 
-// ------ BULK TRANSACTIONS CREATION------
+// ------ BULK TRANSACTIONS CREATION ------
 const bulkDataCreation = async (req: any, res: any) => {
   let howMany: number = 10;
   let userId = req.user.id;

@@ -197,6 +197,14 @@ describe("Spendilow API 💰 - Users Tests", function () {
       .set("Cookie", cookie)
       .end(function (err: Error, res: any) {
         res.should.have.status(200);
+        res.should.be.json;
+
+        res.body.should.have.property("success");
+        should.exist(res.body.success);
+        res.body.success.should.equal(true);
+
+        res.body.should.have.property("message");
+        should.exist(res.body.message);
         done();
       });
   });

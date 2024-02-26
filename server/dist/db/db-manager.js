@@ -70,6 +70,11 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     return queryResult;
                     break;
                 }
+                case "DELETE_USER_TRANSACTIONS": {
+                    queryResult = deleteUserTransactions(queryData, connection);
+                    return queryResult;
+                    break;
+                }
                 default: {
                     throw new BadRequestError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
@@ -186,6 +191,7 @@ const updateUserByID = (spendilowUser, connection, id) => __awaiter(void 0, void
     catch (error) {
         rows.payload = error.sqlMessage;
     }
+    console.log(rows);
     return rows;
 });
 // ------ DELETE SPENDILOW USER ------
@@ -237,6 +243,7 @@ const createTransactionQuery = (transactionData, connection) => __awaiter(void 0
     catch (error) {
         rows.payload = error.sqlMessage;
     }
+    console.log(rows);
     return rows;
 });
 // ------ GET ALL TRANSACTIONS ------
@@ -257,6 +264,7 @@ const getAllTransactions = (spendilowUserId, connection) => __awaiter(void 0, vo
     catch (error) {
         rows.payload = error.sqlMessage;
     }
+    console.log(rows);
     return rows;
 });
 // ------ GET SINGLE TRANSACTION ------
@@ -271,12 +279,16 @@ const getSingleTransaction = (spendilowUserId, transactionId, connection) => __a
         payload: {},
     };
     try {
-        rows = yield connection.query(query, [transactionId, spendilowUserId]);
+        rows.payload = yield connection.query(query, [
+            transactionId,
+            spendilowUserId,
+        ]);
         rows.successState = true;
     }
     catch (error) {
         rows.payload = error.sqlMessage;
     }
+    console.log(rows);
     return rows;
 });
 // ------ UPDATE SINGLE TRANSACTION ------
@@ -299,7 +311,7 @@ const updateSingleTransaction = (spendilowUserId, transactionId, spendilowTransa
     };
     let { amount, transaction_date, title, notes, tags, transaction_type, target_id, } = spendilowTransactionMod;
     try {
-        rows = yield connection.query(query, [
+        rows.payload = yield connection.query(query, [
             amount,
             transaction_date,
             title,
@@ -331,7 +343,10 @@ const deleteSingleTransaction = (spendilowUserId, transactionId, connection) => 
         payload: {},
     };
     try {
-        rows = yield connection.query(query, [transactionId, spendilowUserId]);
+        rows.payload = yield connection.query(query, [
+            transactionId,
+            spendilowUserId,
+        ]);
         if (rows.payload.affectedRows === 1) {
             rows.successState = true;
         }
@@ -339,6 +354,28 @@ const deleteSingleTransaction = (spendilowUserId, transactionId, connection) => 
     catch (error) {
         rows.payload = error.sqlMessage;
     }
+    console.log(rows);
+    return rows;
+});
+// ------ DELETE SINGLE TRANSACTION ------
+const deleteUserTransactions = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(spendilowUserId);
+    const query = `
+  DELETE FROM transactions
+  WHERE user_id = ?
+`;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    try {
+        rows.payload = yield connection.query(query, [spendilowUserId]);
+        rows.successState = true;
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    console.log(rows);
     return rows;
 });
 // ------ Exports ------

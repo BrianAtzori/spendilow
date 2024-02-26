@@ -123,6 +123,11 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             .end(function (err, res) {
             res.should.have.status(201);
             res.should.be.json;
+            res.body.should.have.property("success");
+            should.exist(res.body.success);
+            res.body.success.should.equal(true);
+            res.body.should.have.property("message");
+            should.exist(res.body.message);
             done();
         });
     });
@@ -178,24 +183,24 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             .end(function (err, res) {
             res.should.have.status(200);
             res.should.be.json;
-            res.body.transaction[0].should.have.property("id");
-            should.exist(res.body.transaction[0].id);
-            res.body.transaction[0].should.have.property("user_id");
-            should.exist(res.body.transaction[0]['user_id']);
-            res.body.transaction[0].should.have.property("amount");
-            should.exist(res.body.transaction[0].amount);
-            res.body.transaction[0].should.have.property("transaction_date");
-            should.exist(res.body.transaction[0].transaction_date);
-            res.body.transaction[0].should.have.property("title");
-            should.exist(res.body.transaction[0].title);
-            res.body.transaction[0].should.have.property("notes");
-            should.exist(res.body.transaction[0].notes);
-            res.body.transaction[0].should.have.property("tags");
-            should.exist(res.body.transaction[0].tags);
-            res.body.transaction[0].should.have.property("transaction_type");
-            should.exist(res.body.transaction[0].transaction_type);
-            res.body.transaction[0].should.have.property("target_id");
-            should.exist(res.body.transaction[0].target_id);
+            res.body.transaction.should.have.property("id");
+            should.exist(res.body.transaction.id);
+            res.body.transaction.should.have.property("user_id");
+            should.exist(res.body.transaction["user_id"]);
+            res.body.transaction.should.have.property("amount");
+            should.exist(res.body.transaction.amount);
+            res.body.transaction.should.have.property("transaction_date");
+            should.exist(res.body.transaction.transaction_date);
+            res.body.transaction.should.have.property("title");
+            should.exist(res.body.transaction.title);
+            res.body.transaction.should.have.property("notes");
+            should.exist(res.body.transaction.notes);
+            res.body.transaction.should.have.property("tags");
+            should.exist(res.body.transaction.tags);
+            res.body.transaction.should.have.property("transaction_type");
+            should.exist(res.body.transaction.transaction_type);
+            res.body.transaction.should.have.property("target_id");
+            should.exist(res.body.transaction.target_id);
             done();
         });
     });
@@ -205,6 +210,7 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             .request(baseURL)
             .patch(`api/v1/authenticated-users/transactions/mod/${singleSpendilowTestTransaction}`)
             .send({
+            amount: 10,
             transaction_date: "1970/01/01",
             title: "Transazione di test per verificare la modifica",
             notes: "Transazione generata per il testing, poi modificata",
@@ -213,7 +219,14 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             target_id: null,
         })
             .set("Cookie", cookie)
-            .end(function () {
+            .end(function (err, res) {
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.should.have.property("success");
+            should.exist(res.body.success);
+            res.body.success.should.equal(true);
+            res.body.should.have.property("message");
+            should.exist(res.body.message);
             done();
         });
     });
@@ -223,7 +236,14 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             .request(baseURL)
             .delete(`api/v1/authenticated-users/transactions/del/${singleSpendilowTestTransaction}`)
             .set("Cookie", cookie)
-            .end(function () {
+            .end(function (err, res) {
+            res.should.have.status(200);
+            res.should.be.json;
+            res.body.should.have.property("success");
+            should.exist(res.body.success);
+            res.body.success.should.equal(true);
+            res.body.should.have.property("message");
+            should.exist(res.body.message);
             done();
         });
     });
@@ -235,6 +255,12 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
             .set("Cookie", cookie)
             .end(function (err, res) {
             res.should.have.status(200);
+            res.should.be.json;
+            res.body.should.have.property("success");
+            should.exist(res.body.success);
+            res.body.success.should.equal(true);
+            res.body.should.have.property("message");
+            should.exist(res.body.message);
             done();
         });
     });

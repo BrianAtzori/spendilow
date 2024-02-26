@@ -28,18 +28,27 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
     let newTransactionID = crypto_1.default.randomUUID();
     let userID = req.user.id;
     let newSpendilowTransaction = new SpendilowTransaction(Object.assign({ id: newTransactionID, user_id: userID }, req.body));
-    dbManager.databaseInteraction("CREATE_TRANSACTION", newSpendilowTransaction);
-    res
-        .status(http_status_codes_1.StatusCodes.CREATED)
-        .json({ message: "Nuova transazione aggiunta!" });
+    const { successState, payload } = yield dbManager.databaseInteraction("CREATE_TRANSACTION", newSpendilowTransaction);
+    if (!successState) {
+        throw new BadRequestError(`L'aggiunta della transazione non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`);
+    }
+    res.status(http_status_codes_1.StatusCodes.CREATED).json({
+        success: true,
+        message: "Nuova transazione aggiunta!",
+    });
 });
 // ------ GET ALL TRANSACTIONS ------
 const getAllTransactions = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.user.id) {
         throw new UnauthenticatedError("L'utente di cui si sta cercando di ottenere le transazioni non esiste o l'ID é errato, contatta il supporto utente.");
     }
-    let transactions = yield dbManager.databaseInteraction("GET_ALL_TRANSACTIONS", req.user.id);
-    res.status(http_status_codes_1.StatusCodes.OK).json({ transactions });
+    const { successState, payload } = yield dbManager.databaseInteraction("GET_ALL_TRANSACTIONS", req.user.id);
+    if (successState) {
+        res.status(http_status_codes_1.StatusCodes.OK).json({ transactions: payload });
+    }
+    else {
+        throw new Error(`La lettura delle transazioni non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`);
+    }
 });
 // ------ GET SINGLE TRANSACTION ------
 const getSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -49,8 +58,13 @@ const getSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, fun
     if (!req.user.id) {
         throw new UnauthenticatedError("Non posso cercare la transazione per questo utente perché l'ID é errato, contatta il supporto utente.");
     }
-    let transaction = yield dbManager.databaseInteraction("GET_SINGLE_TRANSACTION", { transactionId: req.params.id, spendilowUserId: req.user.id });
-    res.status(http_status_codes_1.StatusCodes.OK).json({ transaction });
+    const { successState, payload } = yield dbManager.databaseInteraction("GET_SINGLE_TRANSACTION", { transactionId: req.params.id, spendilowUserId: req.user.id });
+    if (successState) {
+        res.status(http_status_codes_1.StatusCodes.OK).json({ transaction: payload[0] });
+    }
+    else {
+        throw new BadRequestError(`La lettura della transaziona non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`);
+    }
 });
 // ------ UPDATE SINGLE TRANSACTION ------
 const updateSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -63,14 +77,18 @@ const updateSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, 
     if (!req.user.id) {
         throw new UnauthenticatedError("L'utente con cui si sta cercando di modificare una transazione non esiste o l'ID é errato, contatta il supporto utente.");
     }
-    yield dbManager.databaseInteraction("UPDATE_TRANSACTION", {
+    const { successState, payload } = yield dbManager.databaseInteraction("UPDATE_TRANSACTION", {
         transactionId: req.params.id,
         spendilowUserId: req.user.id,
         spendilowTransactionMod: req.body,
     });
-    res
-        .status(http_status_codes_1.StatusCodes.OK)
-        .json({ message: "Transazione modificata correttamente!" });
+    if (!successState) {
+        throw new BadRequestError(`La modifica della transazione non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`);
+    }
+    res.status(http_status_codes_1.StatusCodes.OK).json({
+        success: true,
+        message: "Transazione modificata correttamente!",
+    });
 });
 // ------ DELETE SINGLE TRANSACTION ------
 const deleteSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -80,15 +98,20 @@ const deleteSingleTransaction = (req, res) => __awaiter(void 0, void 0, void 0, 
     if (!req.user.id) {
         throw new UnauthenticatedError("Non posso eliminare la transazione per questo utente perché l'ID é errato, contatta il supporto utente.");
     }
-    yield dbManager.databaseInteraction("DELETE_TRANSACTION", {
+    const databaseOperationResult = yield dbManager.databaseInteraction("DELETE_TRANSACTION", {
         transactionId: req.params.id,
         spendilowUserId: req.user.id,
     });
-    res
-        .status(http_status_codes_1.StatusCodes.OK)
-        .json({ message: "Transazione eliminata correttamente!" });
+    if (databaseOperationResult.successState) {
+        res
+            .status(http_status_codes_1.StatusCodes.OK)
+            .json({ success: true, message: "Transazione eliminata correttamente!" });
+    }
+    else {
+        throw new BadRequestError(`L'eliminazione della transazione non é andata a buon fine, riprova oppure contatta il supporto.`);
+    }
 });
-// ------ BULK TRANSACTIONS CREATION------
+// ------ BULK TRANSACTIONS CREATION ------
 const bulkDataCreation = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let howMany = 10;
     let userId = req.user.id;

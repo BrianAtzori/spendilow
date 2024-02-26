@@ -44,7 +44,7 @@ const modifyUser = async (req: any, res: Response) => {
 
   if (!successState) {
     throw new BadRequestError(
-      "L'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
+      "Qualcosa é andato storto durante la modifica, oppure l'utente che si sta cercando di modificare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
   }
 
@@ -57,57 +57,78 @@ const modifyUser = async (req: any, res: Response) => {
   if (userUpdateResult.successState) {
     res.status(StatusCodes.NO_CONTENT).json();
   } else {
-    throw new Error(
-      "La modifica dell'utente non é andata a buon fine, riprova oppure contatta il supporto."
+    throw new BadRequestError(
+      `La modifica dell'utente non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${userUpdateResult.payload}`
     );
   }
 };
 
 // ------ DELETE USER ------
 const deleteUser = async (req: any, res: Response) => {
-  const userId = req.user.id;
-
-  if (!userId) {
+  if (!req.user.id) {
     throw new UnauthenticatedError(
       "L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
   }
 
-  const existingSpendilowUser = await dbManager.databaseInteraction(
+  const { successState } = await dbManager.databaseInteraction(
     "GET_USER_BY_ID",
-    userId
+    req.user.id
   );
 
-  if (!existingSpendilowUser) {
+  if (!successState) {
     throw new BadRequestError(
       "L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
   }
 
-  dbManager.databaseInteraction("DELETE_USER", userId);
+  // First you delete every transaction for that user
 
-  res
-    .status(StatusCodes.OK)
-    .json({ message: "Utente eliminato correttamente!" });
+  const deleteUserTransactions = await dbManager.databaseInteraction(
+    "DELETE_USER_TRANSACTIONS",
+    req.user.id
+  );
+
+  if (!deleteUserTransactions.successState) {
+    throw new BadRequestError(
+      "Qualcosa é andato storto durante l'eliminazione dei dati dell'utente e quindi non é stato possibile eliminare il suo profilo."
+    );
+  }
+
+  const databaseOperationResult = await dbManager.databaseInteraction(
+    "DELETE_USER",
+    req.user.id
+  );
+
+  if (databaseOperationResult.successState) {
+    res
+      .status(StatusCodes.OK)
+      .clearCookie("spendilow-refresh-token")
+      .clearCookie("spendilow-access-token")
+      .json({ success: true, message: "Utente eliminato correttamente!" });
+  } else {
+    throw new Error(
+      "L'eliminazione dell'utente non é andata a buon fine, riprova oppure contatta il supporto."
+    );
+  }
 };
 
 // ------ GET USER PROFILE ------
 const getUserProfile = async (req: any, res: Response) => {
-
   if (!req.user.id) {
     throw new UnauthenticatedError(
       "Il profilo cercato non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
     );
   }
 
-  const userProfile = await dbManager.databaseInteraction(
+  const { successState, payload } = await dbManager.databaseInteraction(
     "GET_USER_BY_ID",
     req.user.id
   );
 
-  if (!userProfile) {
+  if (payload.length === 0) {
     throw new BadRequestError(
-      "L'utente che si sta cercando non esiste e non corrisponde ad un account registrato, contatta il supporto utente."
+      `L'utente che si sta cercando non esiste e non corrisponde ad un account registrato, contatta il supporto utente.`
     );
   }
 
@@ -120,7 +141,7 @@ const getUserProfile = async (req: any, res: Response) => {
     profileimage,
     workfield,
     username,
-  } = userProfile;
+  } = payload[0];
 
   res.status(StatusCodes.OK).json({
     id,
