@@ -322,6 +322,7 @@ const getAllTransactions = async (spendilowUserId: any, connection: any) => {
   SELECT *
   FROM transactions
   WHERE user_id = ?
+  ORDER BY transaction_date DESC
 `;
 
   let rows: databaseOperationResult = {

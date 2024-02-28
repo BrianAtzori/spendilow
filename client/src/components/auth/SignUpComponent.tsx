@@ -17,7 +17,7 @@ export default function SignUpComponent() {
     password: "",
     savings: 0.0,
     salary: 0.0,
-    profileImage: "",
+    profileimage: "",
     workfield: "",
     username: "",
     isMFAActive: false,
@@ -61,7 +61,7 @@ export default function SignUpComponent() {
         const base64String = reader.result as string;
         setNewSpendilowUser({
           ...newSpendilowUser,
-          profileImage: base64String,
+          profileimage: base64String,
         });
       };
 
@@ -91,7 +91,7 @@ export default function SignUpComponent() {
     if (
       newSpendilowUser.email === "" ||
       newSpendilowUser.password === "" ||
-      newSpendilowUser.profileImage === "" ||
+      newSpendilowUser.profileimage === "" ||
       newSpendilowUser.workfield === "" ||
       newSpendilowUser.username === ""
     ) {

@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       {userLogged && <Header></Header>}
-      <div className=" max-w-screen max-w-screen min-h-screen min-w-screen">
+      <div className="min-h-screen min-w-screen">
         <Routes>
           {/* LANDING & AUTH */}
           <Route path="/" element={<Splash />}></Route>

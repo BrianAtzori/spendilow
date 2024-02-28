@@ -13,6 +13,8 @@ import { useAppSelector } from "../../redux/hooks";
 // ------ SERVICES ------
 import { getSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
 import ErrorScreenComponent from "../../components/shared/ErrorScreenComponent";
+import DataDisplayerComponent from "../../components/shared/DataDisplayerComponent";
+import { getSpendilowUserTransactions } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
 
 // ------ TYPESCRIPT ------
 interface spendilowUserProfile {
@@ -26,24 +28,48 @@ interface spendilowUserProfile {
   username: string;
 }
 
+//TODO: Improvement of this component with splitting
+
 export default function Dashboard() {
   //------ HOOKS ------
   useEffect(() => {
     loadDashboard();
+    loadTransactions();
   }, []);
 
+  //Transactions Data
+  const [userTransactions, setUserTransactions] = useState([
+    {
+      transaction_date: new Date(),
+      amount: 0,
+      title: "",
+      notes: "",
+      tags: "",
+      transaction_type: "",
+      target_id: "",
+    },
+  ]);
+
+  //TODO: Gestire loader ed errore dell'elenco delle transazioni
+  //Loaders
   const [isLoading, setIsLoading] = useState(true);
+  const [transactionsLoading, setAreTransactionsLoading] = useState(true);
 
-  const dispatch = useAppDispatch();
-
-  const currentSpendilowUser: spendilowUserProfile = useAppSelector(
-    (state) => state.userProfile.value
-  );
-
+  //Errors
   const [profileError, setProfileError] = useState({
     state: false,
     message: "Errore durante il caricamento del profilo",
   });
+  const [transactionsError, setTransactionsError] = useState({
+    state: false,
+    message: "Errore durante il caricamento delle tue transazioni.",
+  });
+
+  //Redux
+  const dispatch = useAppDispatch();
+  const currentSpendilowUser: spendilowUserProfile = useAppSelector(
+    (state) => state.userProfile.value
+  );
 
   // ------ DATA ------
   const currentDate = new Date();
@@ -65,8 +91,24 @@ export default function Dashboard() {
     }
   }
 
+  async function loadTransactions() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const externalCallResult: any =
+      await getSpendilowUserTransactions().finally(() => {
+        setAreTransactionsLoading(false);
+      });
+
+    if (externalCallResult.transactions) {
+      setUserTransactions(externalCallResult.transactions);
+    } else {
+      setTransactionsError({ state: true, message: externalCallResult[0] });
+    }
+  }
+
+  //TODO: Se non ho il profilo devo avere un collegamento alla home
+
   return (
-    <>
+    <div className="min-h-screen static">
       <LoaderComponent
         isLoading={isLoading}
         message={"Caricamento del profilo in corso 💰"}
@@ -80,9 +122,10 @@ export default function Dashboard() {
         </>
       ) : (
         <>
-          <div className="hero min-h-screen tablet:place-items-start">
+          {/* USER PROFILE WIDGETS */}
+          <div className="hero tablet:place-items-start">
             <div className="hero-content flex-col gap-3 min-w-full">
-              <div className="text-left card card-body bg-base-100 tablet:w-full">
+              <div className="text-left shadow card card-body bg-base-100 tablet:w-full">
                 <h1 className="text-5xl font-bold font-primary">
                   Benvenutə, {currentSpendilowUser.username}
                 </h1>
@@ -200,18 +243,21 @@ export default function Dashboard() {
                         />
                       </svg>
                     </div>
-                    <div className="stat-title">Sezione in costruzione</div>
+                    <div className="stat-title">Ultimo movimento:</div>
                     <div className="stat-value">
-                      {currentSpendilowUser.salary}
+                      {userTransactions[0].amount}
                     </div>
-                    <div className="stat-desc">WORK IN PROGRESS 🚧</div>
+                    <div className="stat-desc">{userTransactions[0].title}</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          {/* USER TRANSACTIONS */}
+          <div className="divider font-primary divider-neutral opacity-50 mx-8"></div>
+          <DataDisplayerComponent></DataDisplayerComponent>
         </>
       )}
-    </>
+    </div>
   );
 }

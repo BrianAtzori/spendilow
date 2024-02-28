@@ -252,6 +252,7 @@ const getAllTransactions = (spendilowUserId, connection) => __awaiter(void 0, vo
   SELECT *
   FROM transactions
   WHERE user_id = ?
+  ORDER BY transaction_date DESC
 `;
     let rows = {
         successState: false,

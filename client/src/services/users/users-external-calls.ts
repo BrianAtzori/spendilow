@@ -16,7 +16,7 @@ interface newSpendilowUser {
   password: string;
   savings: number;
   salary: number;
-  profileImage: string;
+  profileimage: string;
   workfield: string;
   username: string;
   isMFAActive: boolean;

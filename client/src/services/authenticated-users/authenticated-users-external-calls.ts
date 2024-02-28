@@ -10,6 +10,7 @@ const route: string = "/authenticated-users";
 // ------ SERVICES ------
 import { apiErrorResponseHandler } from "../general/apiErrorResponseHandler";
 
+// ------ TYPESCRIPT ------
 interface spendilowUserProfile {
   id: string;
   email: string;
