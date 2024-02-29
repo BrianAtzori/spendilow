@@ -26,6 +26,9 @@ const createTransaction = (req, res) => __awaiter(void 0, void 0, void 0, functi
         throw new BadRequestError("L'utente con cui si sta cercando di creare una transazione non esiste o l'ID é errato, contatta il supporto utente.");
     }
     let newTransactionID = crypto_1.default.randomUUID();
+    //TODO: renderlo dinamico in base agli input
+    let target_id = crypto_1.default.randomUUID();
+    req.body.target_id = target_id;
     let userID = req.user.id;
     let newSpendilowTransaction = new SpendilowTransaction(Object.assign({ id: newTransactionID, user_id: userID }, req.body));
     const { successState, payload } = yield dbManager.databaseInteraction("CREATE_TRANSACTION", newSpendilowTransaction);

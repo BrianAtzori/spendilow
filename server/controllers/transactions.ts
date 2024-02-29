@@ -22,6 +22,10 @@ const createTransaction = async (req: any, res: Response) => {
 
   let newTransactionID: string = crypto.randomUUID();
 
+  //TODO: renderlo dinamico in base agli input
+  let target_id: string = crypto.randomUUID();
+  req.body.target_id = target_id
+
   let userID: string = req.user.id;
 
   let newSpendilowTransaction = new SpendilowTransaction({
