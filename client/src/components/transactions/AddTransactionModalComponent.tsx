@@ -118,6 +118,8 @@ export default function AddTransactionModalComponent({
     });
 
     console.log(externalCallResult);
+
+    window.location.href = "/user/dashboard";
   }
 
   return (

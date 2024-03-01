@@ -11,6 +11,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { changeUserLoggedState } from "../../redux/reducers/auth/userLoggedSlice";
 import { updateUserProfile } from "../../redux/reducers/user/userProfileSlice";
 import { useAppSelector } from "../../redux/hooks";
+import { updateUserTransactions } from "../../redux/reducers/transactions/userTransactionsSlice";
 
 // ------ SERVICES ------
 import { getSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
@@ -29,6 +30,16 @@ interface spendilowUserProfile {
   workfield: string;
   username: string;
 }
+interface spendilowTransaction {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transaction_date: any;
+  amount: number;
+  title: string;
+  notes: string;
+  tags: string;
+  transaction_type: string;
+  target_id: string;
+}
 
 //TODO: Improvement of this component with splitting
 
@@ -38,19 +49,6 @@ export default function Dashboard() {
     loadDashboard();
     loadTransactions();
   }, []);
-
-  //Transactions Data
-  const [userTransactions, setUserTransactions] = useState([
-    {
-      transaction_date: new Date(),
-      amount: 0,
-      title: "",
-      notes: "",
-      tags: "",
-      transaction_type: "",
-      target_id: "",
-    },
-  ]);
 
   //ShowDialog
   const [showTransactionDialog, setShowTransactionDialog] = useState(false);
@@ -74,6 +72,10 @@ export default function Dashboard() {
   const dispatch = useAppDispatch();
   const currentSpendilowUser: spendilowUserProfile = useAppSelector(
     (state) => state.userProfile.value
+  );
+
+  const transactions: spendilowTransaction[] = useAppSelector(
+    (state) => state.userTransactions.transactions
   );
 
   // ------ DATA ------
@@ -104,7 +106,7 @@ export default function Dashboard() {
       });
 
     if (externalCallResult.transactions) {
-      setUserTransactions(externalCallResult.transactions);
+      dispatch(updateUserTransactions(externalCallResult.transactions));
     } else {
       setTransactionsError({ state: true, message: externalCallResult[0] });
     }
@@ -137,9 +139,7 @@ export default function Dashboard() {
                   Benvenutə, {currentSpendilowUser.username}
                 </h1>
                 <div className="font-body">
-                  <p className="">
-                    Come andranno i tuoi risparmi questi mesi?
-                  </p>
+                  <p className="">Come andranno i tuoi risparmi questi mesi?</p>
                   <p>
                     Ricordati che gli sforzi vanno fatti giorno per giorno,
                     inizia tracciando le tue spese e migliora un po' alla volta
@@ -251,10 +251,8 @@ export default function Dashboard() {
                       </svg>
                     </div>
                     <div className="stat-title">Ultimo movimento:</div>
-                    <div className="stat-value">
-                      {userTransactions[0].amount}
-                    </div>
-                    <div className="stat-desc">{userTransactions[0].title}</div>
+                    <div className="stat-value">{transactions[0].amount}</div>
+                    <div className="stat-desc">{transactions[0].title}</div>
                   </div>
                 </div>
               </div>

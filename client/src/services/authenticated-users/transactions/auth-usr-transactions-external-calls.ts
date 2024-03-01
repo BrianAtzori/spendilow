@@ -80,9 +80,7 @@ const createNewSpendilowUserTransaction = async (
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((res: any) => {
-        console.log(res.data.success);
-
-        switch (res.data.success) {
+         switch (res.data.success) {
           case true:
             return res.data.message;
             break;
