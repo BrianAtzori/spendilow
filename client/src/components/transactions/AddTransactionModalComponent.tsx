@@ -33,6 +33,7 @@ export default function AddTransactionModalComponent({
   const modalRef: any = useRef(null);
 
   useEffect(() => {
+
     if (!modalRef.current) {
       return;
     }

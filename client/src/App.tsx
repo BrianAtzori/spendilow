@@ -11,12 +11,22 @@ import Dashboard from "./pages/user/Dashboard";
 import Settings from "./pages/user/Settings";
 import Expenses from "./pages/functions/Expenses";
 import Budget from "./pages/functions/Budget";
+import FloatingMenuComponent from "./components/shared/FloatingMenuComponent";
+import AddTransactionModalComponent from "./components/transactions/AddTransactionModalComponent";
 
 // ------ REDUX ------
 import { useAppSelector } from "./redux/hooks";
+import { useAppDispatch } from "./redux/hooks";
+import { setTransactionModalShowing } from "./redux/reducers/interactions/transactionModalSlice";
 
 function App() {
+  // ------ HOOKS ------
   const userLogged: boolean = useAppSelector((state) => state.userLogged.value);
+  const modalShowing: boolean = useAppSelector(
+    (state) => state.transactionModal.isShowing
+  );
+
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -33,6 +43,13 @@ function App() {
           <Route path="/user/expenses" element={<Expenses />}></Route>
           <Route path="/user/budget" element={<Budget></Budget>}></Route>
         </Routes>
+        {userLogged && <FloatingMenuComponent></FloatingMenuComponent>}
+        {(modalShowing && !userLogged) && (
+          <AddTransactionModalComponent
+            visible={modalShowing}
+            onClose={() => dispatch(setTransactionModalShowing(false))}
+          ></AddTransactionModalComponent>
+        )}
         <Footer></Footer>
       </div>
     </>

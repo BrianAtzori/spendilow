@@ -5,12 +5,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import userLoggedReducer from "./reducers/auth/userLoggedSlice";
 import userProfileReducer from "./reducers/user/userProfileSlice";
 import userTransactionsSlice from "./reducers/transactions/userTransactionsSlice";
+import transactionModalSlice from "./reducers/interactions/transactionModalSlice";
 
 export const store = configureStore({
   reducer: {
     userLogged: userLoggedReducer,
     userProfile: userProfileReducer,
-    userTransactions: userTransactionsSlice
+    userTransactions: userTransactionsSlice,
+    transactionModal: transactionModalSlice,
   },
 });
 
