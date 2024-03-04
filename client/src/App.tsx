@@ -44,7 +44,7 @@ function App() {
           <Route path="/user/budget" element={<Budget></Budget>}></Route>
         </Routes>
         {userLogged && <FloatingMenuComponent></FloatingMenuComponent>}
-        {(modalShowing && !userLogged) && (
+        {(modalShowing && userLogged) && (
           <AddTransactionModalComponent
             visible={modalShowing}
             onClose={() => dispatch(setTransactionModalShowing(false))}

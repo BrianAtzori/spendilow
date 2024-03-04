@@ -37,7 +37,6 @@ export default function Dashboard() {
     message: "Errore durante il caricamento delle tue transazioni.",
   });
 
-  //Redux
   const dispatch = useAppDispatch();
 
   //------ FUNCTIONS ------
@@ -92,7 +91,15 @@ export default function Dashboard() {
         <>
           <UserProfileWidgets></UserProfileWidgets>
           <div className="divider font-primary divider-neutral opacity-50 mx-8"></div>
-          <DataDisplayerComponent></DataDisplayerComponent>
+          <DataDisplayerComponent
+            title="Le tue spese"
+            subtitle="Dai un'occhiata alle spese degli ultimi 30 giorni 🗓️"
+            mode="transactions"
+            // payload={{}}
+            isLoading={transactionsLoading}
+            error={transactionsError.state}
+            errorMessage={transactionsError.message}
+          ></DataDisplayerComponent>
         </>
       )}
     </div>

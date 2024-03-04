@@ -25,7 +25,6 @@ type TransactionDisplayerProp = {
 export default function TransactionsDisplayerComponent({
   userTransactions,
 }: TransactionDisplayerProp) {
-
   // ------ DATA DISPLAY HANDLING ------ //TODO: Metodi generali e importati?
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
