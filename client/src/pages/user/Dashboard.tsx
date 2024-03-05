@@ -17,6 +17,7 @@ import { getSpendilowUserProfile } from "../../services/authenticated-users/auth
 import ErrorScreenComponent from "../../components/shared/ErrorScreenComponent";
 import DataDisplayerComponent from "../../components/shared/DataDisplayerComponent";
 import { getSpendilowUserTransactions } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
+import dayjs from "dayjs";
 
 export default function Dashboard() {
   //------ HOOKS ------
@@ -63,8 +64,19 @@ export default function Dashboard() {
         setAreTransactionsLoading(false);
       });
 
+    const currentDate = dayjs().subtract(30, "day");
+
+    const filteredTransactions = externalCallResult.transactions.filter(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (transaction: any) => {
+        if (currentDate.isBefore(transaction["transaction_date"])) {
+          return true;
+        }
+      }
+    );
+
     if (externalCallResult.transactions) {
-      dispatch(updateUserTransactions(externalCallResult.transactions));
+      dispatch(updateUserTransactions(filteredTransactions));
     } else {
       setTransactionsError({ state: true, message: externalCallResult[0] });
     }

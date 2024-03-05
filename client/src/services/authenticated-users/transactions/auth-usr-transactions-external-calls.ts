@@ -36,7 +36,7 @@ const getSpendilowUserTransactions = async (): Promise<
       target_id: "",
     },
   ];
-  //TODO: Filtro ultimi 30 giorni? Con una mod?
+
   try {
     result = await axios
       .get(baseURL + route + "/get/all", {
@@ -80,7 +80,7 @@ const createNewSpendilowUserTransaction = async (
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((res: any) => {
-         switch (res.data.success) {
+        switch (res.data.success) {
           case true:
             return res.data.message;
             break;

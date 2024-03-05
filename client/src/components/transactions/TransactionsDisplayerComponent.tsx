@@ -164,8 +164,6 @@ export default function TransactionsDisplayerComponent({
     );
   };
 
-  //TODO: "Ultimi 30 giorni, non tutte"
-
   return (
     <div>
       <div className="overflow-x-auto">
