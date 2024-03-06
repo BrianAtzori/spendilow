@@ -6,6 +6,7 @@ import userLoggedReducer from "./reducers/auth/userLoggedSlice";
 import userProfileReducer from "./reducers/user/userProfileSlice";
 import userTransactionsSlice from "./reducers/transactions/userTransactionsSlice";
 import transactionModalSlice from "./reducers/interactions/transactionModalSlice";
+import transactionMenuModalSlice from "./reducers/interactions/transactionMenuModalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     userProfile: userProfileReducer,
     userTransactions: userTransactionsSlice,
     transactionModal: transactionModalSlice,
+    transactionMenuModal: transactionMenuModalSlice,
   },
 });
 

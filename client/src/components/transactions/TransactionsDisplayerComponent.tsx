@@ -1,11 +1,19 @@
 // ------ REACT ------
 import React from "react";
 
+// ------ REDUX ------
+import { useAppDispatch } from "../../redux/hooks";
+import {
+  setTransactionMenuModalSliceShowing,
+  setTransactionMenuModalSliceTransaction,
+} from "../../redux/reducers/interactions/transactionMenuModalSlice";
+
 // ------ SERVICES ------
 import nextId from "react-id-generator";
 
 // ------ TYPESCRIPT ------
 interface spendilowTransaction {
+  id: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transaction_date: any;
   amount: number;
@@ -25,6 +33,9 @@ type TransactionDisplayerProp = {
 export default function TransactionsDisplayerComponent({
   userTransactions,
 }: TransactionDisplayerProp) {
+  // ------ HOOKS ------
+  const dispatch = useAppDispatch();
+
   // ------ DATA DISPLAY HANDLING ------ //TODO: Metodi generali e importati?
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
@@ -87,7 +98,7 @@ export default function TransactionsDisplayerComponent({
     }
   };
 
-  const transactionMenuCreator = () => {
+  const transactionMenuCreator = (transactionID: string) => {
     return (
       <ul className="menu menu-horizontal rounded-box bg-accent ">
         <li>
@@ -112,22 +123,30 @@ export default function TransactionsDisplayerComponent({
             </svg>
           </a>
         </li>
+
         <li>
-          <a>
-            <svg
-              className="w-5 h-5 text-neutral0 dark:text-neutral"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fillRule="evenodd"
-                d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm9.4-5.5a1 1 0 1 0 0 2 1 1 0 1 0 0-2ZM10 10a1 1 0 1 0 0 2h1v3h-1a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-1v-4c0-.6-.4-1-1-1h-2Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
+          <button
+            onClick={() => {
+              dispatch(setTransactionMenuModalSliceShowing(true));
+              dispatch(setTransactionMenuModalSliceTransaction(transactionID));
+            }}
+          >
+            <a>
+              <svg
+                className="w-5 h-5 text-neutral0 dark:text-neutral"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm9.4-5.5a1 1 0 1 0 0 2 1 1 0 1 0 0-2ZM10 10a1 1 0 1 0 0 2h1v3h-1a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-1v-4c0-.6-.4-1-1-1h-2Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </a>
+          </button>
         </li>
         <li>
           <a>
@@ -181,7 +200,10 @@ export default function TransactionsDisplayerComponent({
           <tbody>
             {userTransactions.map((transaction: spendilowTransaction) => {
               return (
-                <tr key={nextId()} className="font-body">
+                <tr
+                  key={nextId()}
+                  className="font-body"
+                >
                   <td className="hidden desktop:table-cell">
                     {dateManipulation(transaction.transaction_date)}
                   </td>
@@ -193,7 +215,7 @@ export default function TransactionsDisplayerComponent({
                     {transaction.amount}
                   </td>
                   <td className="text-right hidden tablet:table-cell ">
-                    {transactionMenuCreator()}
+                    {transactionMenuCreator(transaction.id)}
                   </td>
                 </tr>
               );

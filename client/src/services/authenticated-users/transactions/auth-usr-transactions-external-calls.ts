@@ -112,4 +112,134 @@ const createNewSpendilowUserTransaction = async (
   return result;
 };
 
-export { getSpendilowUserTransactions, createNewSpendilowUserTransaction };
+const getSpendilowUserTransaction = async (
+  transactionID: string
+): Promise<spendilowTransactions | string> => {
+  let result: spendilowTransactions | string = {
+    transaction_date: new Date(),
+    amount: 0,
+    title: "",
+    notes: "",
+    tags: "",
+    transaction_type: "",
+    target_id: "",
+  };
+  try {
+    result = await axios
+      .get(baseURL + route + `/get/${transactionID}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return apiErrorResponseHandler(
+          error.response.status,
+          "Non siamo riusciti a recuperare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+        );
+      });
+  } catch (error) {
+    result = apiErrorResponseHandler(
+      500,
+      "Non siamo riusciti a recuperare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+    );
+  }
+
+  return result;
+};
+
+const deleteSpendilowUserTransaction = async (
+  transactionID: string
+): Promise<string> => {
+  let result: string = "";
+
+  try {
+    result = await axios
+      .delete(baseURL + route + `/del/${transactionID}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return apiErrorResponseHandler(
+          error.response.status,
+          "Non siamo riusciti ad eliminare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+        );
+      });
+  } catch (error) {
+    result = apiErrorResponseHandler(
+      500,
+      "Non siamo riusciti a recuperare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+    );
+  }
+
+  return result;
+};
+
+const editSpendilowUserTransaction = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  editedTransaction: any
+): Promise<string> => {
+  let result: string = "";
+
+  const { amount, title, notes, tags, target_id, transaction_type } =
+    editedTransaction;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let transformedDate: any = "string";
+
+  transformedDate = editedTransaction.transaction_date.split("T")[0];
+
+  transformedDate = transformedDate.split("-");
+
+  editedTransaction.transaction_date =
+    transformedDate[0] + "/" + transformedDate[1] + "/" + transformedDate[2];
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const transactionEditingBody: any = {
+    amount,
+    title,
+    notes,
+    tags,
+    target_id,
+    transaction_type,
+  };
+
+  transactionEditingBody.transaction_date = editedTransaction.transaction_date;
+
+  try {
+    result = await axios
+      .patch(
+        baseURL + route + `/mod/${editedTransaction.id}`,
+        transactionEditingBody,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return apiErrorResponseHandler(
+          error.response.status,
+          "Non siamo riusciti a modificare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+        );
+      });
+  } catch (error) {
+    result = apiErrorResponseHandler(
+      500,
+      "Non siamo riusciti a modificare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+    );
+  }
+
+  return result;
+};
+
+export {
+  getSpendilowUserTransactions,
+  createNewSpendilowUserTransaction,
+  getSpendilowUserTransaction,
+  deleteSpendilowUserTransaction,
+  editSpendilowUserTransaction,
+};
