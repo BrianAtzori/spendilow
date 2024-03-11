@@ -62,34 +62,38 @@ export default function DataDisplayerComponent({
             ) : (
               <>
                 <LoaderComponent
-                  isLoading={isLoading}
+                  isLoading={!error && isLoading}
                   message={"Caricamento delle transazioni in corso 💰"}
                 ></LoaderComponent>
-                <h1 className="text-5xl font-bold font-primary">{title}</h1>
-                <div className="font-body">
-                  <p className="">{subtitle}</p>
-                </div>
-                <div className="py-8">
-                  {transactions.length === 0 ? (
-                    <>
-                      <NoResultsComponent></NoResultsComponent>
-                    </>
-                  ) : (
-                    <>
-                      {displayerMode === "transactions" && (
+                {!isLoading && (
+                  <>
+                    <h1 className="text-5xl font-bold font-primary">{title}</h1>
+                    <div className="font-body">
+                      <p className="">{subtitle}</p>
+                    </div>
+                    <div className="py-8">
+                      {transactions.length === 0 ? (
                         <>
-                          <p className="text-sm mb-4 tablet:hidden text-neutral-500 font-heading">
-                            (☝🏼 Clicca su una transazione per visualizzarne i
-                            dettagli e interagire)
-                          </p>
-                          <TransactionsDisplayerComponent
-                            userTransactions={transactions}
-                          ></TransactionsDisplayerComponent>
+                          <NoResultsComponent></NoResultsComponent>
+                        </>
+                      ) : (
+                        <>
+                          {displayerMode === "transactions" && (
+                            <>
+                              <p className="text-sm mb-4 tablet:hidden text-neutral-500 font-heading">
+                                (☝🏼 Clicca su una transazione per visualizzarne
+                                i dettagli e interagire)
+                              </p>
+                              <TransactionsDisplayerComponent
+                                userTransactions={transactions}
+                              ></TransactionsDisplayerComponent>
+                            </>
+                          )}
                         </>
                       )}
-                    </>
-                  )}
-                </div>
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>

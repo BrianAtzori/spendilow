@@ -10,6 +10,7 @@ import {
 
 // ------ SERVICES ------
 import nextId from "react-id-generator";
+import { deleteSpendilowUserTransaction } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
 
 // ------ TYPESCRIPT ------
 interface spendilowTransaction {
@@ -36,8 +37,8 @@ export default function TransactionsDisplayerComponent({
   // ------ HOOKS ------
   const dispatch = useAppDispatch();
 
-  // ------ DATA DISPLAY HANDLING ------ //TODO: Metodi generali e importati? 
-  //TODO: Bottone per eliminare una transazione
+  // ------ DATA DISPLAY HANDLING ------
+  //TODO: Metodi generali e importati?
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
       case "Income":
@@ -132,7 +133,11 @@ export default function TransactionsDisplayerComponent({
           </button>
         </li>
         <li className="hidden tablet:table-cell">
-          <a>
+          <button
+            onClick={() => {
+              deleteTransaction(transactionID);
+            }}
+          >
             <svg
               className="w-5 h-5 text-neutral dark:text-neutral"
               aria-hidden="true"
@@ -146,7 +151,7 @@ export default function TransactionsDisplayerComponent({
                 clipRule="evenodd"
               />
             </svg>
-          </a>
+          </button>
         </li>
       </ul>
     );
@@ -165,6 +170,24 @@ export default function TransactionsDisplayerComponent({
       transformedDate[2] + "/" + transformedDate[1] + "/" + transformedDate[0]
     );
   };
+
+  // ------ FUNCTIONS ------
+  async function deleteTransaction(transactionID: string) {
+    const response = confirm("Vuoi eliminare questa transazione?");
+
+    if (response) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const externalCallResult: any = await deleteSpendilowUserTransaction(
+        transactionID
+      );
+
+      if (externalCallResult.success) {
+        window.location.href = "/user/dashboard";
+      } else {
+        alert(externalCallResult);
+      }
+    }
+  }
 
   return (
     <div>

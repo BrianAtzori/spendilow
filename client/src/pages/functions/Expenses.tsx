@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import UserExpensesWidgets from "../../components/user/UserExpensesWidgets";
 import ErrorScreenComponent from "../../components/shared/ErrorScreenComponent";
 import LoaderComponent from "../../components/shared/LoaderComponent";
+import DataDisplayerComponent from "../../components/shared/DataDisplayerComponent";
 
 // ------ REDUX ------
 import { useAppDispatch } from "../../redux/hooks";
@@ -66,15 +67,14 @@ export default function Expenses() {
         <>
           <UserExpensesWidgets></UserExpensesWidgets>
           <div className="divider font-primary divider-neutral opacity-50 mx-8"></div>
-          {/*<DataDisplayerComponent
-            title="Le tue spese"
-            subtitle="Dai un'occhiata alle spese degli ultimi 30 giorni 🗓️"
+          <DataDisplayerComponent
+            title="Tutti i tuoi movimenti"
+            subtitle="Ecco l'elenco di tutte le tue spese e delle tue entrate 💶"
             mode="transactions"
-            // payload={{}}
             isLoading={transactionsLoading}
             error={transactionsError.state}
             errorMessage={transactionsError.message}
-          ></DataDisplayerComponent> */}
+          ></DataDisplayerComponent>
         </>
       )}
     </div>
