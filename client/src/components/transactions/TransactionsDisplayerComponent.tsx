@@ -36,7 +36,8 @@ export default function TransactionsDisplayerComponent({
   // ------ HOOKS ------
   const dispatch = useAppDispatch();
 
-  // ------ DATA DISPLAY HANDLING ------ //TODO: Metodi generali e importati?
+  // ------ DATA DISPLAY HANDLING ------ //TODO: Metodi generali e importati? 
+  //TODO: Bottone per eliminare una transazione
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
       case "Income":
@@ -100,31 +101,8 @@ export default function TransactionsDisplayerComponent({
 
   const transactionMenuCreator = (transactionID: string) => {
     return (
-      <ul className="menu menu-horizontal rounded-box bg-accent ">
-        <li>
-          <a>
-            <svg
-              className="w-5 h-5 text-neutral dark:text-neutral"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fillRule="evenodd"
-                d="M11.3 6.2H5a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h11c1.1 0 2-1 2-2.1V11l-4 4.2c-.3.3-.7.6-1.2.7l-2.7.6c-1.7.3-3.3-1.3-3-3.1l.6-2.9c.1-.5.4-1 .7-1.3l3-3.1Z"
-                clipRule="evenodd"
-              />
-              <path
-                fillRule="evenodd"
-                d="M19.8 4.3a2.1 2.1 0 0 0-1-1.1 2 2 0 0 0-2.2.4l-.6.6 2.9 3 .5-.6a2.1 2.1 0 0 0 .6-1.5c0-.2 0-.5-.2-.8Zm-2.4 4.4-2.8-3-4.8 5-.1.3-.7 3c0 .3.3.7.6.6l2.7-.6.3-.1 4.7-5Z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </a>
-        </li>
-
-        <li>
+      <ul className="menu menu-horizontal rounded-box bg-accent">
+        <li className="tablet:table-cell">
           <button
             onClick={() => {
               dispatch(setTransactionMenuModalSliceShowing(true));
@@ -133,7 +111,7 @@ export default function TransactionsDisplayerComponent({
           >
             <a>
               <svg
-                className="w-5 h-5 text-neutral0 dark:text-neutral"
+                className="w-5 h-5 text-neutral dark:text-neutral"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -141,14 +119,19 @@ export default function TransactionsDisplayerComponent({
               >
                 <path
                   fillRule="evenodd"
-                  d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm9.4-5.5a1 1 0 1 0 0 2 1 1 0 1 0 0-2ZM10 10a1 1 0 1 0 0 2h1v3h-1a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-1v-4c0-.6-.4-1-1-1h-2Z"
+                  d="M11.3 6.2H5a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h11c1.1 0 2-1 2-2.1V11l-4 4.2c-.3.3-.7.6-1.2.7l-2.7.6c-1.7.3-3.3-1.3-3-3.1l.6-2.9c.1-.5.4-1 .7-1.3l3-3.1Z"
+                  clipRule="evenodd"
+                />
+                <path
+                  fillRule="evenodd"
+                  d="M19.8 4.3a2.1 2.1 0 0 0-1-1.1 2 2 0 0 0-2.2.4l-.6.6 2.9 3 .5-.6a2.1 2.1 0 0 0 .6-1.5c0-.2 0-.5-.2-.8Zm-2.4 4.4-2.8-3-4.8 5-.1.3-.7 3c0 .3.3.7.6.6l2.7-.6.3-.1 4.7-5Z"
                   clipRule="evenodd"
                 />
               </svg>
             </a>
           </button>
         </li>
-        <li>
+        <li className="hidden tablet:table-cell">
           <a>
             <svg
               className="w-5 h-5 text-neutral dark:text-neutral"
@@ -200,10 +183,7 @@ export default function TransactionsDisplayerComponent({
           <tbody>
             {userTransactions.map((transaction: spendilowTransaction) => {
               return (
-                <tr
-                  key={nextId()}
-                  className="font-body"
-                >
+                <tr key={nextId()} className="font-body">
                   <td className="hidden desktop:table-cell">
                     {dateManipulation(transaction.transaction_date)}
                   </td>
@@ -214,7 +194,7 @@ export default function TransactionsDisplayerComponent({
                   <td className="hidden tablet:table-cell ">
                     {transaction.amount}
                   </td>
-                  <td className="text-right hidden tablet:table-cell ">
+                  <td className="text-right tablet:table-cell ">
                     {transactionMenuCreator(transaction.id)}
                   </td>
                 </tr>

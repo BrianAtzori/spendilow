@@ -60,6 +60,19 @@ export default function TransactionDataFunctionsComponent({
         {isFormVisible && (
           <div className="form-control desktop:w-full">
             <div className="flex flex-col gap-4 font-heading desktop:flex-row desktop:flex-wrap desktop:justify-between">
+            <div className="form-control desktop:w-5/12">
+                <label className="label">
+                  <span className="label-text font-bold">Quantitá</span>
+                </label>
+                <input
+                  className="input input-bordered"
+                  id="amount"
+                  name="amount"
+                  placeholder="0"
+                  onChange={handleChange}
+                  value={transaction.amount}
+                />
+              </div>
               <div className="form-control desktop:w-5/12">
                 <label className="label">
                   <span className="label-text font-bold">Titolo</span>
@@ -83,6 +96,7 @@ export default function TransactionDataFunctionsComponent({
                   id="transaction_date"
                   name="transaction_date"
                   placeholder="1970/01/01"
+                  //TODO: Se non la tocchi é ancora un problema
                   onChange={handleChange}
                 />
               </div>

@@ -106,6 +106,7 @@ export default function UserProfileWidgets() {
                     />
                   </svg>
                 </div>
+                {/* //TODO: Questi dovrebbero essere calcolati */}
                 <div className="stat-title">I tuoi risparmi:</div>
                 <div className="stat-value">{currentSpendilowUser.savings}</div>
                 <div className="stat-desc">Contiua cosí 🙌🏻'</div>
