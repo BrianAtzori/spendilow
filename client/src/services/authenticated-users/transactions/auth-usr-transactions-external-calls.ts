@@ -71,7 +71,7 @@ const createNewSpendilowUserTransaction = async (
     "/" +
     (newSpendilowTransaction.transaction_date.getUTCMonth() + 1).toString() +
     "/" +
-    newSpendilowTransaction.transaction_date.getUTCDate().toString();
+    (newSpendilowTransaction.transaction_date.getUTCDate() + 1).toString();
 
   try {
     result = await axios
@@ -186,15 +186,12 @@ const editSpendilowUserTransaction = async (
   const { amount, title, notes, tags, target_id, transaction_type } =
     editedTransaction;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let transformedDate: any = "string";
-
-  transformedDate = editedTransaction.transaction_date.split("T")[0];
-
-  transformedDate = transformedDate.split("-");
-
   editedTransaction.transaction_date =
-    transformedDate[0] + "/" + transformedDate[1] + "/" + transformedDate[2];
+    editedTransaction.transaction_date.getUTCFullYear().toString() +
+    "/" +
+    (editedTransaction.transaction_date.getUTCMonth() + 1).toString() +
+    "/" +
+    (editedTransaction.transaction_date.getUTCDate() + 1).toString();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transactionEditingBody: any = {

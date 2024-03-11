@@ -41,7 +41,7 @@ export default function TransactionMenuModalComponent({
     getTransaction();
   }, [visible]);
 
-  const currentTransactionID = useAppSelector(
+  const currentTransactionID: string = useAppSelector(
     (state) => state.transactionMenuModal.transactionID
   );
 
@@ -132,8 +132,6 @@ export default function TransactionMenuModalComponent({
     ).finally(() => {
       setIsLoading(false);
     });
-
-    console.log(externalCallResult);
 
     if (externalCallResult.transaction) {
       setNewSpendilowUserTransaction(externalCallResult.transaction);

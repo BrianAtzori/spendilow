@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const transactionMenuModalSlice = createSlice({
   name: "transactionMenuModalSliceShowing",
-  initialState: { isShowing: false, transactionID: null },
+  initialState: { isShowing: false, transactionID: "" },
   reducers: {
     setTransactionMenuModalSliceShowing: (state, action) => {
       // console.log(state.isShowing)
@@ -15,7 +15,9 @@ export const transactionMenuModalSlice = createSlice({
   },
 });
 
-export const { setTransactionMenuModalSliceShowing, setTransactionMenuModalSliceTransaction } =
-  transactionMenuModalSlice.actions;
+export const {
+  setTransactionMenuModalSliceShowing,
+  setTransactionMenuModalSliceTransaction,
+} = transactionMenuModalSlice.actions;
 
 export default transactionMenuModalSlice.reducer;

@@ -9,7 +9,6 @@ import { deleteSpendilowUserTransaction } from "../../../services/authenticated-
 
 // ------ TYPESCRIPT ------
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 export default function TransactionDataFunctionsComponent({
   transaction,
   handleChange,
@@ -24,21 +23,6 @@ export default function TransactionDataFunctionsComponent({
       state: false,
       message: "Errore in fase di eliminazione della transazione.",
     });
-
-  // ------ DATA DISPLAY HANDLING ------
-
-  const dateManipulation = (date: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let transformedDate: any = "string";
-
-    transformedDate = date.split("T")[0];
-
-    transformedDate = transformedDate.split("-");
-
-    return (
-      transformedDate[0] + "-" + transformedDate[1] + "-" + transformedDate[2]
-    );
-  };
 
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -100,7 +84,6 @@ export default function TransactionDataFunctionsComponent({
                   name="transaction_date"
                   placeholder="1970/01/01"
                   onChange={handleChange}
-                  value={transaction.transaction_date}
                 />
               </div>
               <div className="form-control desktop:w-5/12">

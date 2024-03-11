@@ -3,16 +3,16 @@ import React from "react";
 
 // ------ TYPESCRIPT ------
 /* eslint-disable @typescript-eslint/no-explicit-any */
-interface spendilowTransactions {
-  id: string;
-  transaction_date: any;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string;
-}
+// interface spendilowTransactions {
+//   id: string;
+//   transaction_date: any;
+//   amount: number;
+//   title: string;
+//   notes: string;
+//   tags: string;
+//   transaction_type: string;
+//   target_id: string;
+// }
 
 export default function TransactionDataComponent({ transaction }: any) {
   // ------ DATA DISPLAY HANDLING ------//TODO: Metodi generali e importati?
@@ -78,17 +78,45 @@ export default function TransactionDataComponent({ transaction }: any) {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const dateManipulation = (date: any) => {
+  const dateManipulation = (date: string | Date) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let transformedDate: any = "string";
 
-    transformedDate = date.split("T")[0];
+    // or the first render will crash
+    if (date === undefined) {
+      return "Errore nel recuperare la data";
+    } else {
+      switch (typeof date) {
+        case "object":
+          transformedDate =
+            date.getUTCDate().toString() +
+            "/" +
+            (date.getUTCMonth() + 1).toString() +
+            "/" +
+            date.getUTCFullYear().toString();
 
-    transformedDate = transformedDate.split("-");
+          return transformedDate;
 
-    return (
-      transformedDate[2] + "/" + transformedDate[1] + "/" + transformedDate[0]
-    );
+          break;
+
+        case "string":
+          transformedDate = date.split("T")[0];
+
+          transformedDate = transformedDate.split("-");
+
+          return (
+            transformedDate[2] +
+            "/" +
+            transformedDate[1] +
+            "/" +
+            transformedDate[0]
+          );
+          break;
+
+        default:
+          return "01/01/1970";
+      }
+    }
   };
 
   return (
@@ -102,7 +130,7 @@ export default function TransactionDataComponent({ transaction }: any) {
         </div>
         <span className="text-neutral font-heading">
           {/* //TODO: Check render Data */}
-          {/* {dateManipulation(spendilowUserTransaction.transaction_date)} */}
+          {dateManipulation(transaction.transaction_date)}
         </span>
       </div>
       <div className="divider font-primary divider-neutral opacity-50"></div>
