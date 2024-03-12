@@ -1,6 +1,9 @@
 // ------ REACT ------
 import React from "react";
 
+// ------ SERVICE ------
+import nextId from "react-id-generator";
+
 // ------ TYPESCRIPT ------
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // interface spendilowTransactions {
@@ -15,7 +18,7 @@ import React from "react";
 // }
 
 export default function TransactionDataComponent({ transaction }: any) {
-  // ------ DATA DISPLAY HANDLING ------//TODO: Metodi generali e importati?
+  // ------ DATA DISPLAY HANDLING ------
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
       case "Income":
@@ -77,9 +80,7 @@ export default function TransactionDataComponent({ transaction }: any) {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dateManipulation = (date: string | Date) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let transformedDate: any = "string";
 
     // or the first render will crash
@@ -119,6 +120,24 @@ export default function TransactionDataComponent({ transaction }: any) {
     }
   };
 
+  const tagsGeneration = (tags: string) => {
+    if (tags === "" || tags === undefined) {
+      return <></>;
+    } else {
+      const splittedTags = tags.split(",");
+
+      const generatedTags = splittedTags.map((tag) => {
+        return (
+          <div id={nextId()} className="badge badge-primary mx-2">
+            {tag}
+          </div>
+        );
+      });
+
+      return generatedTags;
+    }
+  };
+
   return (
     <>
       <div className="flex flex-row gap-2 justify-between align-middle">
@@ -135,9 +154,16 @@ export default function TransactionDataComponent({ transaction }: any) {
       </div>
       <div className="divider font-primary divider-neutral opacity-50"></div>
       <div className="font-body text-sm">
+      <label className="label">
+          <span className="label-text font-bold">Note:</span>
+        </label>
         <p className="mb-2">{transaction.notes}</p>
-        {/* //TODO: Render Tags */}
-        <div className="badge badge-primary mx-2">{transaction.tags}</div>
+        <label className="label">
+          <span className="label-text font-bold">Tags:</span>
+        </label>
+        <div className="flex flex-row flex-wrap justify-start">
+          {tagsGeneration(transaction.tags)}
+        </div>
       </div>
       <div className="divider font-primary divider-neutral opacity-50"></div>
     </>

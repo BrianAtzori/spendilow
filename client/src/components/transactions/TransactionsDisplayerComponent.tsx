@@ -38,7 +38,6 @@ export default function TransactionsDisplayerComponent({
   const dispatch = useAppDispatch();
 
   // ------ DATA DISPLAY HANDLING ------
-  //TODO: Metodi generali e importati?
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
       case "Income":

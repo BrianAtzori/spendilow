@@ -24,7 +24,6 @@ interface spendilowTransactions {
 // https://stackoverflow.com/questions/76955824/how-to-control-daisyui-modal-after-update-to-v3-in-reactjs
 // https://stackoverflow.com/questions/40366407/typescript-modal-window
 
-//TODO: Manage Tags
 export default function AddTransactionModalComponent({
   visible,
   onClose,
@@ -103,12 +102,55 @@ export default function AddTransactionModalComponent({
         message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
       });
     } else {
+      // if (newSpendilowUserTransaction.tags != "") {
+      //   await manageTagsCreation()
+      //     .then(() => {
+      //       console.log(newSpendilowUserTransaction.tags);
+      // addNewTransaction();
+      //     })
+      //     .finally(() => {
+      //       setIsLoading(true);
+      //     });
+      // } else {
+      //   console.log("No Tags");
       setIsLoading(true);
       await addNewTransaction();
     }
   }
 
   // ------ FUNCTIONS ------
+  // async function manageTagsCreation() {
+  //   const { tags } = newSpendilowUserTransaction;
+
+  //   let formattedTags = "";
+
+  //   if (tags.includes(",")) {
+  //     const splittedTags = tags.split(",");
+
+  //     for (let i = 0; i < splittedTags.length; i++) {
+  //       if (i === splittedTags.length - 1 && splittedTags[i] != "") {
+  //         formattedTags += splittedTags[i];
+  //       } else {
+  //         formattedTags += splittedTags[i] + ";";
+  //       }
+  //     }
+  //   } else {
+  //     setNewSpendilowUserTransaction({
+  //       ...newSpendilowUserTransaction,
+  //       ["tags"]: tags,
+  //     });
+
+  //     return;
+  //   }
+
+  //   setNewSpendilowUserTransaction({
+  //     ...newSpendilowUserTransaction,
+  //     ["tags"]: formattedTags,
+  //   });
+
+  //   return;
+  // }
+
   async function addNewTransaction() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const externalCallResult: any = await createNewSpendilowUserTransaction(
@@ -178,6 +220,19 @@ export default function AddTransactionModalComponent({
           </div>
           <div className="form-control desktop:w-5/12">
             <label className="label">
+              <span className="label-text font-bold">Quantitá</span>
+            </label>
+            <input
+              className="input input-bordered"
+              id="amount"
+              name="amount"
+              placeholder="0"
+              onChange={handleChange}
+              value={newSpendilowUserTransaction.amount}
+            />
+          </div>
+          <div className="form-control desktop:w-5/12">
+            <label className="label">
               <span className="label-text font-bold">Data</span>
             </label>
             <input
@@ -220,7 +275,9 @@ export default function AddTransactionModalComponent({
           </div>
           <div className="form-control desktop:w-5/12">
             <label className="label">
-              <span className="label-text font-bold">Tag</span>
+              <span className="label-text font-bold">
+                Tag (Separati da virgole)
+              </span>
             </label>
             <input
               className="input input-bordered"

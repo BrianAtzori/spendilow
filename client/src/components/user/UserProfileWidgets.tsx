@@ -132,7 +132,6 @@ export default function UserProfileWidgets() {
                     />
                   </svg>
                 </div>
-                {/* //TODO: Questi dovrebbero essere calcolati */}
                 <div className="stat-title">
                   I risparmi degli ultimi 30 giorni:
                 </div>
