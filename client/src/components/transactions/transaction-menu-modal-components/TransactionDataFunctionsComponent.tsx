@@ -96,7 +96,6 @@ export default function TransactionDataFunctionsComponent({
                   id="transaction_date"
                   name="transaction_date"
                   placeholder="1970/01/01"
-                  //TODO: Se non la tocchi é ancora un problema
                   onChange={handleChange}
                 />
               </div>
