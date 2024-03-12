@@ -40,6 +40,32 @@ export default function UserProfileWidgets() {
   // ------ DATA HANDLING ------
   const currentDate = new Date();
 
+  const userExpensesValuesGeneration = (mode: string) => {
+    let calculatedValue: number = 0;
+    switch (mode) {
+      case "total": {
+        for (let i = 0; i < transactions.length; i++) {
+          switch (transactions[i].transaction_type) {
+            case "Income":
+              calculatedValue += transactions[i].amount;
+              break;
+            case "Expense":
+              calculatedValue -= transactions[i].amount;
+              break;
+            case "Budget":
+              calculatedValue += transactions[i].amount;
+              break;
+            default:
+              break;
+          }
+        }
+        break;
+      }
+    }
+
+    return calculatedValue.toFixed(2);
+  };
+
   return (
     <>
       <div className="hero tablet:place-items-start">
@@ -57,7 +83,7 @@ export default function UserProfileWidgets() {
             </div>
           </div>
           <div className="flex flex-col gap-3 justify-around w-full tablet:flex-wrap tablet:flex-row tablet:justify-between desktop:justify-start">
-            <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl ">
+            <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl overflow-hidden ">
               <div className="stat">
                 <div className="stat-figure text-secondary hidden desktop:block">
                   <svg
@@ -87,7 +113,7 @@ export default function UserProfileWidgets() {
                 </div>
               </div>
             </div>
-            <div className="stats shadow font-heading tablet:w-5/12  tablet:max-w-xl ">
+            <div className="stats shadow font-heading tablet:w-5/12  tablet:max-w-xl overflow-hidden">
               <div className="stat">
                 <div className="stat-figure text-secondary hidden desktop:block">
                   <svg
@@ -107,12 +133,21 @@ export default function UserProfileWidgets() {
                   </svg>
                 </div>
                 {/* //TODO: Questi dovrebbero essere calcolati */}
-                <div className="stat-title">I tuoi risparmi:</div>
-                <div className="stat-value">{currentSpendilowUser.savings}</div>
-                <div className="stat-desc">Contiua cosí 🙌🏻'</div>
+                <div className="stat-title">
+                  I risparmi degli ultimi 30 giorni:
+                </div>
+                <div className="stat-value">
+                  {userExpensesValuesGeneration("total")}
+                </div>
+                <div className="stat-desc">
+                  Continua cosí, parti da una base di
+                  <div className="badge badge-primary mx-2">
+                    {currentSpendilowUser.savings}
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl ">
+            <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl overflow-hidden ">
               <div className="stat">
                 <div className="stat-figure text-secondary hidden desktop:block">
                   <svg
@@ -139,7 +174,7 @@ export default function UserProfileWidgets() {
                 </div>
               </div>
             </div>
-            <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl ">
+            <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl">
               <div className="stat">
                 <div className="stat-figure text-secondary hidden desktop:block">
                   <svg
@@ -157,7 +192,27 @@ export default function UserProfileWidgets() {
                   </svg>
                 </div>
                 <div className="stat-title">Ultimo movimento:</div>
-                <div className="stat-value">{transactions[0].amount}</div>
+                {transactions[0].transaction_type === "Expense" && (
+                  <>
+                    <div className="stat-value text-error">
+                      {transactions[0].amount}
+                    </div>
+                  </>
+                )}
+                {transactions[0].transaction_type === "Income" && (
+                  <>
+                    <div className="stat-value text-success">
+                      {transactions[0].amount}
+                    </div>
+                  </>
+                )}
+                {transactions[0].transaction_type === "Budget" && (
+                  <>
+                    <div className="stat-value text-info">
+                      {transactions[0].amount}
+                    </div>
+                  </>
+                )}
                 <div className="stat-desc">{transactions[0].title}</div>
               </div>
             </div>

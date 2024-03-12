@@ -45,6 +45,7 @@ export default function UserExpensesWidgets() {
 
     switch (mode) {
       case "total": {
+        calculatedValue = currentSpendilowUser.savings
         for (let i = 0; i < transactions.length; i++) {
           switch (transactions[i].transaction_type) {
             case "Income":
@@ -220,7 +221,7 @@ export default function UserExpensesWidgets() {
                   {userExpensesValuesGeneration("incomes")}
                 </div>
                 <div className="stat-desc">
-                  Con uno stipendio mensile di:
+                  Con uno stipendio mensile di
                   <div className="badge badge-primary mx-2">
                     {currentSpendilowUser.salary}
                   </div>

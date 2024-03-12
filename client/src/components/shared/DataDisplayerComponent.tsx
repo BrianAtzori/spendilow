@@ -11,7 +11,7 @@ import ErrorComponent from "./ErrorComponent";
 import { useAppSelector } from "../../redux/hooks";
 
 interface spendilowTransaction {
-  id: string
+  id: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transaction_date: any;
   amount: number;
@@ -46,7 +46,7 @@ export default function DataDisplayerComponent({
 
   const [displayerMode] = useState(mode);
 
-  //TODO: Puó diventare uno switch?
+  //TODO: Quando avremo i budget lo trasformiamo in una funziona che ritorna quello che mi interessa o il componente che vogliamo renderizzare
   const transactions: spendilowTransaction[] = useAppSelector(
     (state) => state.userTransactions.transactions
   );

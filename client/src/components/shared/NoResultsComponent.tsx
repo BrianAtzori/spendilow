@@ -2,9 +2,6 @@ import React from "react";
 
 //Similar to the error component, displayed inside the DataDisplayerComponent when there are no results
 
-//TODO: Props should be:
-//? Messaggio
-
 export default function NoResultsComponent() {
   return (
     <div className="hero mx-auto min-h-full">
