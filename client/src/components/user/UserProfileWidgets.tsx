@@ -190,7 +190,7 @@ export default function UserProfileWidgets() {
                     />
                   </svg>
                 </div>
-                <div className="stat-title">Ultimo movimento:</div>
+                <div className="stat-title">Movimento piú recente:</div>
                 {transactions[0].transaction_type === "Expense" && (
                   <>
                     <div className="stat-value text-error">

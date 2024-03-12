@@ -19,7 +19,7 @@ import { editSpendilowUserTransaction } from "../../services/authenticated-users
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface spendilowTransactions {
   id: string;
-  transaction_date: any;
+  transaction_date: Date;
   amount: number;
   title: string;
   notes: string;
@@ -48,7 +48,7 @@ export default function TransactionMenuModalComponent({
   const [spendilowUserTransaction, setNewSpendilowUserTransaction] =
     useState<spendilowTransactions>({
       id: "",
-      transaction_date: undefined,
+      transaction_date: new Date(),
       amount: 0,
       title: "",
       notes: "",
@@ -97,6 +97,7 @@ export default function TransactionMenuModalComponent({
       setNewSpendilowUserTransaction({
         ...spendilowUserTransaction,
         [event.target.name]: event.target.value,
+        transaction_date: new Date(spendilowUserTransaction.transaction_date),
       });
     }
   };
@@ -113,7 +114,8 @@ export default function TransactionMenuModalComponent({
       spendilowUserTransaction.transaction_date === undefined ||
       spendilowUserTransaction.amount === undefined ||
       spendilowUserTransaction.title === "" ||
-      spendilowUserTransaction.transaction_type === ""
+      spendilowUserTransaction.transaction_type === "" ||
+      spendilowUserTransaction.transaction_date === null
     ) {
       setTransactionMenuEditingError({
         state: true,

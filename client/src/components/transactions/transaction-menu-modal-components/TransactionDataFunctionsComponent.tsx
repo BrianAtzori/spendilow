@@ -60,7 +60,7 @@ export default function TransactionDataFunctionsComponent({
         {isFormVisible && (
           <div className="form-control desktop:w-full">
             <div className="flex flex-col gap-4 font-heading desktop:flex-row desktop:flex-wrap desktop:justify-between">
-            <div className="form-control desktop:w-5/12">
+              <div className="form-control desktop:w-5/12">
                 <label className="label">
                   <span className="label-text font-bold">Quantitá</span>
                 </label>

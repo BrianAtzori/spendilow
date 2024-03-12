@@ -125,15 +125,13 @@ export default function TransactionDataComponent({ transaction }: any) {
       return <></>;
     } else {
       const splittedTags = tags.split(",");
-
       const generatedTags = splittedTags.map((tag) => {
         return (
-          <div id={nextId()} className="badge badge-primary mx-2">
+          <div key={nextId()} className="badge badge-primary mx-2">
             {tag}
           </div>
         );
       });
-
       return generatedTags;
     }
   };
@@ -148,13 +146,12 @@ export default function TransactionDataComponent({ transaction }: any) {
           <h1 className="font-primary font-bold">{transaction.title}</h1>
         </div>
         <span className="text-neutral font-heading">
-          {/* //TODO: Check render Data */}
           {dateManipulation(transaction.transaction_date)}
         </span>
       </div>
       <div className="divider font-primary divider-neutral opacity-50"></div>
       <div className="font-body text-sm">
-      <label className="label">
+        <label className="label">
           <span className="label-text font-bold">Note:</span>
         </label>
         <p className="mb-2">{transaction.notes}</p>
