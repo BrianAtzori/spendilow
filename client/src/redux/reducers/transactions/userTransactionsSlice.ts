@@ -6,6 +6,7 @@ export const userTransactionsSlice = createSlice({
   initialState: {
     transactions: [
       {
+        id: "",
         transaction_date: "",
         amount: 0,
         title: "",

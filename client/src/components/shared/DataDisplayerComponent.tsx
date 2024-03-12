@@ -11,6 +11,7 @@ import ErrorComponent from "./ErrorComponent";
 import { useAppSelector } from "../../redux/hooks";
 
 interface spendilowTransaction {
+  id: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transaction_date: any;
   amount: number;
