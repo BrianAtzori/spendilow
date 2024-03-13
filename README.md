@@ -13,15 +13,15 @@
 
 ...to be defined
 
+- [You can see the APIs documentation here 📄](https://github.com/BrianAtzori/spendilow/blob/main/docs/api/routes.md)
+
 ## FRONTEND BUILT WITH 🎨
 
 ...to be defined
 
-- [You can see the APIs documentation here 📄](https://github.com/BrianAtzori/spendilow/blob/main/docs/api/routes.md)
-
-### READ ME future updates
+### READ ME Roadmap
 
 - Link to the application
 - Usage (with screenshots)
-- Links for issues
+- Links for issues & bugs
 - Contacts
