@@ -21,6 +21,7 @@ import { useAppDispatch } from "./redux/hooks";
 import { setTransactionModalShowing } from "./redux/reducers/interactions/transactionModalSlice";
 import { setTransactionMenuModalSliceShowing } from "./redux/reducers/interactions/transactionMenuModalSlice";
 
+
 function App() {
   // ------ HOOKS ------
   const userLogged: boolean = useAppSelector((state) => state.userLogged.value);
