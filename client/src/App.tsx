@@ -22,6 +22,7 @@ import { setTransactionModalShowing } from "./redux/reducers/interactions/transa
 import { setTransactionMenuModalSliceShowing } from "./redux/reducers/interactions/transactionMenuModalSlice";
 import ErrorScreenComponent from "./components/shared/ErrorScreenComponent";
 
+
 function App() {
   // ------ HOOKS ------
   const userLogged: boolean = useAppSelector((state) => state.userLogged.value);
