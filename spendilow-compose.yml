@@ -1,0 +1,47 @@
+version: "3"
+services:
+  maria-db:
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    env_file:
+      - .env
+    networks:
+      - db_network
+  db-gui:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - db_network
+  backend:
+    build:
+      context: ./server/
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5132:5132
+    networks:
+      - db_network
+      - app_network
+    env_file:
+      - ./server/.env
+  frontend:
+    build:
+      context: ./client/
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5173:5173
+    networks:
+      - app_network
+    env_file:
+      - ./client/.env
+
+networks:
+  app_network:
+  db_network:
