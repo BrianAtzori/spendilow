@@ -1,26 +1,49 @@
-FROM node as stage
+FROM node:alpine as builder
 
 WORKDIR /app
 
 COPY package.json .
 COPY package-lock.json .
-COPY . .
-COPY public .
+
 RUN npm install
+
+COPY . .
+
 RUN npm run build
 
-# COPY ./dist ./app/dist
+FROM nginx:alpine
 
-FROM nginx
+COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY --from=stage /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
-CMD [ "nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
 
-## EXPOSE [Port you mentioned in the vite.config file]
+# FROM node as stage
 
-# EXPOSE 5173
+# WORKDIR /app
 
-# CMD ["npm", "run", "dev"]
+# COPY package.json .
+# COPY package-lock.json .
+# COPY public .
+# RUN npm install
+# COPY . .
+# RUN npm run build
+
+# # COPY ./dist ./app/dist
+
+# FROM nginx
+
+# COPY --from=stage /app/dist /usr/share/nginx/html
+
+# EXPOSE 80
+
+# CMD [ "nginx", "-g", "daemon off;"]
+
+# ## EXPOSE [Port you mentioned in the vite.config file]
+
+# # EXPOSE 5173
+
+# # CMD ["npm", "run", "dev"]
