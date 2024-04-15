@@ -1,0 +1,35 @@
+version: '3'
+services:
+  frontend:
+    build: ./client
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env
+  backend:
+    build: ./server
+    ports:
+      - "5132:5132"
+    env_file:
+      - .env
+    depends_on:
+      - database
+  database:
+    image: mariadb:latest
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    platform: linux/amd64
+    restart: always
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+    environment:
+      PMA_ARBITRARY: 1
+    depends_on:
+      - database

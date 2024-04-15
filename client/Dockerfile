@@ -1,49 +1,32 @@
-FROM node:alpine as builder
+# Usa un'immagine di Node.js per costruire l'app
+FROM node:latest AS build
 
+# Imposta la directory di lavoro all'interno del contenitore
 WORKDIR /app
 
-COPY package.json .
-COPY package-lock.json .
+# Copia il package.json e il package-lock.json nella directory di lavoro
+COPY package.json ./
 
+# Installa le dipendenze
 RUN npm install
 
+# Copia il resto dei file nell'immagine
 COPY . .
 
+# Compila l'applicazione per la produzione
 RUN npm run build
 
+# Stage finale per servire l'applicazione
 FROM nginx:alpine
 
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copia i file compilati dall'immagine di build nell'immagine nginx
+COPY --from=build /app/dist /usr/share/nginx/html
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copia il file .env per le variabili d'ambiente
+COPY .env /usr/share/nginx/html/.env
 
-EXPOSE 80
+# Espone la porta 5173 per consentire l'accesso all'applicazione
+EXPOSE 5173
 
+# Comando per avviare nginx
 CMD ["nginx", "-g", "daemon off;"]
-
-# FROM node as stage
-
-# WORKDIR /app
-
-# COPY package.json .
-# COPY package-lock.json .
-# COPY public .
-# RUN npm install
-# COPY . .
-# RUN npm run build
-
-# # COPY ./dist ./app/dist
-
-# FROM nginx
-
-# COPY --from=stage /app/dist /usr/share/nginx/html
-
-# EXPOSE 80
-
-# CMD [ "nginx", "-g", "daemon off;"]
-
-# ## EXPOSE [Port you mentioned in the vite.config file]
-
-# # EXPOSE 5173
-
-# # CMD ["npm", "run", "dev"]
