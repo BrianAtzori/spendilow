@@ -1,17 +1,11 @@
 version: '3'
 services:
-  frontend:
-    build: ./client
-    ports:
-      - "5173:5173"
-    env_file:
-      - .env
   backend:
     build: ./server
     ports:
       - "5132:5132"
     env_file:
-      - .env
+      - ./server/.env
     depends_on:
       - database
   database:
