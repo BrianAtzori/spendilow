@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'https://brianatzori.it/prova/',
+  base: 'https://brianatzori.it/spendilow/',
   plugins: [react()],
   server: {
     host: true,

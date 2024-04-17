@@ -1,5 +1,6 @@
 {
   "name": "spendilow-frontend",
+  "homepage": "https://brianatzori.it/spendilow",
   "private": true,
   "version": "1.0.0",
   "description": "Spendilow, a webapp to keep track of personal finances 💰",

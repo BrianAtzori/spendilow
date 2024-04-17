@@ -13,7 +13,8 @@ import { store } from "./redux/store.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <BrowserRouter>
+    //TODO: Fix this with env variable
+    <BrowserRouter basename="/spendilow">
       <App />
     </BrowserRouter>
   </Provider>
