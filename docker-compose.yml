@@ -11,8 +11,10 @@ services:
   database:
     image: mariadb:latest
     restart: always
+    volumes:
+      - ./my_init_db:/docker-entrypoint-initdb.d
     env_file:
-      - .env
+      - ./.env
     ports:
       - "3306:3306"
   phpmyadmin:
