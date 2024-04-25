@@ -1,13 +1,13 @@
 run:
 	make --always-make -j 2 all
 
-all: server app
+all: server app test
 
 app: 
 		cd client;npm run dev
 
 server: 
-		cd server&&npm run dev
+		docker compose up --build -d
 
 test:
 		cd server;npm run test 2>&1 | tee test-logs.txt

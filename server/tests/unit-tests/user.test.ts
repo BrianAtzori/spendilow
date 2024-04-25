@@ -196,6 +196,7 @@ describe("Spendilow API 💰 - Users Tests", function () {
       .delete(`api/v1/authenticated-users/del/`)
       .set("Cookie", cookie)
       .end(function (err: Error, res: any) {
+
         res.should.have.status(200);
         res.should.be.json;
 
@@ -209,4 +210,3 @@ describe("Spendilow API 💰 - Users Tests", function () {
       });
   });
 });
-
