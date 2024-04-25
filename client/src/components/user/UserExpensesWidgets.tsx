@@ -43,66 +43,70 @@ export default function UserExpensesWidgets() {
   const userExpensesValuesGeneration = (mode: string) => {
     let calculatedValue: number = 0;
 
-    switch (mode) {
-      case "total": {
-        calculatedValue = currentSpendilowUser.savings
-        for (let i = 0; i < transactions.length; i++) {
-          switch (transactions[i].transaction_type) {
-            case "Income":
-              calculatedValue += transactions[i].amount;
-              break;
-            case "Expense":
-              calculatedValue -= transactions[i].amount;
-              break;
-            case "Budget":
-              calculatedValue += transactions[i].amount;
-              break;
-            default:
-              break;
+    if (!(transactions.length === 0)) {
+      switch (mode) {
+        case "total": {
+          calculatedValue = currentSpendilowUser.savings;
+          for (let i = 0; i < transactions.length; i++) {
+            switch (transactions[i].transaction_type) {
+              case "Income":
+                calculatedValue += transactions[i].amount;
+                break;
+              case "Expense":
+                calculatedValue -= transactions[i].amount;
+                break;
+              case "Budget":
+                calculatedValue += transactions[i].amount;
+                break;
+              default:
+                break;
+            }
           }
-        }
-        break;
-      }
-
-      case "incomes": {
-        const filteredTransactions = transactions.filter(
-          (singleTransaction) => singleTransaction.transaction_type === "Income"
-        );
-
-        for (let i = 0; i < filteredTransactions.length; i++) {
-          calculatedValue += filteredTransactions[i].amount;
+          break;
         }
 
-        break;
-      }
+        case "incomes": {
+          const filteredTransactions = transactions.filter(
+            (singleTransaction) =>
+              singleTransaction.transaction_type === "Income"
+          );
 
-      case "expenses": {
-        const filteredTransactions = transactions.filter(
-          (singleTransaction) =>
-            singleTransaction.transaction_type === "Expense"
-        );
+          for (let i = 0; i < filteredTransactions.length; i++) {
+            calculatedValue += filteredTransactions[i].amount;
+          }
 
-        for (let i = 0; i < filteredTransactions.length; i++) {
-          calculatedValue -= filteredTransactions[i].amount;
+          break;
         }
 
-        break;
-      }
+        case "expenses": {
+          const filteredTransactions = transactions.filter(
+            (singleTransaction) =>
+              singleTransaction.transaction_type === "Expense"
+          );
 
-      case "budgets": {
-        const filteredTransactions = transactions.filter(
-          (singleTransaction) => singleTransaction.transaction_type === "Budget"
-        );
+          for (let i = 0; i < filteredTransactions.length; i++) {
+            calculatedValue -= filteredTransactions[i].amount;
+          }
 
-        for (let i = 0; i < filteredTransactions.length; i++) {
-          calculatedValue += filteredTransactions[i].amount;
+          break;
         }
 
-        break;
+        case "budgets": {
+          const filteredTransactions = transactions.filter(
+            (singleTransaction) =>
+              singleTransaction.transaction_type === "Budget"
+          );
+
+          for (let i = 0; i < filteredTransactions.length; i++) {
+            calculatedValue += filteredTransactions[i].amount;
+          }
+
+          break;
+        }
       }
+
+      return calculatedValue
     }
-
-    return (calculatedValue.toFixed(2));
   };
 
   return (
@@ -149,28 +153,31 @@ export default function UserExpensesWidgets() {
                 </div>
               </div>
             </div>
-            <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl overflow-hidden">
-              <div className="stat">
-                <div className="stat-figure text-secondary hidden desktop:block">
-                  <svg
-                    className="w-6 h-6 text-accent dark:text-accent"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v4c0 .3.1.5.3.7l3 3a1 1 0 0 0 1.4-1.4L13 11.6V8Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+            {/* //TODO: Better Output with 0 transactions */}
+            {transactions.length === 0 || (
+              <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl overflow-hidden">
+                <div className="stat">
+                  <div className="stat-figure text-secondary hidden desktop:block">
+                    <svg
+                      className="w-6 h-6 text-accent dark:text-accent"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v4c0 .3.1.5.3.7l3 3a1 1 0 0 0 1.4-1.4L13 11.6V8Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="stat-title">Ultimo movimento:</div>
+                  <div className="stat-value">{transactions[0].amount}</div>
+                  <div className="stat-desc">{transactions[0].title}</div>
                 </div>
-                <div className="stat-title">Ultimo movimento:</div>
-                <div className="stat-value">{transactions[0].amount}</div>
-                <div className="stat-desc">{transactions[0].title}</div>
               </div>
-            </div>
+            )}
             <div className="stats shadow font-heading tablet:w-5/12  tablet:max-w-xl overflow-hidden">
               <div className="stat">
                 <div className="stat-figure text-secondary hidden desktop:block">

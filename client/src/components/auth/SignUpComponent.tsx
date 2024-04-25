@@ -123,7 +123,7 @@ export default function SignUpComponent() {
     });
 
     externalCallResult.startsWith("/")
-      ? (window.location.href = externalCallResult)
+      ? (window.location.href = import.meta.env.VITE_BASENAME + externalCallResult)
       : setSignUpError({ state: true, message: externalCallResult });
   }
 

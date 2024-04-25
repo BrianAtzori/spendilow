@@ -45,25 +45,31 @@ export default function UserProfileWidgets() {
     switch (mode) {
       case "total": {
         for (let i = 0; i < transactions.length; i++) {
-          switch (transactions[i].transaction_type) {
-            case "Income":
-              calculatedValue += transactions[i].amount;
-              break;
-            case "Expense":
-              calculatedValue -= transactions[i].amount;
-              break;
-            case "Budget":
-              calculatedValue += transactions[i].amount;
-              break;
-            default:
-              break;
+          if (!(transactions.length === 0)) {
+            switch (transactions[i].transaction_type) {
+              case "Income":
+                calculatedValue += transactions[i].amount;
+                break;
+              case "Expense":
+                calculatedValue -= transactions[i].amount;
+                break;
+              case "Budget":
+                calculatedValue += transactions[i].amount;
+                break;
+              case undefined:
+                calculatedValue = 0;
+                break;
+              default:
+                break;
+            }
           }
         }
         break;
       }
     }
-
-    return calculatedValue.toFixed(2);
+    //TODO: Fix ToFixed Not a function
+    // return calculatedValue.toFixed(2);
+    return calculatedValue;
   };
 
   return (
@@ -173,48 +179,51 @@ export default function UserProfileWidgets() {
                 </div>
               </div>
             </div>
-            <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl">
-              <div className="stat">
-                <div className="stat-figure text-secondary hidden desktop:block">
-                  <svg
-                    className="w-6 h-6 text-accent dark:text-accent"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v4c0 .3.1.5.3.7l3 3a1 1 0 0 0 1.4-1.4L13 11.6V8Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+
+            {transactions.length === 0 || (
+              <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl">
+                <div className="stat">
+                  <div className="stat-figure text-secondary hidden desktop:block">
+                    <svg
+                      className="w-6 h-6 text-accent dark:text-accent"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v4c0 .3.1.5.3.7l3 3a1 1 0 0 0 1.4-1.4L13 11.6V8Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="stat-title">Movimento piú recente:</div>
+                  {transactions[0].transaction_type === "Expense" && (
+                    <>
+                      <div className="stat-value text-error">
+                        {transactions[0].amount}
+                      </div>
+                    </>
+                  )}
+                  {transactions[0].transaction_type === "Income" && (
+                    <>
+                      <div className="stat-value text-success">
+                        {transactions[0].amount}
+                      </div>
+                    </>
+                  )}
+                  {transactions[0].transaction_type === "Budget" && (
+                    <>
+                      <div className="stat-value text-info">
+                        {transactions[0].amount}
+                      </div>
+                    </>
+                  )}
+                  <div className="stat-desc">{transactions[0].title}</div>
                 </div>
-                <div className="stat-title">Movimento piú recente:</div>
-                {transactions[0].transaction_type === "Expense" && (
-                  <>
-                    <div className="stat-value text-error">
-                      {transactions[0].amount}
-                    </div>
-                  </>
-                )}
-                {transactions[0].transaction_type === "Income" && (
-                  <>
-                    <div className="stat-value text-success">
-                      {transactions[0].amount}
-                    </div>
-                  </>
-                )}
-                {transactions[0].transaction_type === "Budget" && (
-                  <>
-                    <div className="stat-value text-info">
-                      {transactions[0].amount}
-                    </div>
-                  </>
-                )}
-                <div className="stat-desc">{transactions[0].title}</div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

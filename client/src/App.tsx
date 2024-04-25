@@ -1,6 +1,6 @@
 // ------ REACT ------
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 
 // ------ COMPONENTS & PAGES ------
 import Splash from "./pages/general/Splash";
@@ -20,6 +20,7 @@ import { useAppSelector } from "./redux/hooks";
 import { useAppDispatch } from "./redux/hooks";
 import { setTransactionModalShowing } from "./redux/reducers/interactions/transactionModalSlice";
 import { setTransactionMenuModalSliceShowing } from "./redux/reducers/interactions/transactionMenuModalSlice";
+import ErrorScreenComponent from "./components/shared/ErrorScreenComponent";
 
 function App() {
   // ------ HOOKS ------
@@ -47,6 +48,22 @@ function App() {
           {/* FUNCTIONS */}
           <Route path="/user/expenses" element={<Expenses />}></Route>
           <Route path="/user/budget" element={<Budget></Budget>}></Route>
+          {/* 404 */}
+          <Route
+            path="*"
+            element={
+              <>
+                <ErrorScreenComponent
+                  message={"Pagina non trovata"}
+                ></ErrorScreenComponent>
+                <Link to="/">
+                  <button className="btn btn-accent font-primary bg-accent place-self-end fixed bottom-3 right-3 shadow">
+                    Torna alla home
+                  </button>
+                </Link>
+              </>
+            }
+          ></Route>
         </Routes>
         {userLogged && <FloatingMenuComponent></FloatingMenuComponent>}
         {modalShowing && userLogged && (

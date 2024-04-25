@@ -161,7 +161,7 @@ export default function AddTransactionModalComponent({
 
     console.log(externalCallResult);
 
-    window.location.href = "/user/dashboard";
+    window.location.href = import.meta.env.VITE_BASENAME + "/user/dashboard";
   }
 
   return (

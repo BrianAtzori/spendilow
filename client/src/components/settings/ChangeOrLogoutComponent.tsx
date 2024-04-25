@@ -37,7 +37,7 @@ export default function ChangeOrLogoutComponent() {
 
       if (externalCallResult.startsWith("/")) {
         dispatch(changeUserLoggedState(false));
-        window.location.href = externalCallResult;
+        window.location.href = import.meta.env.VITE_BASENAME + externalCallResult;
       } else {
         setProfileError({ state: true, message: externalCallResult });
       }

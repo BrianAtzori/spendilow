@@ -181,7 +181,7 @@ export default function TransactionsDisplayerComponent({
       );
 
       if (externalCallResult.success) {
-        window.location.href = "/user/dashboard";
+        window.location.href = import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {
         alert(externalCallResult);
       }

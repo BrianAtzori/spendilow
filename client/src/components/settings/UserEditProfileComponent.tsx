@@ -115,7 +115,7 @@ export default function UserEditProfileComponent() {
       });
 
       externalCallResult.startsWith("/")
-        ? (window.location.href = externalCallResult)
+        ? (window.location.href = import.meta.env.VITE_BASENAME + externalCallResult)
         : setEditError({ state: true, message: externalCallResult });
     } else {
       setIsLoading(false);

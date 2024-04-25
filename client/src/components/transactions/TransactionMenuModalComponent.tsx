@@ -175,7 +175,8 @@ export default function TransactionMenuModalComponent({
       console.log(externalCallResult);
 
       if (externalCallResult.success) {
-        window.location.href = "/user/dashboard";
+        window.location.href =
+          import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {
         setTransactionMenuEditingError({
           state: true,
