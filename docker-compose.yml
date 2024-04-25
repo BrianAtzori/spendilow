@@ -12,7 +12,7 @@ services:
     image: mariadb:latest
     restart: always
     volumes:
-      - ./my_init_db:/docker-entrypoint-initdb.d
+      - ./my_init_db/:/docker-entrypoint-initdb.d/
       - ./spendilow-db:/var/lib/mysql
     env_file:
       - ./.env
