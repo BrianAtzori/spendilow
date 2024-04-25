@@ -10,7 +10,7 @@ CREATE TABLE splusers (
     isMFAActive BOOLEAN,
     savings DECIMAL(10,2),
     salary DECIMAL(10,2),
-    profileimage VARCHAR(255),
+    profileimage LONGTEXT,
     workfield VARCHAR(255),
     username VARCHAR(255)
 );
