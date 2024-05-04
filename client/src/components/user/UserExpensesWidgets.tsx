@@ -105,7 +105,9 @@ export default function UserExpensesWidgets() {
         }
       }
 
-      return calculatedValue
+      return calculatedValue;
+    } else {
+      return 0;
     }
   };
 
@@ -153,8 +155,31 @@ export default function UserExpensesWidgets() {
                 </div>
               </div>
             </div>
-            {/* //TODO: Better Output with 0 transactions */}
-            {transactions.length === 0 || (
+            {transactions.length === 0 ? (
+              <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl">
+                <div className="stat">
+                  <div className="stat-figure text-secondary hidden desktop:block">
+                    <svg
+                      className="w-6 h-6 text-accent dark:text-accent"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm11-4a1 1 0 1 0-2 0v4c0 .3.1.5.3.7l3 3a1 1 0 0 0 1.4-1.4L13 11.6V8Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="stat-title">Movimento piú recente:</div>
+                  <div className="stat-desc">
+                    Inserisci una transazione per iniziare
+                  </div>
+                </div>
+              </div>
+            ) : (
               <div className="stats shadow font-heading tablet:w-5/12 tablet:max-w-xl overflow-hidden">
                 <div className="stat">
                   <div className="stat-figure text-secondary hidden desktop:block">

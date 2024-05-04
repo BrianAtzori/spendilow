@@ -2,6 +2,7 @@ version: '3'
 services:
   backend:
     build: ./server
+    restart: always
     ports:
       - "5132:5132"
     env_file:
