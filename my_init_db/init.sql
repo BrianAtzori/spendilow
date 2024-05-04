@@ -1,5 +1,5 @@
--- GRANT ALL PRIVILEGES ON `spendilow-db`.* TO 'root'@'server';
--- FLUSH PRIVILEGES;
+GRANT ALL PRIVILEGES ON `spendilow-db`.* TO 'root'@'server';
+FLUSH PRIVILEGES;
 
 USE `spendilow-db`;
 
