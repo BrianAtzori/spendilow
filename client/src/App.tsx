@@ -23,6 +23,7 @@ import { setTransactionMenuModalSliceShowing } from "./redux/reducers/interactio
 import ErrorScreenComponent from "./components/shared/ErrorScreenComponent";
 
 
+
 function App() {
   // ------ HOOKS ------
   const userLogged: boolean = useAppSelector((state) => state.userLogged.value);
