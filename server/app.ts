@@ -28,7 +28,7 @@ const cookieParser = require("cookie-parser");
 app.use(helmet());
 app.use(
   cors({
-    origin:`${process.env.ORIGIN}`,
+    origin: `${process.env.ORIGIN}`,
     credentials: true,
   })
 );
@@ -52,6 +52,7 @@ const usersRouter: Router = require("./routes/users");
 const utilitiesRouter: Router = require("./routes/utilities");
 const authenticatedUsersRouter: Router = require("./routes/authenticated-users");
 const transactionsRouter: Router = require("./routes/transactions");
+const budgetRouter: Router = require("./routes/budgets");
 
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
@@ -64,6 +65,11 @@ app.use(
   "/api/v1/authenticated-users/transactions",
   authenticationMiddleware,
   transactionsRouter
+);
+app.use(
+  "/api/v1/authenticated-users/budgets",
+  authenticationMiddleware,
+  budgetRouter
 );
 // app.use("/api-docs/", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
