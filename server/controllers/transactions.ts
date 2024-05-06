@@ -22,9 +22,15 @@ const createTransaction = async (req: any, res: Response) => {
 
   let newTransactionID: string = crypto.randomUUID();
 
-  //TODO: renderlo dinamico in base agli input -> Default budget dell'utente?
-  let target_id: string = crypto.randomUUID();
-  req.body.target_id = target_id
+  //* Transaction ID with target null=user budget
+  //* If defined in body target ID, keep that target
+
+  if (req.body.target_id != null) {
+    //TODO: check if transaction exist
+    req.body.target_id;
+  } else {
+    //nothing?
+  }
 
   let userID: string = req.user.id;
 
