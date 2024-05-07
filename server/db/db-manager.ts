@@ -86,6 +86,11 @@ const databaseInteraction = async (
           return queryResult;
           break;
         }
+        case "CREATE_BUDGET": {
+          queryResult = await createBudgetQuery(queryData, connection);
+          return queryResult;
+          break;
+        }
         default: {
           throw new BadRequestError(
             `I dati non sono validi, ricontrollali o contatta il supporto utente.`
@@ -487,6 +492,33 @@ const deleteUserTransactions = async (
   try {
     rows.payload = await connection.query(query, [spendilowUserId]);
     rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  console.log(rows);
+
+  return rows;
+};
+
+// ------ CREATE BUDGET ------
+const createBudgetQuery = async (budgetData: any, connection: any) => {
+  const query = `
+  INSERT INTO budget (id, name, description) VALUES (?, ?, ?);`;
+
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
+  let { id, name, description } = budgetData;
+
+  try {
+    rows.payload = await connection.query(query, [id, name, description]);
+
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }

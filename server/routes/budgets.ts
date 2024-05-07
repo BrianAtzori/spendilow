@@ -10,7 +10,7 @@ const {
   getSingleBudget,
   deleteSingleBudget,
   //   bulkDataCreation,
-} = require("../controllers/budget");
+} = require("../controllers/budgets");
 
 // ------ CREATE TRANSACTION ------
 budgetRouter.post("/new/", createBudget);

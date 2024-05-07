@@ -8,6 +8,37 @@ import crypto from "crypto";
 
 // ------ CREATE BUDGET ------
 const createBudget = async (req: any, res: Response) => {
+
+  if (!req.body) {
+    throw new BadRequestError(
+      "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
+    );
+  }
+
+  if (!req.user.id) {
+    throw new BadRequestError(
+      "L'utente con cui si sta cercando di creare un nuovo budget non esiste o l'ID é errato, contatta il supporto utente."
+    );
+  }
+
+  let newBudgetId: string = crypto.randomUUID();
+
+  let newSpendilowBudget = {
+    id: newBudgetId,
+    ...req.body
+  }
+
+  const { successState, payload } = await dbManager.databaseInteraction(
+    "CREATE_BUDGET",
+    newSpendilowBudget
+  );
+
+  if (!successState) {
+    throw new BadRequestError(
+      `La creazione del budget non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+    );
+  }
+
   res.status(StatusCodes.CREATED).json({
     success: true,
     message: "Nuovo budget aggiunto!",
@@ -32,7 +63,7 @@ const getAllBudgets = async (req: any, res: Response) => {
     res.status(StatusCodes.OK).json({ transactions: {} });
   } else {
     throw new Error(
-      `La lettura delle transazioni non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+      `La lettura delle transazioni non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: Errore`
     );
   }
 };
@@ -61,12 +92,10 @@ const getSingleBudget = async (req: any, res: Response) => {
     res.status(StatusCodes.OK).json({ transaction: {} });
   } else {
     throw new BadRequestError(
-      `La lettura della transaziona non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+      `La lettura della transaziona non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: Errore`
     );
   }
 };
-
-// ------ UPDATE SINGLE TRANSACTION ------
 
 // ------ DELETE SINGLE TRANSACTION ------
 const deleteSingleBudget = async (req: any, res: Response) => {

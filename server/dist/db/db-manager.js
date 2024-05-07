@@ -75,6 +75,11 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     return queryResult;
                     break;
                 }
+                case "CREATE_BUDGET": {
+                    queryResult = yield createBudgetQuery(queryData, connection);
+                    return queryResult;
+                    break;
+                }
                 default: {
                     throw new BadRequestError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
@@ -372,6 +377,27 @@ const deleteUserTransactions = (spendilowUserId, connection) => __awaiter(void 0
     try {
         rows.payload = yield connection.query(query, [spendilowUserId]);
         rows.successState = true;
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    console.log(rows);
+    return rows;
+});
+// ------ CREATE BUDGET ------
+const createBudgetQuery = (budgetData, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  INSERT INTO budget (id, name, description) VALUES (?, ?, ?);`;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    let { id, name, description } = budgetData;
+    try {
+        rows.payload = yield connection.query(query, [id, name, description]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
     }
     catch (error) {
         rows.payload = error.sqlMessage;
