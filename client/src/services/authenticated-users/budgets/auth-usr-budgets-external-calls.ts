@@ -10,32 +10,21 @@ const route: string = "/authenticated-users/budgets";
 // ------ SERVICES ------
 import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
 
-interface spendilowBudgets {
+interface SpendilowBudget {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: any;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string;
+  id?: number;
+  name: string;
+  description: string;
 }
 
 const createNewSpendilowUserBudget = async (
-  newSpendilowTransaction: spendilowBudgets
+  newSpendilowBudget: SpendilowBudget
 ): Promise<string> => {
   let result: string = "";
 
-  newSpendilowTransaction.transaction_date =
-    newSpendilowTransaction.transaction_date.getUTCFullYear().toString() +
-    "/" +
-    (newSpendilowTransaction.transaction_date.getUTCMonth() + 1).toString() +
-    "/" +
-    (newSpendilowTransaction.transaction_date.getUTCDate() + 1).toString();
-
   try {
     result = await axios
-      .post(baseURL + route + "/new", newSpendilowTransaction, {
+      .post(baseURL + route + "/new", newSpendilowBudget, {
         withCredentials: true,
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,3 +60,5 @@ const createNewSpendilowUserBudget = async (
 
   return result;
 };
+
+export { createNewSpendilowUserBudget };
