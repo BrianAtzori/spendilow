@@ -15,7 +15,13 @@ CREATE TABLE splusers (
     username VARCHAR(255)
 );
 
-CREATE TABLE budget ( id VARCHAR(36) PRIMARY KEY, name VARCHAR(255), description TEXT );
+CREATE TABLE budget (
+    id VARCHAR(36) PRIMARY KEY,
+    name VARCHAR(255),
+    description TEXT,
+    user_id VARCHAR(36),
+    FOREIGN KEY (user_id) REFERENCES splusers(id)
+);
 
 CREATE TABLE transactions (
     id VARCHAR(36) PRIMARY KEY,

@@ -80,6 +80,11 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     return queryResult;
                     break;
                 }
+                case "GET_ALL_BUDGETS": {
+                    queryResult = yield getAllBudgets(queryData, connection);
+                    return queryResult;
+                    break;
+                }
                 default: {
                     throw new BadRequestError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
@@ -387,14 +392,19 @@ const deleteUserTransactions = (spendilowUserId, connection) => __awaiter(void 0
 // ------ CREATE BUDGET ------
 const createBudgetQuery = (budgetData, connection) => __awaiter(void 0, void 0, void 0, function* () {
     const query = `
-  INSERT INTO budget (id, name, description) VALUES (?, ?, ?);`;
+  INSERT INTO budget (id, name, description, user_id) VALUES (?, ?, ?, ?);`;
     let rows = {
         successState: false,
         payload: {},
     };
-    let { id, name, description } = budgetData;
+    let { id, name, description, user_id } = budgetData;
     try {
-        rows.payload = yield connection.query(query, [id, name, description]);
+        rows.payload = yield connection.query(query, [
+            id,
+            name,
+            description,
+            user_id,
+        ]);
         if (rows.payload.affectedRows === 1) {
             rows.successState = true;
         }
@@ -405,6 +415,29 @@ const createBudgetQuery = (budgetData, connection) => __awaiter(void 0, void 0, 
     console.log(rows);
     return rows;
 });
+// ------ GET ALL BUDGETS ------
+function getAllBudgets(spendilowUserId, connection) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const query = `
+  SELECT *
+  FROM budget
+  WHERE user_id = ?
+`;
+        let rows = {
+            successState: false,
+            payload: {},
+        };
+        try {
+            rows.payload = yield connection.query(query, [spendilowUserId]);
+            rows.successState = true;
+        }
+        catch (error) {
+            rows.payload = error.sqlMessage;
+        }
+        console.log(rows);
+        return rows;
+    });
+}
 // ------ Exports ------
 module.exports = {
     databaseInteraction,

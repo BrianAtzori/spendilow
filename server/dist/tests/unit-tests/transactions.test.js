@@ -231,7 +231,7 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
         });
     });
     // ------ DELETE SINGLE TRANSACTION ------
-    it("should delete a single user transaction given the ID on /authenticated-users/transactions/get/:id", function (done) {
+    it("should delete a single user transaction given the ID on /authenticated-users/transactions/del/:id", function (done) {
         chaiTests
             .request(baseURL)
             .delete(`api/v1/authenticated-users/transactions/del/${singleSpendilowTestTransaction}`)

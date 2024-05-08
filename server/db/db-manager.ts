@@ -91,6 +91,11 @@ const databaseInteraction = async (
           return queryResult;
           break;
         }
+        case "GET_ALL_BUDGETS": {
+          queryResult = await getAllBudgets(queryData, connection);
+          return queryResult;
+          break;
+        }
         default: {
           throw new BadRequestError(
             `I dati non sono validi, ricontrollali o contatta il supporto utente.`
@@ -504,17 +509,22 @@ const deleteUserTransactions = async (
 // ------ CREATE BUDGET ------
 const createBudgetQuery = async (budgetData: any, connection: any) => {
   const query = `
-  INSERT INTO budget (id, name, description) VALUES (?, ?, ?);`;
+  INSERT INTO budget (id, name, description, user_id) VALUES (?, ?, ?, ?);`;
 
   let rows: databaseOperationResult = {
     successState: false,
     payload: {},
   };
 
-  let { id, name, description } = budgetData;
+  let { id, name, description, user_id } = budgetData;
 
   try {
-    rows.payload = await connection.query(query, [id, name, description]);
+    rows.payload = await connection.query(query, [
+      id,
+      name,
+      description,
+      user_id,
+    ]);
 
     if (rows.payload.affectedRows === 1) {
       rows.successState = true;
@@ -527,6 +537,34 @@ const createBudgetQuery = async (budgetData: any, connection: any) => {
 
   return rows;
 };
+
+// ------ GET ALL BUDGETS ------
+async function getAllBudgets(
+  spendilowUserId: any,
+  connection: any
+): Promise<any> {
+  const query = `
+  SELECT *
+  FROM budget
+  WHERE user_id = ?
+`;
+
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
+  try {
+    rows.payload = await connection.query(query, [spendilowUserId]);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  console.log(rows);
+
+  return rows;
+}
 
 // ------ Exports ------
 module.exports = {

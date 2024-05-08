@@ -4,11 +4,9 @@ import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 import crypto from "crypto";
-// const SpendilowTransaction = require("../classes/transaction");
 
 // ------ CREATE BUDGET ------
 const createBudget = async (req: any, res: Response) => {
-
   if (!req.body) {
     throw new BadRequestError(
       "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
@@ -25,8 +23,9 @@ const createBudget = async (req: any, res: Response) => {
 
   let newSpendilowBudget = {
     id: newBudgetId,
-    ...req.body
-  }
+    ...req.body,
+    user_id: req.user.id,
+  };
 
   const { successState, payload } = await dbManager.databaseInteraction(
     "CREATE_BUDGET",
@@ -47,24 +46,25 @@ const createBudget = async (req: any, res: Response) => {
 
 // ------ GET ALL BUDGETS ------
 const getAllBudgets = async (req: any, res: Response) => {
-  //   if (!req.user.id) {
-  //     throw new UnauthenticatedError(
-  //       "L'utente di cui si sta cercando di ottenere le transazioni non esiste o l'ID é errato, contatta il supporto utente."
-  //     );
-  //   }
+  if (!req.user.id) {
+    throw new UnauthenticatedError(
+      "L'utente di cui si sta cercando di ottenere i budget non esiste o l'ID é errato, contatta il supporto utente."
+    );
+  }
 
-  //   const { successState, payload } = await dbManager.databaseInteraction(
-  //     "GET_ALL_TRANSACTIONS",
-  //     req.user.id
-  //   );
+  const { successState, payload } = await dbManager.databaseInteraction(
+    "GET_ALL_BUDGETS",
+    req.user.id
+  );
 
   if (true) {
-    //   if (successState) {
-    res.status(StatusCodes.OK).json({ transactions: {} });
-  } else {
-    throw new Error(
-      `La lettura delle transazioni non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: Errore`
-    );
+    if (successState) {
+      res.status(StatusCodes.OK).json({ budgets: payload });
+    } else {
+      throw new Error(
+        `La lettura dei budget non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+      );
+    }
   }
 };
 

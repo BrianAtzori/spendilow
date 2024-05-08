@@ -12,16 +12,16 @@ const {
   //   bulkDataCreation,
 } = require("../controllers/budgets");
 
-// ------ CREATE TRANSACTION ------
+// ------ CREATE BUDGET ------
 budgetRouter.post("/new/", createBudget);
 
-// ------ GET ALL TRANSACTIONS ------
+// ------ GET ALL BUDGETS ------
 budgetRouter.get("/get/all", getAllBudgets);
 
-// ------ GET SINGLE TRANSACTION ------
+// ------ GET SINGLE BUDGET ------
 budgetRouter.get("/get/:id", getSingleBudget);
 
-// ------ DELETE SINGLE TRANSACTION ------
+// ------ DELETE SINGLE BUDGET ------
 budgetRouter.delete("/del/:id", deleteSingleBudget);
 
 // ------ BULK TRANSACTIONS CREATION------

@@ -142,6 +142,34 @@ describe("Spendilow API 💰 - Budgets Tests", function () {
       });
   });
 
+  // ------ GET ALL BUDGETS ------
+  it("should get all the user budgets on /authenticated-users/budgets/get/all GET", function (done) {
+    chaiTests
+      .request(baseURL)
+      .get("api/v1/authenticated-users/budgets/get/all")
+      .set("Cookie", cookie)
+      .end(function (err: Error, res: any) {
+        res.should.have.status(200);
+        res.should.be.json;
+
+        res.body.budgets[0].should.have.property("id");
+        should.exist(res.body.budgets[0].id);
+
+        singleSpendilowTestTransaction = res.body.budgets[0].id;
+
+        res.body.budgets[0].should.have.property("user_id");
+        should.exist(res.body.budgets[0].user_id);
+
+        res.body.budgets[0].should.have.property("description");
+        should.exist(res.body.budgets[0].description);
+
+        res.body.budgets[0].should.have.property("name");
+        should.exist(res.body.budgets[0].name);
+
+        done();
+      });
+  });
+
   // ------ DELETE BUDGET USER ------
   it("should delete the transaction user on /authenticated-users/del/ DELETE", function (done) {
     chaiTests
