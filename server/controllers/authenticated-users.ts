@@ -82,14 +82,19 @@ const deleteUser = async (req: any, res: Response) => {
     );
   }
 
-  // First you delete every transaction for that user
+  // First you delete every budgets and transactions for that user
+
+  const deleteUserBudgets = await dbManager.databaseInteraction(
+    "DELETE_USER_BUDGETS",
+    req.user.id
+  );
 
   const deleteUserTransactions = await dbManager.databaseInteraction(
     "DELETE_USER_TRANSACTIONS",
     req.user.id
   );
 
-  if (!deleteUserTransactions.successState) {
+  if (!deleteUserTransactions.successState || !deleteUserBudgets.successState) {
     throw new BadRequestError(
       "Qualcosa é andato storto durante l'eliminazione dei dati dell'utente e quindi non é stato possibile eliminare il suo profilo."
     );

@@ -51,9 +51,10 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (!successState) {
         throw new BadRequestError("L'utente che si sta cercando di eliminare non esiste e non corrisponde ad un account registrato, contatta il supporto utente.");
     }
-    // First you delete every transaction for that user
+    // First you delete every budgets and transactions for that user
+    const deleteUserBudgets = yield dbManager.databaseInteraction("DELETE_USER_BUDGETS", req.user.id);
     const deleteUserTransactions = yield dbManager.databaseInteraction("DELETE_USER_TRANSACTIONS", req.user.id);
-    if (!deleteUserTransactions.successState) {
+    if (!deleteUserTransactions.successState || !deleteUserBudgets.successState) {
         throw new BadRequestError("Qualcosa é andato storto durante l'eliminazione dei dati dell'utente e quindi non é stato possibile eliminare il suo profilo.");
     }
     const databaseOperationResult = yield dbManager.databaseInteraction("DELETE_USER", req.user.id);

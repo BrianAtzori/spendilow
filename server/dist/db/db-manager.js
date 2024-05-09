@@ -85,6 +85,11 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     return queryResult;
                     break;
                 }
+                case "DELETE_USER_BUDGETS": {
+                    queryResult = deleteUserBudgets(queryData, connection);
+                    return queryResult;
+                    break;
+                }
                 default: {
                     throw new BadRequestError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
@@ -368,7 +373,7 @@ const deleteSingleTransaction = (spendilowUserId, transactionId, connection) => 
     console.log(rows);
     return rows;
 });
-// ------ DELETE SINGLE TRANSACTION ------
+// ------ DELETE USER TRANSACTION ------
 const deleteUserTransactions = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(spendilowUserId);
     const query = `
@@ -438,6 +443,27 @@ function getAllBudgets(spendilowUserId, connection) {
         return rows;
     });
 }
+// ------ DELETE USER BUDGETS ------
+const deleteUserBudgets = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(spendilowUserId);
+    const query = `
+  DELETE FROM budget
+  WHERE user_id = ?
+`;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    try {
+        rows.payload = yield connection.query(query, [spendilowUserId]);
+        rows.successState = true;
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    console.log(rows);
+    return rows;
+});
 // ------ Exports ------
 module.exports = {
     databaseInteraction,

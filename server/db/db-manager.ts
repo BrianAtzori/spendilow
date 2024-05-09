@@ -96,6 +96,11 @@ const databaseInteraction = async (
           return queryResult;
           break;
         }
+        case "DELETE_USER_BUDGETS": {
+          queryResult = deleteUserBudgets(queryData, connection);
+          return queryResult;
+          break;
+        }
         default: {
           throw new BadRequestError(
             `I dati non sono validi, ricontrollali o contatta il supporto utente.`
@@ -477,7 +482,7 @@ const deleteSingleTransaction = async (
   return rows;
 };
 
-// ------ DELETE SINGLE TRANSACTION ------
+// ------ DELETE USER TRANSACTION ------
 const deleteUserTransactions = async (
   spendilowUserId: any,
   connection: any
@@ -565,6 +570,32 @@ async function getAllBudgets(
 
   return rows;
 }
+
+// ------ DELETE USER BUDGETS ------
+const deleteUserBudgets = async (spendilowUserId: any, connection: any) => {
+  console.log(spendilowUserId);
+
+  const query = `
+  DELETE FROM budget
+  WHERE user_id = ?
+`;
+
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
+  try {
+    rows.payload = await connection.query(query, [spendilowUserId]);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  console.log(rows);
+
+  return rows;
+};
 
 // ------ Exports ------
 module.exports = {
