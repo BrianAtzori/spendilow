@@ -61,4 +61,39 @@ const createNewSpendilowUserBudget = async (
   return result;
 };
 
-export { createNewSpendilowUserBudget };
+const getSpendilowUserBudgets = async (): Promise<
+  SpendilowBudget[] | string[]
+> => {
+  let result: SpendilowBudget[] | string[] = [
+    {
+      id: 1,
+      name: "",
+      description: "",
+    },
+  ];
+
+  try {
+    result = await axios
+      .get(baseURL + route + "/get/all", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return apiErrorResponseHandler(
+          error.response.status,
+          "Non siamo riusciti a recuperare le tue transazioni, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+        );
+      });
+  } catch (error) {
+    result[0] = apiErrorResponseHandler(
+      500,
+      "Non siamo riusciti a recuperare le tue transazioni, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+    );
+  }
+
+  return result;
+};
+
+export { createNewSpendilowUserBudget, getSpendilowUserBudgets };

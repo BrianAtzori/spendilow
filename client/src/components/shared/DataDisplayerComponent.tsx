@@ -9,8 +9,9 @@ import ErrorComponent from "./ErrorComponent";
 
 // ------ REDUX ------
 import { useAppSelector } from "../../redux/hooks";
+import BudgetDisplayerComponent from "../budgets/BudgetDisplayerComponent";
 
-interface spendilowTransaction {
+interface SpendilowTransaction {
   id: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transaction_date: any;
@@ -20,6 +21,12 @@ interface spendilowTransaction {
   tags: string;
   transaction_type: string;
   target_id: string;
+}
+
+interface SpendilowBudget {
+  id?: number;
+  name: string;
+  description: string;
 }
 
 interface DataDisplayerComponentProps {
@@ -47,8 +54,12 @@ export default function DataDisplayerComponent({
   const [displayerMode] = useState(mode);
 
   //TODO: Quando avremo i budget lo trasformiamo in una funziona che ritorna quello che mi interessa o il componente che vogliamo renderizzare
-  const transactions: spendilowTransaction[] = useAppSelector(
+  const transactions: SpendilowTransaction[] = useAppSelector(
     (state) => state.userTransactions.transactions
+  );
+
+  const budgets: SpendilowBudget[] = useAppSelector(
+    (state) => state.userBudget.budgets
   );
 
   return (
@@ -73,23 +84,35 @@ export default function DataDisplayerComponent({
                       <p className="">{subtitle}</p>
                     </div>
                     <div className="py-8">
-                      {transactions.length === 0 ? (
+                      {displayerMode === "transactions" ? (
+                        transactions.length === 0 ? (
+                          <>
+                            <NoResultsComponent></NoResultsComponent>
+                          </>
+                        ) : (
+                          <>
+                            <p className="text-sm mb-4 tablet:hidden text-neutral-500 font-heading">
+                              (☝🏼 Clicca su una transazione per visualizzarne i
+                              dettagli e interagire)
+                            </p>
+                            <TransactionsDisplayerComponent
+                              userTransactions={transactions}
+                            ></TransactionsDisplayerComponent>
+                          </>
+                        )
+                      ) : budgets.length === 0 ? (
                         <>
                           <NoResultsComponent></NoResultsComponent>
                         </>
                       ) : (
                         <>
-                          {displayerMode === "transactions" && (
-                            <>
-                              <p className="text-sm mb-4 tablet:hidden text-neutral-500 font-heading">
-                                (☝🏼 Clicca su una transazione per visualizzarne
-                                i dettagli e interagire)
-                              </p>
-                              <TransactionsDisplayerComponent
-                                userTransactions={transactions}
-                              ></TransactionsDisplayerComponent>
-                            </>
-                          )}
+                          <p className="text-sm mb-4 tablet:hidden text-neutral-500 font-heading">
+                            (☝🏼 Clicca su una transazione per visualizzarne i
+                            dettagli e interagire)
+                          </p>
+                          <BudgetDisplayerComponent
+                            userBudgets={budgets}
+                          ></BudgetDisplayerComponent>
                         </>
                       )}
                     </div>
