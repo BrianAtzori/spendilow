@@ -96,4 +96,37 @@ const getSpendilowUserBudgets = async (): Promise<
   return result;
 };
 
-export { createNewSpendilowUserBudget, getSpendilowUserBudgets };
+const deleteSpendilowUserBudget = async (
+  budgetId?: number
+): Promise<string> => {
+  let result: string = "";
+
+  try {
+    result = await axios
+      .delete(baseURL + route + `/del/${budgetId}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return apiErrorResponseHandler(
+          error.response.status,
+          "Non siamo riusciti ad eliminare questo budget, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+        );
+      });
+  } catch (error) {
+    result = apiErrorResponseHandler(
+      500,
+      "Non siamo riusciti ad eliminare questo budget, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+    );
+  }
+
+  return result;
+};
+
+export {
+  deleteSpendilowUserBudget,
+  createNewSpendilowUserBudget,
+  getSpendilowUserBudgets,
+};

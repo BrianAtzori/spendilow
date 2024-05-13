@@ -8,6 +8,7 @@ import userTransactionsSlice from "./reducers/transactions/userTransactionsSlice
 import transactionModalSlice from "./reducers/interactions/transactionModalSlice";
 import transactionMenuModalSlice from "./reducers/interactions/transactionMenuModalSlice";
 import userBudgetSlice from "./reducers/budgets/userBudgetSlice";
+import budgetMenuModalSlice from "./reducers/interactions/budgetMenuModalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     transactionModal: transactionModalSlice,
     transactionMenuModal: transactionMenuModalSlice,
     userBudget: userBudgetSlice,
+    budgetMenuModal: budgetMenuModalSlice,
   },
 });
 

@@ -21,6 +21,8 @@ import { useAppDispatch } from "./redux/hooks";
 import { setTransactionModalShowing } from "./redux/reducers/interactions/transactionModalSlice";
 import { setTransactionMenuModalSliceShowing } from "./redux/reducers/interactions/transactionMenuModalSlice";
 import ErrorScreenComponent from "./components/shared/ErrorScreenComponent";
+import { setBudgetMenuModalSliceShowing } from "./redux/reducers/interactions/budgetMenuModalSlice";
+import BudgetMenuModalComponent from "./components/budgets/BudgetMenuModalComponent";
 
 function App() {
   // ------ HOOKS ------
@@ -30,6 +32,9 @@ function App() {
   );
   const menuTransactionsShowing: boolean = useAppSelector(
     (state) => state.transactionMenuModal.isShowing
+  );
+  const menuBudgetShowing: boolean = useAppSelector(
+    (state) => state.budgetMenuModal.isShowing
   );
 
   const dispatch = useAppDispatch();
@@ -77,6 +82,12 @@ function App() {
             visible={menuTransactionsShowing}
             onClose={() => dispatch(setTransactionMenuModalSliceShowing(false))}
           ></TransactionMenuModalComponent>
+        )}
+        {menuBudgetShowing && userLogged && (
+          <BudgetMenuModalComponent
+            visible={menuBudgetShowing}
+            onClose={() => dispatch(setBudgetMenuModalSliceShowing(false))}
+          ></BudgetMenuModalComponent>
         )}
         <Footer></Footer>
       </div>
