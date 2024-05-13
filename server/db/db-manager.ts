@@ -101,6 +101,34 @@ const databaseInteraction = async (
           return queryResult;
           break;
         }
+        case "GET_SINGLE_BUDGET": {
+          queryResult = getSingleBudget(
+            queryData.spendilowUserId,
+            queryData.budgetId,
+            connection
+          );
+          return queryResult;
+          break;
+        }
+        case "UPDATE_BUDGET": {
+          queryResult = updateSingleBudget(
+            queryData.spendilowUserId,
+            queryData.budgetId,
+            queryData.spendilowBudgetMod,
+            connection
+          );
+          return queryResult;
+          break;
+        }
+        case "DELETE_BUDGET": {
+          queryResult = deleteSingleBudget(
+            queryData.spendilowUserId,
+            queryData.budgetId,
+            connection
+          );
+          return queryResult;
+          break;
+        }
         default: {
           throw new BadRequestError(
             `I dati non sono validi, ricontrollali o contatta il supporto utente.`
@@ -543,6 +571,77 @@ const createBudgetQuery = async (budgetData: any, connection: any) => {
   return rows;
 };
 
+// ------ GET SINGLE BUDGET ------
+const getSingleBudget = async (
+  spendilowUserId: any,
+  budgetId: any,
+  connection: any
+) => {
+  const query = `
+  SELECT *
+  FROM budget
+  WHERE id = ? AND user_id = ?
+`;
+
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
+  try {
+    rows.payload = await connection.query(query, [budgetId, spendilowUserId]);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  console.log(rows);
+
+  return rows;
+};
+
+// ------ UPDATE SINGLE BUDGET ------
+const updateSingleBudget = async (
+  spendilowUserId: any,
+  budgetId: any,
+  spendilowBudgetMod: any,
+  connection: any
+) => {
+  const query = `
+  UPDATE budget
+  SET
+    name = ?,
+    description = ?,
+  WHERE id = ? AND user_id = ?
+`;
+
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
+  let { name, description } = spendilowBudgetMod;
+
+  try {
+    rows.payload = await connection.query(query, [
+      name,
+      description,
+      budgetId,
+      spendilowUserId,
+    ]);
+
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  console.log(rows);
+
+  return rows;
+};
+
 // ------ GET ALL BUDGETS ------
 async function getAllBudgets(
   spendilowUserId: any,
@@ -570,6 +669,36 @@ async function getAllBudgets(
 
   return rows;
 }
+
+// ------ DELETE SINGLE BUDGET ------
+const deleteSingleBudget = async (
+  spendilowUserId: any,
+  budgetId: any,
+  connection: any
+) => {
+  const query = `
+  DELETE FROM budget
+  WHERE id = ? AND user_id = ?
+`;
+
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
+  try {
+    rows.payload = await connection.query(query, [budgetId, spendilowUserId]);
+    if (rows.payload.affectedRows === 1) {
+      rows.successState = true;
+    }
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  console.log(rows);
+
+  return rows;
+};
 
 // ------ DELETE USER BUDGETS ------
 const deleteUserBudgets = async (spendilowUserId: any, connection: any) => {

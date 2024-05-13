@@ -70,26 +70,25 @@ const getAllBudgets = async (req: any, res: Response) => {
 
 // ------ GET SINGLE BUDGET ------
 const getSingleBudget = async (req: any, res: Response) => {
-  //   if (!req.params.id) {
-  //     throw new BadRequestError(
-  //       "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
-  //     );
-  //   }
+  if (!req.params.id) {
+    throw new BadRequestError(
+      "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
+    );
+  }
 
-  //   if (!req.user.id) {
-  //     throw new UnauthenticatedError(
-  //       "Non posso cercare la transazione per questo utente perché l'ID é errato, contatta il supporto utente."
-  //     );
-  //   }
+  if (!req.user.id) {
+    throw new UnauthenticatedError(
+      "Non posso cercare il budget per questo utente perché l'ID é errato, contatta il supporto utente."
+    );
+  }
 
-  //   const { successState, payload } = await dbManager.databaseInteraction(
-  //     "GET_SINGLE_TRANSACTION",
-  //     { transactionId: req.params.id, spendilowUserId: req.user.id }
-  //   );
+  const { successState, payload } = await dbManager.databaseInteraction(
+    "GET_SINGLE_BUDGET",
+    { budgetId: req.params.id, spendilowUserId: req.user.id }
+  );
 
-  //   if (successState) {
-  if (true) {
-    res.status(StatusCodes.OK).json({ transaction: {} });
+  if (successState) {
+    res.status(StatusCodes.OK).json({ budget: payload });
   } else {
     throw new BadRequestError(
       `La lettura della transaziona non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: Errore`
@@ -97,38 +96,78 @@ const getSingleBudget = async (req: any, res: Response) => {
   }
 };
 
-// ------ DELETE SINGLE TRANSACTION ------
+// ------ DELETE SINGLE BUDGET ------
 const deleteSingleBudget = async (req: any, res: Response) => {
-  //   if (!req.params.id) {
-  //     throw new BadRequestError(
-  //       "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
-  //     );
-  //   }
-
-  //   if (!req.user.id) {
-  //     throw new UnauthenticatedError(
-  //       "Non posso eliminare la transazione per questo utente perché l'ID é errato, contatta il supporto utente."
-  //     );
-  //   }
-
-  //   const databaseOperationResult = await dbManager.databaseInteraction(
-  //     "DELETE_TRANSACTION",
-  //     {
-  //       transactionId: req.params.id,
-  //       spendilowUserId: req.user.id,
-  //     }
-  //   );
-
-  //   if (databaseOperationResult.successState) {
-  if (true) {
-    res
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "Transazione eliminata correttamente!" });
-  } else {
+  if (!req.params.id) {
     throw new BadRequestError(
-      `L'eliminazione della transazione non é andata a buon fine, riprova oppure contatta il supporto.`
+      "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
     );
   }
+
+  if (!req.user.id) {
+    throw new UnauthenticatedError(
+      "Non posso eliminare il budget per questo utente perché l'ID é errato, contatta il supporto utente."
+    );
+  }
+
+  const databaseOperationResult = await dbManager.databaseInteraction(
+    "DELETE_BUDGET",
+    {
+      budgetId: req.params.id,
+      spendilowUserId: req.user.id,
+    }
+  );
+
+  if (databaseOperationResult.successState) {
+    res
+      .status(StatusCodes.OK)
+      .json({ success: true, message: "Budget eliminata correttamente!" });
+  } else {
+    throw new BadRequestError(
+      `L'eliminazione del budget non é andata a buon fine, riprova oppure contatta il supporto.`
+    );
+  }
+};
+
+// ------ UPDATE SINGLE TRANSACTION ------
+const updateSingleBudget = async (req: any, res: Response) => {
+  if (!req.params.id) {
+    throw new BadRequestError(
+      "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
+    );
+  }
+
+  if (!req.body) {
+    throw new BadRequestError(
+      "Richiesta non effettuata correttamente, ricontrolla i dati inseriti o contatta il supporto utente."
+    );
+  }
+
+  if (!req.user.id) {
+    throw new UnauthenticatedError(
+      "L'utente con cui si sta cercando di modificare un budget non esiste o l'ID é errato, contatta il supporto utente."
+    );
+  }
+
+  const { successState, payload } = await dbManager.databaseInteraction(
+    "UPDATE_TRANSACTION",
+    {
+      budgetId: req.params.id,
+      spendilowUserId: req.user.id,
+      spendilowBudgetMod: req.body,
+    }
+  );
+
+  if (!successState) {
+    throw new BadRequestError(
+      `La modifica del budget non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+    );
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Budget modificata correttamente!",
+  });
 };
 
 // ------ BULK TRANSACTIONS CREATION ------
