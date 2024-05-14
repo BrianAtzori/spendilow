@@ -22,8 +22,7 @@ interface spendilowTransactions {
   target_id: string;
 }
 
-const getSpendilowUserTransactions = async (): Promise<
-  spendilowTransactions[] | string[]
+const getSpendilowUserTransactions = async (): Promise<spendilowTransactions[] | string[]
 > => {
   let result: spendilowTransactions[] | string[] = [
     {

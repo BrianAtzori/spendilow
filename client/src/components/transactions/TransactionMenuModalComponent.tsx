@@ -17,7 +17,7 @@ import { editSpendilowUserTransaction } from "../../services/authenticated-users
 
 // ------ TYPESCRIPT ------
 /* eslint-disable @typescript-eslint/no-explicit-any */
-interface spendilowTransactions {
+interface SpendilowTransactions {
   id: string;
   transaction_date: Date;
   amount: number;
@@ -46,7 +46,7 @@ export default function TransactionMenuModalComponent({
   );
 
   const [spendilowUserTransaction, setNewSpendilowUserTransaction] =
-    useState<spendilowTransactions>({
+    useState<SpendilowTransactions>({
       id: "",
       transaction_date: new Date(),
       amount: 0,

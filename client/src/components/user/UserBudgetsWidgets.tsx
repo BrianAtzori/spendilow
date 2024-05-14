@@ -14,8 +14,8 @@ export default function UserBudgetsWidgets() {
             <div className="font-body flex flex-col gap-3 ">
               <p className="">
                 In questa scheda potrai trovare i tuoi budget, ovvero un gruppo
-                di transazioni assegnate a cui dovresti assegnare un
-                <strong>"obiettivo"</strong>, ad esempio comprare l'auto oppure
+                di transazioni a cui dovresti assegnare un
+                <strong> "obiettivo"</strong>, ad esempio comprare l'auto oppure
                 un viaggio ✈️
               </p>
               <div className="divider font-primary divider-neutral opacity-50 mx-8 desktop:hidden"></div>
