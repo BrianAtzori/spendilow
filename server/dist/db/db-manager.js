@@ -90,6 +90,26 @@ const databaseInteraction = (operation, queryData, id) => __awaiter(void 0, void
                     return queryResult;
                     break;
                 }
+                case "GET_SINGLE_BUDGET": {
+                    queryResult = getSingleBudget(queryData.spendilowUserId, queryData.budgetId, connection);
+                    return queryResult;
+                    break;
+                }
+                case "GET_BUDGET_TRANSACTIONS": {
+                    queryResult = getBudgetTransactions(queryData.spendilowUserId, queryData.budgetId, connection);
+                    return queryResult;
+                    break;
+                }
+                case "UPDATE_BUDGET": {
+                    queryResult = updateSingleBudget(queryData.spendilowUserId, queryData.budgetId, queryData.spendilowBudgetMod, connection);
+                    return queryResult;
+                    break;
+                }
+                case "DELETE_BUDGET": {
+                    queryResult = deleteSingleBudget(queryData.spendilowUserId, queryData.budgetId, connection);
+                    return queryResult;
+                    break;
+                }
                 default: {
                     throw new BadRequestError(`I dati non sono validi, ricontrollali o contatta il supporto utente.`);
                 }
@@ -420,6 +440,80 @@ const createBudgetQuery = (budgetData, connection) => __awaiter(void 0, void 0, 
     console.log(rows);
     return rows;
 });
+// ------ GET SINGLE BUDGET ------
+const getSingleBudget = (spendilowUserId, budgetId, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  SELECT *
+  FROM budget
+  WHERE id = ? AND user_id = ?
+`;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    try {
+        rows.payload = yield connection.query(query, [budgetId, spendilowUserId]);
+        rows.successState = true;
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    console.log(rows);
+    return rows;
+});
+function getBudgetTransactions(spendilowUserId, budgetId, connection) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const query = `
+  SELECT *
+  FROM transactions
+  WHERE target_id = ? AND user_id = ?
+`;
+        let rows = {
+            successState: false,
+            payload: {},
+        };
+        try {
+            rows.payload = yield connection.query(query, [budgetId, spendilowUserId]);
+            rows.successState = true;
+        }
+        catch (error) {
+            rows.payload = error.sqlMessage;
+        }
+        console.log(rows);
+        return rows;
+    });
+}
+// ------ UPDATE SINGLE BUDGET ------
+const updateSingleBudget = (spendilowUserId, budgetId, spendilowBudgetMod, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  UPDATE budget
+  SET
+    name = ?,
+    description = ?
+  WHERE id = ? AND user_id = ?
+`;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    let { name, description } = spendilowBudgetMod;
+    try {
+        rows.payload = yield connection.query(query, [
+            name,
+            description,
+            budgetId,
+            spendilowUserId,
+        ]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    console.log(rows);
+    return rows;
+});
 // ------ GET ALL BUDGETS ------
 function getAllBudgets(spendilowUserId, connection) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -443,6 +537,28 @@ function getAllBudgets(spendilowUserId, connection) {
         return rows;
     });
 }
+// ------ DELETE SINGLE BUDGET ------
+const deleteSingleBudget = (spendilowUserId, budgetId, connection) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = `
+  DELETE FROM budget
+  WHERE id = ? AND user_id = ?
+`;
+    let rows = {
+        successState: false,
+        payload: {},
+    };
+    try {
+        rows.payload = yield connection.query(query, [budgetId, spendilowUserId]);
+        if (rows.payload.affectedRows === 1) {
+            rows.successState = true;
+        }
+    }
+    catch (error) {
+        rows.payload = error.sqlMessage;
+    }
+    console.log(rows);
+    return rows;
+});
 // ------ DELETE USER BUDGETS ------
 const deleteUserBudgets = (spendilowUserId, connection) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(spendilowUserId);

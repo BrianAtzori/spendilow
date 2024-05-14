@@ -11,7 +11,7 @@ import crypto from "crypto";
 let baseURL: string = "http://localhost:5132/";
 let spendilowTestingBudgetsUser: any;
 let spendilowTestBudget: any;
-let singleSpendilowTestTransaction: any;
+let singleSpendilowTestBudget: any;
 let cookie: any;
 
 describe("Spendilow API 💰 - Budgets Tests", function () {
@@ -155,7 +155,7 @@ describe("Spendilow API 💰 - Budgets Tests", function () {
         res.body.budgets[0].should.have.property("id");
         should.exist(res.body.budgets[0].id);
 
-        singleSpendilowTestTransaction = res.body.budgets[0].id;
+        singleSpendilowTestBudget = res.body.budgets[0].id;
 
         res.body.budgets[0].should.have.property("user_id");
         should.exist(res.body.budgets[0].user_id);
@@ -166,6 +166,83 @@ describe("Spendilow API 💰 - Budgets Tests", function () {
         res.body.budgets[0].should.have.property("name");
         should.exist(res.body.budgets[0].name);
 
+        done();
+      });
+  });
+
+  // ------ GET SINGLE BUDGET ------
+  it("should get a single user budget given the ID on /authenticated-users/budgets/get/:id GET", function (done) {
+    chaiTests
+      .request(baseURL)
+      .get(
+        `api/v1/authenticated-users/budgets/get/${singleSpendilowTestBudget}`
+      )
+      .set("Cookie", cookie)
+      .end(function (err: Error, res: any) {
+
+        res.should.have.status(200);
+        res.should.be.json;
+
+        res.body.budget.should.have.property("id");
+        should.exist(res.body.budget.id);
+
+        res.body.budget.should.have.property("name");
+        should.exist(res.body.budget.name);
+
+        res.body.budget.should.have.property("description");
+        should.exist(res.body.budget.description);
+
+        res.body.should.have.property("transactions");
+        should.exist(res.body.transactions);
+
+        done();
+      });
+  });
+
+  // ------ UPDATE SINGLE BUDGET ------
+  it("should edit a single user budget given the ID on /authenticated-users/budgets/mod/:id", function (done) {
+    chaiTests
+      .request(baseURL)
+      .patch(
+        `api/v1/authenticated-users/budgets/mod/${singleSpendilowTestBudget}`
+      )
+      .send({
+        name: "Test Budget with updates",
+        description: "With updates",
+      })
+      .set("Cookie", cookie)
+      .end(function (err: Error, res: any) {
+        res.should.have.status(200);
+        res.should.be.json;
+
+        res.body.should.have.property("success");
+        should.exist(res.body.success);
+        res.body.success.should.equal(true);
+
+        res.body.should.have.property("message");
+        should.exist(res.body.message);
+        done();
+      });
+  });
+
+  // ------ DELETE SINGLE BUDGET ------
+  it("should delete a single user budget given the ID on /authenticated-users/budgets/del/:id", function (done) {
+    chaiTests
+      .request(baseURL)
+      .delete(
+        `api/v1/authenticated-users/budgets/del/${singleSpendilowTestBudget}`
+      )
+      .set("Cookie", cookie)
+      .end(function (err: Error, res: any) {
+        res.should.have.status(200);
+        res.should.be.json;
+
+        res.body.should.have.property("success");
+        should.exist(res.body.success);
+        res.body.success.should.equal(true);
+
+        res.body.should.have.property("message");
+        should.exist(res.body.message);
         done();
       });
   });

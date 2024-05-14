@@ -9,7 +9,7 @@ const {
   getAllBudgets,
   getSingleBudget,
   deleteSingleBudget,
-  //   bulkDataCreation,
+  updateSingleBudget,
 } = require("../controllers/budgets");
 
 // ------ CREATE BUDGET ------
@@ -21,10 +21,10 @@ budgetRouter.get("/get/all", getAllBudgets);
 // ------ GET SINGLE BUDGET ------
 budgetRouter.get("/get/:id", getSingleBudget);
 
+// ------ UPDATE SINGLE TRANSACTION ------
+budgetRouter.patch("/mod/:id", updateSingleBudget);
+
 // ------ DELETE SINGLE BUDGET ------
 budgetRouter.delete("/del/:id", deleteSingleBudget);
-
-// ------ BULK TRANSACTIONS CREATION------
-// budgetRouter.get("/generate/", bulkDataCreation);
 
 module.exports = budgetRouter;

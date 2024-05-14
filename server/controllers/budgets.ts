@@ -87,11 +87,19 @@ const getSingleBudget = async (req: any, res: Response) => {
     { budgetId: req.params.id, spendilowUserId: req.user.id }
   );
 
-  if (successState) {
-    res.status(StatusCodes.OK).json({ budget: payload });
+  const dbInteractionResponse = await dbManager.databaseInteraction(
+    "GET_BUDGET_TRANSACTIONS",
+    { budgetId: req.params.id, spendilowUserId: req.user.id }
+  );
+
+  if (successState && dbInteractionResponse.successState) {
+    res.status(StatusCodes.OK).json({
+      budget: payload[0],
+      transactions: dbInteractionResponse.payload,
+    });
   } else {
     throw new BadRequestError(
-      `La lettura della transaziona non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: Errore`
+      `La lettura del budget non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: Errore`
     );
   }
 };
@@ -129,7 +137,7 @@ const deleteSingleBudget = async (req: any, res: Response) => {
   }
 };
 
-// ------ UPDATE SINGLE TRANSACTION ------
+// ------ UPDATE SINGLE BUDGET ------
 const updateSingleBudget = async (req: any, res: Response) => {
   if (!req.params.id) {
     throw new BadRequestError(
@@ -150,7 +158,7 @@ const updateSingleBudget = async (req: any, res: Response) => {
   }
 
   const { successState, payload } = await dbManager.databaseInteraction(
-    "UPDATE_TRANSACTION",
+    "UPDATE_BUDGET",
     {
       budgetId: req.params.id,
       spendilowUserId: req.user.id,
@@ -166,7 +174,7 @@ const updateSingleBudget = async (req: any, res: Response) => {
 
   res.status(StatusCodes.OK).json({
     success: true,
-    message: "Budget modificata correttamente!",
+    message: "Budget modificato correttamente!",
   });
 };
 
@@ -238,5 +246,6 @@ module.exports = {
   getAllBudgets,
   getSingleBudget,
   deleteSingleBudget,
+  updateSingleBudget,
   //   bulkDataCreation,
 };

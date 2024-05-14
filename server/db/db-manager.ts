@@ -110,6 +110,15 @@ const databaseInteraction = async (
           return queryResult;
           break;
         }
+        case "GET_BUDGET_TRANSACTIONS": {
+          queryResult = getBudgetTransactions(
+            queryData.spendilowUserId,
+            queryData.budgetId,
+            connection
+          );
+          return queryResult;
+          break;
+        }
         case "UPDATE_BUDGET": {
           queryResult = updateSingleBudget(
             queryData.spendilowUserId,
@@ -600,6 +609,34 @@ const getSingleBudget = async (
   return rows;
 };
 
+async function getBudgetTransactions(
+  spendilowUserId: any,
+  budgetId: any,
+  connection: any
+): Promise<any> {
+  const query = `
+  SELECT *
+  FROM transactions
+  WHERE target_id = ? AND user_id = ?
+`;
+
+  let rows: databaseOperationResult = {
+    successState: false,
+    payload: {},
+  };
+
+  try {
+    rows.payload = await connection.query(query, [budgetId, spendilowUserId]);
+    rows.successState = true;
+  } catch (error: any) {
+    rows.payload = error.sqlMessage;
+  }
+
+  console.log(rows);
+
+  return rows;
+}
+
 // ------ UPDATE SINGLE BUDGET ------
 const updateSingleBudget = async (
   spendilowUserId: any,
@@ -611,7 +648,7 @@ const updateSingleBudget = async (
   UPDATE budget
   SET
     name = ?,
-    description = ?,
+    description = ?
   WHERE id = ? AND user_id = ?
 `;
 
