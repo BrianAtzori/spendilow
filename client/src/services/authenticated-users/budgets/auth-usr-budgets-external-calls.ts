@@ -127,6 +127,36 @@ const getSpendilowUserBudget = async (
   return result;
 };
 
+const editSpendilowUserBudget = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  editedBudget: any
+): Promise<string> => {
+  let result: string = "";
+
+  try {
+    result = await axios
+      .patch(baseURL + route + `/mod/${editedBudget.id}`, editedBudget, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return apiErrorResponseHandler(
+          error.response.status,
+          "Non siamo riusciti a modificare il tuo budget, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+        );
+      });
+  } catch (error) {
+    result = apiErrorResponseHandler(
+      500,
+      "Non siamo riusciti a modificare il tuo budget, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+    );
+  }
+
+  return result;
+};
+
 const deleteSpendilowUserBudget = async (
   budgetId?: number
 ): Promise<string> => {
@@ -161,4 +191,5 @@ export {
   createNewSpendilowUserBudget,
   getSpendilowUserBudgets,
   getSpendilowUserBudget,
+  editSpendilowUserBudget,
 };

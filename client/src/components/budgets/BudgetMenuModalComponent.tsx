@@ -3,13 +3,18 @@ import { useAppSelector } from "../../redux/hooks";
 import LoaderComponent from "../shared/LoaderComponent";
 import ErrorScreenComponent from "../shared/ErrorScreenComponent";
 import { Link } from "react-router-dom";
-import { getSpendilowUserBudget } from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
+import {
+  editSpendilowUserBudget,
+  getSpendilowUserBudget,
+} from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
 import TransactionsDisplayerComponent from "../transactions/TransactionsDisplayerComponent";
+import NoResultsComponent from "../shared/NoResultsComponent";
+import BudgetDataFunctionsComponent from "./BudgetDataFunctionsComponent";
 
 interface SpendilowBudget {
-  id: string;
-  name: string;
-  description: string;
+  id?: string;
+  name?: string;
+  description?: string;
 }
 
 interface SpendilowBudgetAPIResponse {
@@ -27,6 +32,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
     }
     visible ? modalRef.current.showModal() : modalRef.current.close();
     getBudget();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const currentBudgetId: string = useAppSelector(
@@ -47,17 +53,18 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
   const modalRef: any = useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
-  // const [isEditingLoading, setIsEditingLoading] = useState(false);
+  const [isEditingLoading, setIsEditingLoading] = useState(false);
 
   const [budgetMenuError, setBudgetMenuError] = useState({
     state: false,
     message: "Errore in fase di recupero del budget.",
   });
+  const [budgetnMenuEditingError, setBudgetMenuEditingError] = useState({
+    state: false,
+    message: "Errore in fase di modifica del budget.",
+  });
 
-  // const [budgetnMenuEditingError, setBudgetMenuEditingError] = useState({
-  //   state: false,
-  //   message: "Errore in fase di modifica del budget.",
-  // });
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   // ------ DIALOG HANDLING ------
   const handleClose = () => {
@@ -72,12 +79,16 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
   };
 
   // ------ FORM HANDLING ------
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
-  //   setSpendilowUserBudget({
-  //     ...spendilowUserBudget,
-  //     [event.target.name]: event.target.value,
-  //   });
-  // };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
+    setSpendilowUserBudget({
+      ...spendilowUserBudget,
+      budget: {
+        ...spendilowUserBudget.budget,
+        [event.target.name]: event.target.value,
+      },
+    });
+  };
 
   async function verifyInputThenTriggerEditing(event: SyntheticEvent) {
     event.preventDefault();
@@ -88,10 +99,10 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
     });
 
     if (
-      spendilowUserBudget.name === undefined ||
-      spendilowUserBudget.description === undefined ||
-      spendilowUserBudget.name === "" ||
-      spendilowUserBudget.description === ""
+      spendilowUserBudget.budget.name === undefined ||
+      spendilowUserBudget.budget.description === undefined ||
+      spendilowUserBudget.budget.name === "" ||
+      spendilowUserBudget.budget.description === ""
     ) {
       setBudgetMenuEditingError({
         state: true,
@@ -117,37 +128,37 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
     }
   }
 
-  // async function editBudget() {
-  //   const response = confirm("Vuoi modificare il budget?");
-  //   setIsLoading(true);
+  async function editBudget() {
+    const response = confirm("Vuoi modificare il budget?");
+    setIsLoading(true);
 
-  //   const { id, name, description } = spendilowUserBudget;
+    const { id, name, description } = spendilowUserBudget.budget;
 
-  //   if (response) {
-  //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //     const externalCallResult: any = await editSpendilowUserTransaction({
-  //       id,
-  //       name,
-  //       description,
-  //     }).finally(() => {
-  //       setIsEditingLoading(false);
-  //     });
+    if (response) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const externalCallResult: any = await editSpendilowUserBudget({
+        id,
+        name,
+        description,
+      }).finally(() => {
+        setIsEditingLoading(false);
+      });
 
-  //     console.log(externalCallResult);
+      console.log(externalCallResult);
 
-  //     if (externalCallResult.success) {
-  //       window.location.href =
-  //         import.meta.env.VITE_BASENAME + "/user/dashboard";
-  //     } else {
-  //       setBudgetMenuEditingError({
-  //         state: true,
-  //         message: externalCallResult,
-  //       });
-  //     }
-  //   } else {
-  //     setIsEditingLoading(false);
-  //   }
-  // }
+      if (externalCallResult.success) {
+        window.location.href =
+          import.meta.env.VITE_BASENAME + "/user/dashboard";
+      } else {
+        setBudgetMenuEditingError({
+          state: true,
+          message: externalCallResult,
+        });
+      }
+    } else {
+      setIsEditingLoading(false);
+    }
+  }
 
   return (
     <dialog
@@ -202,24 +213,35 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
               </label>
               <div className="flex flex-row flex-wrap justify-start">0.0</div>
               <div className="divider font-primary divider-neutral opacity-50"></div>
-              <label className="label">
-                <span className="label-text font-bold">Transazioni:</span>
-              </label>
-              {/* //TODO: Same logic of the dasboard */}
-              <TransactionsDisplayerComponent
-                userTransactions={spendilowUserBudget.transactions}
-              ></TransactionsDisplayerComponent>
+              {!isFormVisible ? (
+                <>
+                  <label className="label">
+                    <span className="label-text font-bold">Transazioni:</span>
+                  </label>
+                  {spendilowUserBudget.transactions.length === 0 ? (
+                    <>
+                      <NoResultsComponent></NoResultsComponent>
+                    </>
+                  ) : (
+                    <TransactionsDisplayerComponent
+                      userTransactions={spendilowUserBudget.transactions}
+                    ></TransactionsDisplayerComponent>
+                  )}
+                </>
+              ) : (
+                <></>
+              )}
             </div>
           </>
-          // <>
-          //   <TransactionDataFunctionsComponent
-          //     transaction={spendilowUserTransaction}
-          //     handleChange={handleChange}
-          //     isEditingLoading={isEditingLoading}
-          //     transactionMenuEditingError={transactionMenuEditingError}
-          //   ></TransactionDataFunctionsComponent>
-          // </>
         )}
+        <BudgetDataFunctionsComponent
+          budget={spendilowUserBudget.budget}
+          handleChange={handleChange}
+          isEditingLoading={isEditingLoading}
+          budgetMenuEditingError={budgetnMenuEditingError}
+          isFormVisible={isFormVisible}
+          setIsFormVisible={setIsFormVisible}
+        ></BudgetDataFunctionsComponent>
       </form>
     </dialog>
   );
