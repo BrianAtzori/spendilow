@@ -14,7 +14,7 @@ export default function Budget() {
   const [budgetsLoading, setAreBudgetsLoading] = useState(true);
   const [budgetsError, setBudgetsError] = useState({
     state: false,
-    message: "Errore durante il caricamento delle tue transazioni.",
+    message: "Errore durante il caricamento dei tuoi budget.",
   });
 
   useEffect(() => {

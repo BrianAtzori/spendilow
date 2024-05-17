@@ -13,7 +13,7 @@ import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
 // ------ TYPESCRIPT ------
 interface spendilowTransactions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: any;
+  transaction_date: string;
   amount: number;
   title: string;
   notes: string;
@@ -22,7 +22,8 @@ interface spendilowTransactions {
   target_id: string;
 }
 
-const getSpendilowUserTransactions = async (): Promise<spendilowTransactions[] | string[]
+const getSpendilowUserTransactions = async (): Promise<
+  spendilowTransactions[] | string[]
 > => {
   let result: spendilowTransactions[] | string[] = [
     {
@@ -65,12 +66,13 @@ const createNewSpendilowUserTransaction = async (
 ): Promise<string> => {
   let result: string = "";
 
-  newSpendilowTransaction.transaction_date =
-    newSpendilowTransaction.transaction_date.getUTCFullYear().toString() +
-    "/" +
-    (newSpendilowTransaction.transaction_date.getUTCMonth() + 1).toString() +
-    "/" +
-    (newSpendilowTransaction.transaction_date.getUTCDate() + 1).toString();
+  console.log(newSpendilowTransaction.transaction_date);
+
+  // newSpendilowTransaction.transaction_date.getUTCFullYear().toString() +
+  //   "/" +
+  //   (newSpendilowTransaction.transaction_date.getUTCMonth() + 1).toString() +
+  //   "/" +
+  //   (newSpendilowTransaction.transaction_date.getUTCDate() + 1).toString();
 
   try {
     result = await axios
