@@ -13,7 +13,7 @@ import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
 // ------ TYPESCRIPT ------
 interface spendilowTransactions {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: string;
+  transaction_date: Date;
   amount: number;
   title: string;
   notes: string;
@@ -65,14 +65,6 @@ const createNewSpendilowUserTransaction = async (
   newSpendilowTransaction: spendilowTransactions
 ): Promise<string> => {
   let result: string = "";
-
-  console.log(newSpendilowTransaction.transaction_date);
-
-  // newSpendilowTransaction.transaction_date.getUTCFullYear().toString() +
-  //   "/" +
-  //   (newSpendilowTransaction.transaction_date.getUTCMonth() + 1).toString() +
-  //   "/" +
-  //   (newSpendilowTransaction.transaction_date.getUTCDate() + 1).toString();
 
   try {
     result = await axios
@@ -190,9 +182,9 @@ const editSpendilowUserTransaction = async (
   editedTransaction.transaction_date =
     editedTransaction.transaction_date.getUTCFullYear().toString() +
     "/" +
-    (editedTransaction.transaction_date.getUTCMonth() + 1).toString() +
+    editedTransaction.transaction_date.getUTCMonth().toString() +
     "/" +
-    (editedTransaction.transaction_date.getUTCDate() + 1).toString();
+    editedTransaction.transaction_date.getUTCDate().toString();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transactionEditingBody: any = {
@@ -210,7 +202,7 @@ const editSpendilowUserTransaction = async (
     result = await axios
       .patch(
         baseURL + route + `/mod/${editedTransaction.id}`,
-        transactionEditingBody,
+        editedTransaction,
         {
           withCredentials: true,
         }

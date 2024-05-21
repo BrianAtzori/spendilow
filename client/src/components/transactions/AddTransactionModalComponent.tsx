@@ -16,7 +16,7 @@ import nextId from "react-id-generator";
 // ------ TYPESCRIPT ------
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface spendilowTransactions {
-  transaction_date: any;
+  transaction_date: Date;
   amount: number;
   title: string;
   notes: string;
@@ -65,7 +65,7 @@ export default function AddTransactionModalComponent({
 
   const [newSpendilowUserTransaction, setNewSpendilowUserTransaction] =
     useState<spendilowTransactions>({
-      transaction_date: undefined,
+      transaction_date: new Date(),
       amount: 0,
       title: "",
       notes: "",

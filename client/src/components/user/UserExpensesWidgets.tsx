@@ -50,13 +50,13 @@ export default function UserExpensesWidgets() {
           for (let i = 0; i < transactions.length; i++) {
             switch (transactions[i].transaction_type) {
               case "Income":
-                calculatedValue += transactions[i].amount;
+                calculatedValue += Number(transactions[i].amount);
                 break;
               case "Expense":
-                calculatedValue -= transactions[i].amount;
+                calculatedValue -= Number(transactions[i].amount);
                 break;
               case "Budget":
-                calculatedValue += transactions[i].amount;
+                calculatedValue += Number(transactions[i].amount);
                 break;
               default:
                 break;
@@ -72,7 +72,7 @@ export default function UserExpensesWidgets() {
           );
 
           for (let i = 0; i < filteredTransactions.length; i++) {
-            calculatedValue += filteredTransactions[i].amount;
+            calculatedValue += Number(filteredTransactions[i].amount);
           }
 
           break;
@@ -85,7 +85,7 @@ export default function UserExpensesWidgets() {
           );
 
           for (let i = 0; i < filteredTransactions.length; i++) {
-            calculatedValue -= filteredTransactions[i].amount;
+            calculatedValue -= Number(filteredTransactions[i].amount);
           }
 
           break;
@@ -98,14 +98,14 @@ export default function UserExpensesWidgets() {
           );
 
           for (let i = 0; i < filteredTransactions.length; i++) {
-            calculatedValue += filteredTransactions[i].amount;
+            calculatedValue += Number(filteredTransactions[i].amount);
           }
 
           break;
         }
       }
 
-      return calculatedValue;
+      return Number(calculatedValue).toFixed(2);
     } else {
       return 0;
     }
