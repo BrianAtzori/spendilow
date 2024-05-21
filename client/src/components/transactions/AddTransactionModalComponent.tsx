@@ -22,7 +22,7 @@ interface spendilowTransactions {
   notes: string;
   tags: string;
   transaction_type: string;
-  target_id: string;
+  target_id: string | null;
 }
 
 // ------ RESOURCES ------
@@ -71,7 +71,7 @@ export default function AddTransactionModalComponent({
       notes: "",
       tags: "",
       transaction_type: "Expense",
-      target_id: "",
+      target_id: null,
     });
 
   const availableBudgets = useAppSelector((state) => state.userBudget.budgets);
@@ -131,17 +131,6 @@ export default function AddTransactionModalComponent({
         message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
       });
     } else {
-      // if (newSpendilowUserTransaction.tags != "") {
-      //   await manageTagsCreation()
-      //     .then(() => {
-      //       console.log(newSpendilowUserTransaction.tags);
-      // addNewTransaction();
-      //     })
-      //     .finally(() => {
-      //       setIsLoading(true);
-      //     });
-      // } else {
-      //   console.log("No Tags");
       setIsLoading(true);
       await addNewTransaction();
     }
@@ -173,38 +162,6 @@ export default function AddTransactionModalComponent({
 
     window.location.href = import.meta.env.VITE_BASENAME + "/user/dashboard";
   }
-
-  // async function manageTagsCreation() {
-  //   const { tags } = newSpendilowUserTransaction;
-
-  //   let formattedTags = "";
-
-  //   if (tags.includes(",")) {
-  //     const splittedTags = tags.split(",");
-
-  //     for (let i = 0; i < splittedTags.length; i++) {
-  //       if (i === splittedTags.length - 1 && splittedTags[i] != "") {
-  //         formattedTags += splittedTags[i];
-  //       } else {
-  //         formattedTags += splittedTags[i] + ";";
-  //       }
-  //     }
-  //   } else {
-  //     setNewSpendilowUserTransaction({
-  //       ...newSpendilowUserTransaction,
-  //       ["tags"]: tags,
-  //     });
-
-  //     return;
-  //   }
-
-  //   setNewSpendilowUserTransaction({
-  //     ...newSpendilowUserTransaction,
-  //     ["tags"]: formattedTags,
-  //   });
-
-  //   return;
-  // }
 
   return (
     <dialog
@@ -324,9 +281,14 @@ export default function AddTransactionModalComponent({
                         id="target_id"
                         name="target_id"
                         placeholder="I tuoi budget"
-                        value={newSpendilowUserTransaction.target_id}
+                        value={
+                          newSpendilowUserTransaction.target_id != null
+                            ? newSpendilowUserTransaction.target_id!
+                            : ""
+                        }
                         onChange={handleChange}
                       >
+                        <option></option>
                         {availableBudgets.map((budget) => {
                           return (
                             <option key={nextId()} value={budget.id}>

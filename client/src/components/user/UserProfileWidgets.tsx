@@ -41,20 +41,20 @@ export default function UserProfileWidgets() {
   const currentDate = new Date();
 
   const userExpensesValuesGeneration = (mode: string) => {
-    let calculatedValue: number = 0.00;
+    let calculatedValue: number = 0.0;
     switch (mode) {
       case "total": {
         for (let i = 0; i < transactions.length; i++) {
-          if (!(transactions.length === 0)) {
+          if (transactions.length != 0) {
             switch (transactions[i].transaction_type) {
               case "Income":
-                calculatedValue += transactions[i].amount;
+                calculatedValue += Number(transactions[i].amount);
                 break;
               case "Expense":
-                calculatedValue -= transactions[i].amount;
+                calculatedValue -= Number(transactions[i].amount);
                 break;
               case "Budget":
-                calculatedValue += transactions[i].amount;
+                calculatedValue += Number(transactions[i].amount);
                 break;
               case undefined:
                 calculatedValue = 0;
@@ -67,7 +67,7 @@ export default function UserProfileWidgets() {
         break;
       }
     }
-    
+
     return Number(calculatedValue).toFixed(2);
   };
 

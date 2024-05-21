@@ -19,7 +19,7 @@ interface spendilowTransactions {
   notes: string;
   tags: string;
   transaction_type: string;
-  target_id: string;
+  target_id: string | null;
 }
 
 const getSpendilowUserTransactions = async (): Promise<

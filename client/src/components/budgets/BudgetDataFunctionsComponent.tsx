@@ -86,6 +86,23 @@ export default function BudgetDataFunctionsComponent({
                   value={budget.description}
                 />
               </div>
+              <div className="form-control desktop:w-full">
+                {isEditingLoading ? (
+                  <>
+                    <button className="btn btn-accent font-primary">
+                      <span className="loading loading-dots loading-md"></span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="submit"
+                      className="btn btn-accent font-primary"
+                      value="Conferma modifiche"
+                    ></input>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -94,23 +111,6 @@ export default function BudgetDataFunctionsComponent({
             <ErrorComponent
               message={budgetMenuEditingError.message}
             ></ErrorComponent>
-          )}
-        </div>
-        <div className="form-control desktop:w-full">
-          {isEditingLoading ? (
-            <>
-              <button className="btn btn-accent font-primary">
-                <span className="loading loading-dots loading-md"></span>
-              </button>
-            </>
-          ) : (
-            <>
-              <input
-                type="submit"
-                className="btn btn-accent font-primary"
-                value="Conferma modifiche"
-              ></input>
-            </>
           )}
         </div>
 
