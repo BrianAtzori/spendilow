@@ -181,7 +181,8 @@ export default function TransactionsDisplayerComponent({
       );
 
       if (externalCallResult.success) {
-        window.location.href = import.meta.env.VITE_BASENAME + "/user/dashboard";
+        window.location.href =
+          import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {
         alert(externalCallResult);
       }
@@ -212,7 +213,13 @@ export default function TransactionsDisplayerComponent({
                   <td>
                     {transactionTypeIconCreator(transaction.transaction_type)}
                   </td>
-                  <td className="font-bold">{transaction.title}</td>
+                  <td className="font-bold">
+                    {transaction.title}{" "}
+                    {transaction.transaction_type === "Budget" &&
+                    transaction.target_id === null
+                      ? "(Senza budget)"
+                      : ""}
+                  </td>
                   <td className="hidden tablet:table-cell ">
                     {transaction.amount}
                   </td>

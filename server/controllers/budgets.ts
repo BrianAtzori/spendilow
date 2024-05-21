@@ -118,21 +118,35 @@ const deleteSingleBudget = async (req: any, res: Response) => {
     );
   }
 
-  const databaseOperationResult = await dbManager.databaseInteraction(
-    "DELETE_BUDGET",
+  const transactionBudgetRemoveResult = await dbManager.databaseInteraction(
+    "DELETE_BUDGET_FROM_TRANSACTIONS",
     {
       budgetId: req.params.id,
       spendilowUserId: req.user.id,
     }
   );
 
-  if (databaseOperationResult.successState) {
-    res
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "Budget eliminata correttamente!" });
+  if (transactionBudgetRemoveResult.successState) {
+    const databaseOperationResult = await dbManager.databaseInteraction(
+      "DELETE_BUDGET",
+      {
+        budgetId: req.params.id,
+        spendilowUserId: req.user.id,
+      }
+    );
+
+    if (databaseOperationResult.successState) {
+      res
+        .status(StatusCodes.OK)
+        .json({ success: true, message: "Budget eliminata correttamente!" });
+    } else {
+      throw new BadRequestError(
+        `L'eliminazione del budget non é andata a buon fine, riprova oppure contatta il supporto con questo errore: ${databaseOperationResult.payload}`
+      );
+    }
   } else {
     throw new BadRequestError(
-      `L'eliminazione del budget non é andata a buon fine, riprova oppure contatta il supporto.`
+      `L'eliminazione del budget non é andata a buon fine, riprova oppure contatta il supporto con questo errore: ${transactionBudgetRemoveResult.payload}`
     );
   }
 };

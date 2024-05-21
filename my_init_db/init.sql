@@ -27,7 +27,7 @@ CREATE TABLE transactions (
     id VARCHAR(36) PRIMARY KEY,
     user_id VARCHAR(36),
     amount DECIMAL(10,2),
-    transaction_date DATE,
+    transaction_date DATETIME,
     title VARCHAR(255),
     notes TEXT,
     tags VARCHAR(255),
