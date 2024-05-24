@@ -13,20 +13,10 @@ import nextId from "react-id-generator";
 import { deleteSpendilowUserTransaction } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
 
 // ------ TYPESCRIPT ------
-interface spendilowTransaction {
-  id: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: any;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string;
-}
+import { SpendilowTransaction } from "../../shared/interfaces";
 
 type TransactionDisplayerProp = {
-  userTransactions: spendilowTransaction[];
+  userTransactions: SpendilowTransaction[];
 };
 
 //A responsive table that render a set of transactions from props
@@ -204,7 +194,7 @@ export default function TransactionsDisplayerComponent({
             </tr>
           </thead>
           <tbody>
-            {userTransactions.map((transaction: spendilowTransaction) => {
+            {userTransactions.map((transaction: SpendilowTransaction) => {
               return (
                 <tr key={nextId()} className="font-body">
                   <td className="hidden desktop:table-cell">
@@ -224,7 +214,7 @@ export default function TransactionsDisplayerComponent({
                     {transaction.amount}
                   </td>
                   <td className="text-right tablet:table-cell ">
-                    {transactionMenuCreator(transaction.id)}
+                    {transactionMenuCreator(transaction.id!)}
                   </td>
                 </tr>
               );

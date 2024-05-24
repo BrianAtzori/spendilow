@@ -9,23 +9,12 @@ const route: string = "/authenticated-users/transactions";
 
 // ------ SERVICES ------
 import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
-
-// ------ TYPESCRIPT ------
-interface spendilowTransactions {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: Date;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string | null;
-}
+import { SpendilowTransaction } from "../../../shared/interfaces";
 
 const getSpendilowUserTransactions = async (): Promise<
-  spendilowTransactions[] | string[]
+  SpendilowTransaction[] | string[]
 > => {
-  let result: spendilowTransactions[] | string[] = [
+  let result: SpendilowTransaction[] | string[] = [
     {
       transaction_date: new Date(),
       amount: 0,
@@ -62,7 +51,7 @@ const getSpendilowUserTransactions = async (): Promise<
 };
 
 const createNewSpendilowUserTransaction = async (
-  newSpendilowTransaction: spendilowTransactions
+  newSpendilowTransaction: SpendilowTransaction
 ): Promise<string> => {
   let result: string = "";
 
@@ -107,8 +96,8 @@ const createNewSpendilowUserTransaction = async (
 
 const getSpendilowUserTransaction = async (
   transactionID: string
-): Promise<spendilowTransactions | string> => {
-  let result: spendilowTransactions | string = {
+): Promise<SpendilowTransaction | string> => {
+  let result: SpendilowTransaction | string = {
     transaction_date: new Date(),
     amount: 0,
     title: "",

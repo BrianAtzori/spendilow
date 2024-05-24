@@ -5,35 +5,15 @@ import React from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 // ------ TYPESCRIPT ------
-interface spendilowUserProfile {
-  id: string;
-  email: string;
-  isMFAActive: boolean;
-  savings: number;
-  salary: number;
-  profileimage: string;
-  workfield: string;
-  username: string;
-}
-
-interface spendilowTransaction {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: any;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string;
-}
+import { SpendilowTransaction, SpendilowUser } from "../../shared/interfaces";
 
 export default function UserProfileWidgets() {
   // ----- HOOKS ------
-  const currentSpendilowUser: spendilowUserProfile = useAppSelector(
+  const currentSpendilowUser: SpendilowUser = useAppSelector(
     (state) => state.userProfile.value
   );
 
-  const transactions: spendilowTransaction[] = useAppSelector(
+  const transactions: SpendilowTransaction[] = useAppSelector(
     (state) => state.userTransactions.transactions
   );
 

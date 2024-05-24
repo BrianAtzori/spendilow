@@ -9,10 +9,11 @@ import ErrorComponent from "../shared/ErrorComponent";
 
 // ------ SERVICES ------
 import { signUpNewSpendilowUser } from "../../services/users/users-external-calls";
+import { SpendilowUser } from "../../shared/interfaces";
 
 export default function SignUpComponent() {
   // ------ HOOKS ------
-  const [newSpendilowUser, setNewSpendilowUser] = useState({
+  const [newSpendilowUser, setNewSpendilowUser] = useState<SpendilowUser>({
     email: "",
     password: "",
     savings: 0.0,
@@ -100,7 +101,7 @@ export default function SignUpComponent() {
         message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
       });
     } else {
-      if (passwordCheck.test(newSpendilowUser.password)) {
+      if (passwordCheck.test(newSpendilowUser.password!)) {
         setIsLoading(true);
         await signUp();
       } else {
@@ -123,7 +124,8 @@ export default function SignUpComponent() {
     });
 
     externalCallResult.startsWith("/")
-      ? (window.location.href = import.meta.env.VITE_BASENAME + externalCallResult)
+      ? (window.location.href =
+          import.meta.env.VITE_BASENAME + externalCallResult)
       : setSignUpError({ state: true, message: externalCallResult });
   }
 

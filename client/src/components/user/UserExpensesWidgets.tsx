@@ -4,29 +4,6 @@ import React from "react";
 // ------ REDUX ------
 import { useAppSelector } from "../../redux/hooks";
 
-// ------ TYPESCRIPT ------
-interface spendilowTransaction {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: any;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string;
-}
-
-interface spendilowUserProfile {
-  id: string;
-  email: string;
-  isMFAActive: boolean;
-  savings: number;
-  salary: number;
-  profileimage: string;
-  workfield: string;
-  username: string;
-}
-
 export default function UserExpensesWidgets() {
   // ----- HOOKS ------
   const transactions: spendilowTransaction[] = useAppSelector(

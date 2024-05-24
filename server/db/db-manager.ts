@@ -4,6 +4,11 @@ import { SqlError } from "mariadb";
 const BadRequestError = require("../errors");
 const dbConnectionPool = require("./db-connector");
 
+interface DatabaseOperationResult {
+  successState: boolean;
+  payload: any;
+}
+
 // ------ DB ACTIONS MANAGER ------
 const databaseInteraction = async (
   operation: string,
@@ -166,11 +171,6 @@ const databaseInteraction = async (
   }
 };
 
-interface databaseOperationResult {
-  successState: boolean;
-  payload: any;
-}
-
 // ------ REGISTER SPENDILOW USER ------
 const createSplUser = async (spendilowUser: any, connection: any) => {
   const query = `
@@ -178,7 +178,7 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -224,7 +224,7 @@ const readSplUser = async (spendilowUser: any, connection: any) => {
 
   const email = spendilowUser.email;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -243,7 +243,7 @@ const readSplUser = async (spendilowUser: any, connection: any) => {
 const readSplUserByID = async (spendilowUserId: any, connection: any) => {
   const query = `SELECT * FROM \`splusers\` WHERE \`id\`=? LIMIT 1`;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -272,7 +272,7 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
     WHERE id = ?
   `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -307,7 +307,7 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
 const deleteSplUser = async (spendilowUserId: any, connection: any) => {
   const query = `DELETE FROM \`splusers\` WHERE \`splusers\`.\`id\` = ?`;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -334,7 +334,7 @@ const createTransactionQuery = async (
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -386,7 +386,7 @@ const getAllTransactions = async (spendilowUserId: any, connection: any) => {
   ORDER BY transaction_date DESC
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -415,7 +415,7 @@ const getSingleTransaction = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -455,7 +455,7 @@ const updateSingleTransaction = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -506,7 +506,7 @@ const deleteSingleTransaction = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -540,7 +540,7 @@ const deleteUserTransactions = async (
   WHERE user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -562,7 +562,7 @@ const createBudgetQuery = async (budgetData: any, connection: any) => {
   const query = `
   INSERT INTO budget (id, name, description, user_id) VALUES (?, ?, ?, ?);`;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -601,7 +601,7 @@ const getSingleBudget = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -630,7 +630,7 @@ async function getBudgetTransactions(
   WHERE target_id = ? AND user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -662,7 +662,7 @@ const updateSingleBudget = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -700,7 +700,7 @@ async function getAllBudgets(
   WHERE user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -728,7 +728,7 @@ const deleteSingleBudget = async (
   WHERE id = ? AND user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -756,7 +756,7 @@ const deleteUserBudgets = async (spendilowUserId: any, connection: any) => {
   WHERE user_id = ?
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };
@@ -785,7 +785,7 @@ const deleteBudgetFromTransactions = async (
   WHERE user_id = ? AND target_id = ?;
 `;
 
-  let rows: databaseOperationResult = {
+  let rows: DatabaseOperationResult = {
     successState: false,
     payload: {},
   };

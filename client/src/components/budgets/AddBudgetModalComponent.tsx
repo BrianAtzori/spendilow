@@ -8,12 +8,8 @@ import ErrorComponent from "../shared/ErrorComponent";
 // ------ SERVICES ------
 import { createNewSpendilowUserBudget } from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
 
-// ------ TYPESCRIPT ------
-interface SpendilowBudget {
-  id?: number;
-  name: string;
-  description: string;
-}
+// ------- TYPESCRIPT ------
+import { SpendilowBudget } from "../../shared/interfaces";
 
 export default function AddBudgetModalComponent({ visible, onClose }: any) {
   // ------ HOOKS ------

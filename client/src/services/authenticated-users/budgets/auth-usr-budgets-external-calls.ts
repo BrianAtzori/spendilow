@@ -10,11 +10,8 @@ const route: string = "/authenticated-users/budgets";
 // ------ SERVICES ------
 import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
 
-interface SpendilowBudget {
-  id?: string;
-  name: string;
-  description: string;
-}
+// ------ TYPESCRIPT ------
+import { SpendilowBudget } from "../../../shared/interfaces";
 
 const createNewSpendilowUserBudget = async (
   newSpendilowBudget: SpendilowBudget
@@ -158,7 +155,7 @@ const editSpendilowUserBudget = async (
 };
 
 const deleteSpendilowUserBudget = async (
-  budgetId?: number
+  budgetId?: string
 ): Promise<string> => {
   let result: string = "";
 

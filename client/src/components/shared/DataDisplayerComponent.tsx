@@ -11,24 +11,6 @@ import ErrorComponent from "./ErrorComponent";
 import { useAppSelector } from "../../redux/hooks";
 import BudgetDisplayerComponent from "../budgets/BudgetDisplayerComponent";
 
-interface SpendilowTransaction {
-  id: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: any;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string;
-}
-
-interface SpendilowBudget {
-  id?: number;
-  name: string;
-  description: string;
-}
-
 interface DataDisplayerComponentProps {
   title: string;
   subtitle: string;

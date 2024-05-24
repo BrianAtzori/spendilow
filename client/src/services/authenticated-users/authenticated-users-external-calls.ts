@@ -11,21 +11,10 @@ const route: string = "/authenticated-users";
 import { apiErrorResponseHandler } from "../general/apiErrorResponseHandler";
 
 // ------ TYPESCRIPT ------
-interface spendilowUserProfile {
-  id: string;
-  email: string;
-  isMFAActive: boolean;
-  savings: number;
-  salary: number;
-  profileimage: string;
-  workfield: string;
-  username: string;
-}
+import { SpendilowUser } from "../../shared/interfaces";
 
-const getSpendilowUserProfile = async (): Promise<
-  spendilowUserProfile | string
-> => {
-  let result: spendilowUserProfile | string = {
+const getSpendilowUserProfile = async (): Promise<SpendilowUser | string> => {
+  let result: SpendilowUser | string = {
     id: "",
     email: "",
     isMFAActive: false,
@@ -60,9 +49,7 @@ const getSpendilowUserProfile = async (): Promise<
   return result;
 };
 
-const editSpendilowUserProfile = async (
-  editedSpendilowUser: spendilowUserProfile
-) => {
+const editSpendilowUserProfile = async (editedSpendilowUser: SpendilowUser) => {
   let result: string = "";
 
   try {

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import AddBudgetModalComponent from "../budgets/AddBudgetModalComponent";
-// import { createNewSpendilowUserBudget } from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
 
 export default function UserBudgetsWidgets() {
   const [modalShowing, setIsModalShowing] = useState(false);

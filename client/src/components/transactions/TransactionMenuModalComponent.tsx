@@ -16,22 +16,13 @@ import { getSpendilowUserTransaction } from "../../services/authenticated-users/
 import { editSpendilowUserTransaction } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
 
 // ------ TYPESCRIPT ------
-/* eslint-disable @typescript-eslint/no-explicit-any */
-interface SpendilowTransactions {
-  id: string;
-  transaction_date: Date;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string;
-}
+import { SpendilowTransaction } from "../../shared/interfaces";
 
 export default function TransactionMenuModalComponent({
   visible,
   onClose,
-}: any) {
+}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+any) {
   // ------ HOOKS ------
   useEffect(() => {
     if (!modalRef.current) {
@@ -39,6 +30,7 @@ export default function TransactionMenuModalComponent({
     }
     visible ? modalRef.current.showModal() : modalRef.current.close();
     getTransaction();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
   const currentTransactionID: string = useAppSelector(
@@ -46,7 +38,7 @@ export default function TransactionMenuModalComponent({
   );
 
   const [spendilowUserTransaction, setNewSpendilowUserTransaction] =
-    useState<SpendilowTransactions>({
+    useState<SpendilowTransaction>({
       id: "",
       transaction_date: new Date(),
       amount: 0,
@@ -57,6 +49,7 @@ export default function TransactionMenuModalComponent({
       target_id: "",
     });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modalRef: any = useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -87,6 +80,7 @@ export default function TransactionMenuModalComponent({
   };
 
   // ------ FORM HANDLING ------
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
     if (event.target.name === "transaction_date") {
       setNewSpendilowUserTransaction({

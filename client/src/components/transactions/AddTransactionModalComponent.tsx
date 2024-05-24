@@ -12,18 +12,7 @@ import LoaderComponent from "../shared/LoaderComponent";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/hooks";
 import nextId from "react-id-generator";
-
-// ------ TYPESCRIPT ------
-/* eslint-disable @typescript-eslint/no-explicit-any */
-interface spendilowTransactions {
-  transaction_date: Date;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string | null;
-}
+import { SpendilowTransaction } from "../../shared/interfaces";
 
 // ------ RESOURCES ------
 // https://daisyui.com/components/modal/
@@ -33,8 +22,10 @@ interface spendilowTransactions {
 export default function AddTransactionModalComponent({
   visible,
   onClose,
-}: any) {
+}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+any) {
   // ------ HOOKS ------
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modalRef: any = useRef(null);
 
   useEffect(() => {
@@ -64,7 +55,7 @@ export default function AddTransactionModalComponent({
   });
 
   const [newSpendilowUserTransaction, setNewSpendilowUserTransaction] =
-    useState<spendilowTransactions>({
+    useState<SpendilowTransaction>({
       transaction_date: new Date(),
       amount: 0,
       title: "",
@@ -91,6 +82,7 @@ export default function AddTransactionModalComponent({
   };
 
   // ------ FORM HANDLING ------
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
     if (event.target.name === "transaction_date") {
       setNewSpendilowUserTransaction({
@@ -138,6 +130,7 @@ export default function AddTransactionModalComponent({
 
   // ------ FUNCTIONS ------
   async function getAvailableBudgets() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const externalCallResult: any = await getSpendilowUserBudgets().finally(
       () => {
         setAreAvailableBudgetsLoading(false);

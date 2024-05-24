@@ -10,18 +10,7 @@ import {
 import TransactionsDisplayerComponent from "../transactions/TransactionsDisplayerComponent";
 import NoResultsComponent from "../shared/NoResultsComponent";
 import BudgetDataFunctionsComponent from "./BudgetDataFunctionsComponent";
-
-interface SpendilowBudget {
-  id?: string;
-  name?: string;
-  description?: string;
-}
-
-interface SpendilowBudgetAPIResponse {
-  budget: SpendilowBudget;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transactions: any[];
-}
+import { SpendilowBudgetAPIResponse } from "../../shared/interfaces";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function BudgetMenuModalComponent({ visible, onClose }: any) {
@@ -79,8 +68,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
   };
 
   // ------ FORM HANDLING ------
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSpendilowUserBudget({
       ...spendilowUserBudget,
       budget: {

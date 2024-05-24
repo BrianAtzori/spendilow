@@ -11,20 +11,11 @@ import ErrorComponent from "../shared/ErrorComponent";
 import { editSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
 
 // ------ TYPESCRIPT ------
-interface spendilowUserProfile {
-  id: string;
-  email: string;
-  isMFAActive: boolean;
-  savings: number;
-  salary: number;
-  profileimage: string;
-  workfield: string;
-  username: string;
-}
+import { SpendilowUser } from "../../shared/interfaces";
 
 export default function UserEditProfileComponent() {
   // ------ HOOKS ------
-  const currentSpendilowUser: spendilowUserProfile = useAppSelector(
+  const currentSpendilowUser: SpendilowUser = useAppSelector(
     (state) => state.userProfile.value
   );
 
@@ -115,7 +106,8 @@ export default function UserEditProfileComponent() {
       });
 
       externalCallResult.startsWith("/")
-        ? (window.location.href = import.meta.env.VITE_BASENAME + externalCallResult)
+        ? (window.location.href =
+            import.meta.env.VITE_BASENAME + externalCallResult)
         : setEditError({ state: true, message: externalCallResult });
     } else {
       setIsLoading(false);

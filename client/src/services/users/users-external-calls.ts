@@ -11,25 +11,10 @@ const route: string = "/users";
 import { apiErrorResponseHandler } from "../general/apiErrorResponseHandler";
 
 // ------ TYPESCRIPT ------
-interface newSpendilowUser {
-  email: string;
-  password: string;
-  savings: number;
-  salary: number;
-  profileimage: string;
-  workfield: string;
-  username: string;
-  isMFAActive: boolean;
-}
+import { SpendilowUser, SpendilowUserLogin } from "../../shared/interfaces";
 
-interface spendilowUserLogin {
-  email: string;
-  password: string;
-}
-
-// ------ CALLS ------
 const signUpNewSpendilowUser = async function (
-  newSpendilowUser: newSpendilowUser
+  newSpendilowUser: SpendilowUser
 ): Promise<string> {
   let result: string = "";
 
@@ -70,7 +55,7 @@ const signUpNewSpendilowUser = async function (
 };
 
 const loginSpendilowUser = async function (
-  userCredentials: spendilowUserLogin
+  userCredentials: SpendilowUserLogin
 ): Promise<string> {
   let result: string = "";
 

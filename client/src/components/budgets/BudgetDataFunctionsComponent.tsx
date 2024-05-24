@@ -7,7 +7,6 @@ import ErrorComponent from "../shared/ErrorComponent";
 // ------ SERVICES ------
 import { deleteSpendilowUserBudget } from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
 
-// ------ TYPESCRIPT ------
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default function BudgetDataFunctionsComponent({
   budget,

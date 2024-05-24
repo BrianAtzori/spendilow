@@ -4,19 +4,6 @@ import React from "react";
 // ------ SERVICE ------
 import nextId from "react-id-generator";
 
-// ------ TYPESCRIPT ------
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// interface spendilowTransactions {
-//   id: string;
-//   transaction_date: any;
-//   amount: number;
-//   title: string;
-//   notes: string;
-//   tags: string;
-//   transaction_type: string;
-//   target_id: string;
-// }
-
 export default function TransactionDataComponent({ transaction }: any) {
   // ------ DATA DISPLAY HANDLING ------
   const transactionTypeIconCreator = (type: string) => {

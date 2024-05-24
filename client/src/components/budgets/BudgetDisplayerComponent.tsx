@@ -5,12 +5,7 @@ import {
   setBudgetMenuModalSliceShowing,
 } from "../../redux/reducers/interactions/budgetMenuModalSlice";
 import { deleteSpendilowUserBudget } from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
-
-interface SpendilowBudget {
-  id?: number;
-  name: string;
-  description: string;
-}
+import { SpendilowBudget } from "../../shared/interfaces";
 
 interface BudgetDisplayerProps {
   userBudgets: SpendilowBudget[];
@@ -22,7 +17,7 @@ export default function BudgetDisplayerComponent({
   // ------ HOOKS ------
   const dispatch = useAppDispatch();
 
-  const budgetMenuCreator = (budgetId?: number) => {
+  const budgetMenuCreator = (budgetId?: string) => {
     return (
       <ul className="menu menu-horizontal rounded-box bg-accent">
         <li className="tablet:table-cell">
@@ -80,12 +75,14 @@ export default function BudgetDisplayerComponent({
   };
 
   // ------ FUNCTIONS ------
-  async function deleteBudget(budgetId?: number) {
+  async function deleteBudget(budgetId?: string) {
     const response = confirm("Vuoi eliminare questo budget?");
 
     if (response) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await deleteSpendilowUserBudget(budgetId);
+      const externalCallResult: any = await deleteSpendilowUserBudget(
+        budgetId!
+      );
 
       if (externalCallResult.success) {
         window.location.href =

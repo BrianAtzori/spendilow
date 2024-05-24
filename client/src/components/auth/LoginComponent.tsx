@@ -10,9 +10,12 @@ import ErrorComponent from "../shared/ErrorComponent";
 // ------ SERVICES ------
 import { loginSpendilowUser } from "../../services/users/users-external-calls";
 
+// ------ TYPESCRIPT ------
+import { SpendilowUserLogin } from "../../shared/interfaces";
+
 export default function LoginComponent() {
   // ------ HOOKS ------
-  const [userCredentials, setUserCredentials] = useState({
+  const [userCredentials, setUserCredentials] = useState<SpendilowUserLogin>({
     email: "",
     password: "",
   });
@@ -60,7 +63,8 @@ export default function LoginComponent() {
     });
 
     externalCallResult.startsWith("/")
-      ? (window.location.href = import.meta.env.VITE_BASENAME + externalCallResult)
+      ? (window.location.href =
+          import.meta.env.VITE_BASENAME + externalCallResult)
       : setLoginError({ state: true, message: externalCallResult });
   }
 
