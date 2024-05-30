@@ -189,6 +189,14 @@ export default function TransactionDataFunctionsComponent({
                       </select>
                     </div>
                   )}
+                {transaction.transaction_type === "Budget" &&
+                  availableBudgets.length === 0 && (
+                    <ErrorComponent
+                      message={
+                        "Non hai budget da selezionare, creane uno nella sezione dedicata"
+                      }
+                    ></ErrorComponent>
+                  )}
                 <div className="form-control desktop:w-5/12">
                   <label className="label">
                     <span className="label-text font-bold">Note</span>

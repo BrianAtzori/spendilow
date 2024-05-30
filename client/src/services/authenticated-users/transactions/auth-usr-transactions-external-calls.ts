@@ -171,7 +171,7 @@ const editSpendilowUserTransaction = async (
   editedTransaction.transaction_date =
     editedTransaction.transaction_date.getUTCFullYear().toString() +
     "/" +
-    editedTransaction.transaction_date.getUTCMonth().toString() +
+    (editedTransaction.transaction_date.getUTCMonth() + 1).toString() +
     "/" +
     editedTransaction.transaction_date.getUTCDate().toString();
 
