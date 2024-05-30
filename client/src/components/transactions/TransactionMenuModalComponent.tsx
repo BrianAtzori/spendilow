@@ -16,13 +16,20 @@ import { getSpendilowUserTransaction } from "../../services/authenticated-users/
 import { editSpendilowUserTransaction } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
 
 // ------ TYPESCRIPT ------
-import { SpendilowTransaction } from "../../shared/interfaces";
+import {
+  ExternalCallResult,
+  SpendilowTransaction,
+} from "../../shared/interfaces";
+
+interface TransactionMenuModalProps {
+  visible: boolean;
+  onClose: (value: React.SetStateAction<boolean>) => void;
+}
 
 export default function TransactionMenuModalComponent({
   visible,
   onClose,
-}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-any) {
+}: TransactionMenuModalProps) {
   // ------ HOOKS ------
   useEffect(() => {
     if (!modalRef.current) {
@@ -49,8 +56,7 @@ any) {
       target_id: "",
     });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const modalRef: any = useRef(null);
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -122,17 +128,20 @@ any) {
 
   // ------ FUNCTIONS ------
   async function getTransaction() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await getSpendilowUserTransaction(
-      currentTransactionID
-    ).finally(() => {
-      setIsLoading(false);
-    });
+    const externalCallResult: ExternalCallResult | string =
+      await getSpendilowUserTransaction(currentTransactionID).finally(() => {
+        setIsLoading(false);
+      });
 
-    if (externalCallResult.transaction) {
-      setNewSpendilowUserTransaction(externalCallResult.transaction);
+    if ((externalCallResult as ExternalCallResult).transaction) {
+      setNewSpendilowUserTransaction(
+        (externalCallResult as ExternalCallResult).transaction!
+      );
     } else {
-      setTransactionMenuError({ state: true, message: externalCallResult });
+      setTransactionMenuError({
+        state: true,
+        message: externalCallResult as string,
+      });
     }
   }
 
@@ -152,23 +161,23 @@ any) {
     } = spendilowUserTransaction;
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await editSpendilowUserTransaction({
-        id,
-        amount,
-        title,
-        notes,
-        tags,
-        target_id,
-        transaction_date,
-        transaction_type,
-      }).finally(() => {
-        setIsEditingLoading(false);
-      });
+      const externalCallResult: ExternalCallResult | string =
+        await editSpendilowUserTransaction({
+          id,
+          amount,
+          title,
+          notes,
+          tags,
+          target_id,
+          transaction_date,
+          transaction_type,
+        }).finally(() => {
+          setIsEditingLoading(false);
+        });
 
       console.log(externalCallResult);
 
-      if (externalCallResult.success) {
+      if ((externalCallResult as ExternalCallResult).success) {
         window.location.href =
           import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {

@@ -28,8 +28,7 @@ export default function ChangeOrLogoutComponent() {
     setIsLoading(true);
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await logoutSpendilowUserProfile(
+      const externalCallResult: string = await logoutSpendilowUserProfile(
         operation
       ).finally(() => {
         setIsLoading(false);
@@ -37,7 +36,8 @@ export default function ChangeOrLogoutComponent() {
 
       if (externalCallResult.startsWith("/")) {
         dispatch(changeUserLoggedState(false));
-        window.location.href = import.meta.env.VITE_BASENAME + externalCallResult;
+        window.location.href =
+          import.meta.env.VITE_BASENAME + externalCallResult;
       } else {
         setProfileError({ state: true, message: externalCallResult });
       }

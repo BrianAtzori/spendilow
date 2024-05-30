@@ -9,7 +9,10 @@ const route: string = "/authenticated-users/transactions";
 
 // ------ SERVICES ------
 import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
-import { SpendilowTransaction } from "../../../shared/interfaces";
+import {
+  ExternalCallResult,
+  SpendilowTransaction,
+} from "../../../shared/interfaces";
 
 const getSpendilowUserTransactions = async (): Promise<
   SpendilowTransaction[] | string[]
@@ -96,16 +99,9 @@ const createNewSpendilowUserTransaction = async (
 
 const getSpendilowUserTransaction = async (
   transactionID: string
-): Promise<SpendilowTransaction | string> => {
-  let result: SpendilowTransaction | string = {
-    transaction_date: new Date(),
-    amount: 0,
-    title: "",
-    notes: "",
-    tags: "",
-    transaction_type: "",
-    target_id: "",
-  };
+): Promise<ExternalCallResult | string> => {
+  let result: ExternalCallResult | string;
+
   try {
     result = await axios
       .get(baseURL + route + `/get/${transactionID}`, {

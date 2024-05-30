@@ -55,8 +55,7 @@ export default function LoginComponent() {
 
   // ------ FUNCTIONS ------
   async function login() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await loginSpendilowUser(
+    const externalCallResult: string = await loginSpendilowUser(
       userCredentials
     ).finally(() => {
       setIsLoading(false);

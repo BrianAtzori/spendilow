@@ -11,7 +11,10 @@ const route: string = "/authenticated-users/budgets";
 import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
 
 // ------ TYPESCRIPT ------
-import { SpendilowBudget } from "../../../shared/interfaces";
+import {
+  ExternalCallResult,
+  SpendilowBudget,
+} from "../../../shared/interfaces";
 
 const createNewSpendilowUserBudget = async (
   newSpendilowBudget: SpendilowBudget
@@ -58,15 +61,9 @@ const createNewSpendilowUserBudget = async (
 };
 
 const getSpendilowUserBudgets = async (): Promise<
-  SpendilowBudget[] | string[]
+  ExternalCallResult | string
 > => {
-  let result: SpendilowBudget[] | string[] = [
-    {
-      id: "",
-      name: "",
-      description: "",
-    },
-  ];
+  let result: ExternalCallResult | string;
 
   try {
     result = await axios
@@ -83,7 +80,7 @@ const getSpendilowUserBudgets = async (): Promise<
         );
       });
   } catch (error) {
-    result[0] = apiErrorResponseHandler(
+    result = apiErrorResponseHandler(
       500,
       "Non siamo riusciti a recuperare le tue transazioni, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
     );

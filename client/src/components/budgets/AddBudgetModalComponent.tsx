@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // ------ REACT ------
 import React, { useRef, useEffect, SyntheticEvent, useState } from "react";
 
@@ -11,9 +10,17 @@ import { createNewSpendilowUserBudget } from "../../services/authenticated-users
 // ------- TYPESCRIPT ------
 import { SpendilowBudget } from "../../shared/interfaces";
 
-export default function AddBudgetModalComponent({ visible, onClose }: any) {
+interface AddBudgetModalProps {
+  visible: boolean;
+  onClose: (value: React.SetStateAction<boolean>) => void;
+}
+
+export default function AddBudgetModalComponent({
+  visible,
+  onClose,
+}: AddBudgetModalProps) {
   // ------ HOOKS ------
-  const modalRef: any = useRef(null);
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (!modalRef.current) {
@@ -80,8 +87,7 @@ export default function AddBudgetModalComponent({ visible, onClose }: any) {
   }
 
   async function addNewBudget() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await createNewSpendilowUserBudget(
+    const externalCallResult: string = await createNewSpendilowUserBudget(
       newSpendilowUserBudget
     ).finally(() => {
       setIsLoading(false);

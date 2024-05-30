@@ -10,10 +10,22 @@ import {
 import TransactionsDisplayerComponent from "../transactions/TransactionsDisplayerComponent";
 import NoResultsComponent from "../shared/NoResultsComponent";
 import BudgetDataFunctionsComponent from "./BudgetDataFunctionsComponent";
-import { SpendilowBudgetAPIResponse } from "../../shared/interfaces";
+import {
+  SpendilowError,
+  SpendilowBudgetAPIResponse,
+  SpendilowBudget,
+  ExternalCallResult,
+} from "../../shared/interfaces";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default function BudgetMenuModalComponent({ visible, onClose }: any) {
+interface BudgetMenuModalProps {
+  visible: boolean;
+  onClose: (value: React.SetStateAction<boolean>) => void;
+}
+
+export default function BudgetMenuModalComponent({
+  visible,
+  onClose,
+}: BudgetMenuModalProps) {
   // ------ HOOKS ------
   useEffect(() => {
     if (!modalRef.current) {
@@ -38,20 +50,20 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
       transactions: [],
     });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const modalRef: any = useRef(null);
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isEditingLoading, setIsEditingLoading] = useState(false);
 
-  const [budgetMenuError, setBudgetMenuError] = useState({
+  const [budgetMenuError, setBudgetMenuError] = useState<SpendilowError>({
     state: false,
     message: "Errore in fase di recupero del budget.",
   });
-  const [budgetnMenuEditingError, setBudgetMenuEditingError] = useState({
-    state: false,
-    message: "Errore in fase di modifica del budget.",
-  });
+  const [budgetMenuEditingError, setBudgetMenuEditingError] =
+    useState<SpendilowError>({
+      state: false,
+      message: "Errore in fase di modifica del budget.",
+    });
 
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -102,17 +114,25 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
   }
   // ------ FUNCTIONS ------
   async function getBudget() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await getSpendilowUserBudget(
-      currentBudgetId
-    ).finally(() => {
-      setIsLoading(false);
-    });
+    const externalCallResult:
+      | SpendilowBudgetAPIResponse
+      | string
+      | SpendilowBudget = await getSpendilowUserBudget(currentBudgetId).finally(
+      () => {
+        setIsLoading(false);
+      }
+    );
 
-    if (externalCallResult.budget && externalCallResult.transactions) {
-      setSpendilowUserBudget(externalCallResult);
+    if (
+      (externalCallResult as SpendilowBudgetAPIResponse).budget &&
+      (externalCallResult as SpendilowBudgetAPIResponse).transactions
+    ) {
+      setSpendilowUserBudget(externalCallResult as SpendilowBudgetAPIResponse);
     } else {
-      setBudgetMenuError({ state: true, message: externalCallResult });
+      setBudgetMenuError({
+        state: true,
+        message: externalCallResult as string,
+      });
     }
   }
 
@@ -123,18 +143,18 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
     const { id, name, description } = spendilowUserBudget.budget;
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await editSpendilowUserBudget({
-        id,
-        name,
-        description,
-      }).finally(() => {
-        setIsEditingLoading(false);
-      });
+      const externalCallResult: ExternalCallResult | string =
+        await editSpendilowUserBudget({
+          id,
+          name,
+          description,
+        }).finally(() => {
+          setIsEditingLoading(false);
+        });
 
       console.log(externalCallResult);
 
-      if (externalCallResult.success) {
+      if ((externalCallResult as ExternalCallResult).success) {
         window.location.href =
           import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {
@@ -173,7 +193,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
         {budgetMenuError.state ? (
           <>
             <ErrorScreenComponent
-              message={budgetMenuError["message"]}
+              message={budgetMenuError["message"]!}
             ></ErrorScreenComponent>
             <Link to="/">
               <button className="btn btn-accent font-primary bg-accent place-self-end fixed bottom-3 right-3 shadow">
@@ -226,7 +246,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: any) {
           budget={spendilowUserBudget.budget}
           handleChange={handleChange}
           isEditingLoading={isEditingLoading}
-          budgetMenuEditingError={budgetnMenuEditingError}
+          budgetMenuEditingError={budgetMenuEditingError}
           isFormVisible={isFormVisible}
           setIsFormVisible={setIsFormVisible}
         ></BudgetDataFunctionsComponent>

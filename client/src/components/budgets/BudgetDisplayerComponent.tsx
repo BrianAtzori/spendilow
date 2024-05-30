@@ -5,7 +5,7 @@ import {
   setBudgetMenuModalSliceShowing,
 } from "../../redux/reducers/interactions/budgetMenuModalSlice";
 import { deleteSpendilowUserBudget } from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
-import { SpendilowBudget } from "../../shared/interfaces";
+import { ExternalCallResult, SpendilowBudget } from "../../shared/interfaces";
 
 interface BudgetDisplayerProps {
   userBudgets: SpendilowBudget[];
@@ -79,12 +79,10 @@ export default function BudgetDisplayerComponent({
     const response = confirm("Vuoi eliminare questo budget?");
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await deleteSpendilowUserBudget(
-        budgetId!
-      );
+      const externalCallResult: string | ExternalCallResult =
+        await deleteSpendilowUserBudget(budgetId!);
 
-      if (externalCallResult.success) {
+      if ((externalCallResult as ExternalCallResult).success) {
         window.location.href =
           import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {

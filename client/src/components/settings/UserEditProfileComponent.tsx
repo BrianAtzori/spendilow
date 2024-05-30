@@ -98,8 +98,7 @@ export default function UserEditProfileComponent() {
     setIsLoading(true);
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await editSpendilowUserProfile(
+      const externalCallResult: string = await editSpendilowUserProfile(
         inEditSpendilowUser
       ).finally(() => {
         setIsLoading(false);

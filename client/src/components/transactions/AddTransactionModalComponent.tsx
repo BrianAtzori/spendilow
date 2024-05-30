@@ -12,21 +12,29 @@ import LoaderComponent from "../shared/LoaderComponent";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/hooks";
 import nextId from "react-id-generator";
-import { SpendilowTransaction } from "../../shared/interfaces";
+import {
+  ExternalCallResult,
+  SpendilowTransaction,
+} from "../../shared/interfaces";
 
 // ------ RESOURCES ------
 // https://daisyui.com/components/modal/
 // https://stackoverflow.com/questions/76955824/how-to-control-daisyui-modal-after-update-to-v3-in-reactjs
 // https://stackoverflow.com/questions/40366407/typescript-modal-window
 
+// ------ TYPESCRIPT ------
+interface AddTransactionModalProps {
+  visible: boolean;
+  onClose: (value: React.SetStateAction<boolean>) => void;
+}
+
 export default function AddTransactionModalComponent({
   visible,
   onClose,
-}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-any) {
+}: AddTransactionModalProps) {
   // ------ HOOKS ------
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const modalRef: any = useRef(null);
+
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (!modalRef.current) {
@@ -37,6 +45,7 @@ any) {
 
   useEffect(() => {
     getAvailableBudgets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [areAvailableBudgetsLoading, setAreAvailableBudgetsLoading] =
@@ -130,26 +139,30 @@ any) {
 
   // ------ FUNCTIONS ------
   async function getAvailableBudgets() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await getSpendilowUserBudgets().finally(
-      () => {
+    const externalCallResult: ExternalCallResult | string =
+      await getSpendilowUserBudgets().finally(() => {
         setAreAvailableBudgetsLoading(false);
-      }
-    );
-    if (externalCallResult.budgets) {
-      dispatch(updateUserBudgets(externalCallResult.budgets));
+      });
+
+    if ((externalCallResult as ExternalCallResult).budgets) {
+      dispatch(
+        updateUserBudgets((externalCallResult as ExternalCallResult).budgets)
+      );
     } else {
-      setBudgetsError({ state: true, message: externalCallResult[0] });
+      setBudgetsError({
+        state: true,
+        message: externalCallResult as string,
+      });
     }
   }
 
   async function addNewTransaction() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await createNewSpendilowUserTransaction(
-      newSpendilowUserTransaction
-    ).finally(() => {
-      setIsLoading(false);
-    });
+    const externalCallResult: ExternalCallResult | string =
+      await createNewSpendilowUserTransaction(
+        newSpendilowUserTransaction
+      ).finally(() => {
+        setIsLoading(false);
+      });
 
     console.log(externalCallResult);
 

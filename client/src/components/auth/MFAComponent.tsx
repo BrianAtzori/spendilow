@@ -13,11 +13,10 @@ export default function MFAComponent() {
     generateQR();
   }, []);
 
-  const [QRCode, setQRCode] = useState();
+  const [QRCode, setQRCode] = useState<string>();
 
   async function generateQR() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await activateMFA();
+    const externalCallResult: string = await activateMFA();
 
     externalCallResult.startsWith("Non")
       ? alert(externalCallResult)

@@ -7,7 +7,22 @@ import ErrorComponent from "../shared/ErrorComponent";
 // ------ SERVICES ------
 import { deleteSpendilowUserBudget } from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// ------ TYPESCRIPT ------
+import {
+  ExternalCallResult,
+  SpendilowBudget,
+  SpendilowError,
+} from "../../shared/interfaces";
+
+interface BudgetDataFunctionsProps {
+  budget: SpendilowBudget;
+  isEditingLoading: boolean;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  budgetMenuEditingError: SpendilowError;
+  isFormVisible: boolean;
+  setIsFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export default function BudgetDataFunctionsComponent({
   budget,
   handleChange,
@@ -15,7 +30,7 @@ export default function BudgetDataFunctionsComponent({
   budgetMenuEditingError,
   isFormVisible,
   setIsFormVisible,
-}: any) {
+}: BudgetDataFunctionsProps) {
   // ------ HOOKS ------
   const [isDeletionLoading, setIsLoading] = useState(false);
 
@@ -30,16 +45,14 @@ export default function BudgetDataFunctionsComponent({
     setIsLoading(true);
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await deleteSpendilowUserBudget(
-        budget.id
-      ).finally(() => {
-        setIsLoading(false);
-      });
+      const externalCallResult: ExternalCallResult | string =
+        await deleteSpendilowUserBudget(budget.id).finally(() => {
+          setIsLoading(false);
+        });
 
       console.log(externalCallResult);
 
-      if (externalCallResult.success) {
+      if ((externalCallResult as ExternalCallResult).success) {
         window.location.href =
           import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {
@@ -108,7 +121,7 @@ export default function BudgetDataFunctionsComponent({
         <div className="form-control desktop:w-full">
           {budgetMenuEditingError.state && (
             <ErrorComponent
-              message={budgetMenuEditingError.message}
+              message={budgetMenuEditingError.message!}
             ></ErrorComponent>
           )}
         </div>

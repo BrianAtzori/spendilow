@@ -116,8 +116,7 @@ export default function SignUpComponent() {
 
   // ------ FUNCTIONS ------
   async function signUp() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await signUpNewSpendilowUser(
+    const externalCallResult: string = await signUpNewSpendilowUser(
       newSpendilowUser
     ).finally(() => {
       setIsLoading(false);
