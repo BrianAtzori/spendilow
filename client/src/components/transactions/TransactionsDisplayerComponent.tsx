@@ -13,7 +13,10 @@ import nextId from "react-id-generator";
 import { deleteSpendilowUserTransaction } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
 
 // ------ TYPESCRIPT ------
-import { SpendilowTransaction } from "../../shared/interfaces";
+import {
+  ExternalCallResult,
+  SpendilowTransaction,
+} from "../../shared/interfaces";
 
 type TransactionDisplayerProp = {
   userTransactions: SpendilowTransaction[];
@@ -146,12 +149,10 @@ export default function TransactionsDisplayerComponent({
     );
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const dateManipulation = (date: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let transformedDate: any = "string";
+  const dateManipulation = (date: string | Date) => {
+    let transformedDate: string | Date | string[] = "string";
 
-    transformedDate = date.split("T")[0];
+    transformedDate = (date as string).split("T")[0];
 
     transformedDate = transformedDate.split("-");
 
@@ -165,12 +166,10 @@ export default function TransactionsDisplayerComponent({
     const response = confirm("Vuoi eliminare questa transazione?");
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await deleteSpendilowUserTransaction(
-        transactionID
-      );
+      const externalCallResult: ExternalCallResult | string =
+        await deleteSpendilowUserTransaction(transactionID);
 
-      if (externalCallResult.success) {
+      if ((externalCallResult as ExternalCallResult).success) {
         window.location.href =
           import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {

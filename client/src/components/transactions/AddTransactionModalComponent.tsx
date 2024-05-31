@@ -1,5 +1,11 @@
 // ------ REACT ------
-import React, { useRef, useEffect, SyntheticEvent, useState } from "react";
+import React, {
+  useRef,
+  useEffect,
+  SyntheticEvent,
+  useState,
+  ChangeEvent,
+} from "react";
 
 // ------ COMPONENTS & PAGES ------
 import ErrorComponent from "../shared/ErrorComponent";
@@ -91,8 +97,12 @@ export default function AddTransactionModalComponent({
   };
 
   // ------ FORM HANDLING ------
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
+  const handleChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLSelectElement>
+      | ChangeEvent<HTMLTextAreaElement>
+  ) => {
     if (event.target.name === "transaction_date") {
       setNewSpendilowUserTransaction({
         ...newSpendilowUserTransaction,

@@ -1,5 +1,5 @@
 // ------ PACKAGES ------
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 // ------ ASSETS ------
 import { baseURL } from "../../";
@@ -26,8 +26,7 @@ const createNewSpendilowUserBudget = async (
       .post(baseURL + route + "/new", newSpendilowBudget, {
         withCredentials: true,
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
+      .then((res: AxiosResponse) => {
         switch (res.data.success) {
           case true:
             return res.data.message;
@@ -122,8 +121,7 @@ const getSpendilowUserBudget = async (
 };
 
 const editSpendilowUserBudget = async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  editedBudget: any
+  editedBudget: SpendilowBudget
 ): Promise<string> => {
   let result: string = "";
 

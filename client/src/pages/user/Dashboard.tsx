@@ -18,12 +18,17 @@ import ErrorScreenComponent from "../../components/shared/ErrorScreenComponent";
 import DataDisplayerComponent from "../../components/shared/DataDisplayerComponent";
 import { getSpendilowUserTransactions } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
 import dayjs from "dayjs";
+import {
+  ExternalCallResult,
+  SpendilowTransaction,
+} from "../../shared/interfaces";
 
 export default function Dashboard() {
   //------ HOOKS ------
   useEffect(() => {
     loadDashboard();
     loadTransactions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -42,12 +47,10 @@ export default function Dashboard() {
 
   //------ FUNCTIONS ------
   async function loadDashboard() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await getSpendilowUserProfile().finally(
-      () => {
+    const externalCallResult: ExternalCallResult | string =
+      await getSpendilowUserProfile().finally(() => {
         setIsLoading(false);
-      }
-    );
+      });
 
     if (typeof externalCallResult === "object") {
       dispatch(changeUserLoggedState(true));
@@ -58,27 +61,28 @@ export default function Dashboard() {
   }
 
   async function loadTransactions() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any =
+    const externalCallResult: ExternalCallResult | string =
       await getSpendilowUserTransactions().finally(() => {
         setAreTransactionsLoading(false);
       });
 
     const currentDate = dayjs().subtract(30, "day");
 
-    const filteredTransactions = externalCallResult.transactions.filter(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (transaction: any) => {
-        if (currentDate.isBefore(transaction["transaction_date"])) {
-          return true;
-        }
+    const filteredTransactions = (
+      externalCallResult as ExternalCallResult
+    ).transactions!.filter((transaction: SpendilowTransaction) => {
+      if (currentDate.isBefore(transaction["transaction_date"])) {
+        return true;
       }
-    );
+    });
 
-    if (externalCallResult.transactions) {
+    if ((externalCallResult as ExternalCallResult).transactions) {
       dispatch(updateUserTransactions(filteredTransactions));
     } else {
-      setTransactionsError({ state: true, message: externalCallResult[0] });
+      setTransactionsError({
+        state: true,
+        message: externalCallResult as string,
+      });
     }
   }
   return (

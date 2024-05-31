@@ -3,8 +3,15 @@ import React from "react";
 
 // ------ SERVICE ------
 import nextId from "react-id-generator";
+import { SpendilowTransaction } from "../../../shared/interfaces";
 
-export default function TransactionDataComponent({ transaction }: any) {
+interface TransactionDataProps {
+  transaction: SpendilowTransaction;
+}
+
+export default function TransactionDataComponent({
+  transaction,
+}: TransactionDataProps) {
   // ------ DATA DISPLAY HANDLING ------
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
@@ -68,7 +75,7 @@ export default function TransactionDataComponent({ transaction }: any) {
   };
 
   const dateManipulation = (date: string | Date) => {
-    let transformedDate: any = "string";
+    let transformedDate: string | Date | string[] = "string";
 
     // or the first render will crash
     if (date === undefined) {

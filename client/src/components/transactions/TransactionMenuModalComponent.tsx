@@ -86,8 +86,12 @@ export default function TransactionMenuModalComponent({
   };
 
   // ------ FORM HANDLING ------
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
+  const handleChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     if (event.target.name === "transaction_date") {
       setNewSpendilowUserTransaction({
         ...spendilowUserTransaction,

@@ -21,7 +21,7 @@ class SpendilowTransaction {
     tags,
     transaction_type,
     target_id,
-  }: any) {
+  }: SpendilowTransaction) {
     this.id = id;
     this.user_id = user_id;
     this.amount = amount;

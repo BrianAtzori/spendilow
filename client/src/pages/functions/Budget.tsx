@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import DataDisplayerComponent from "../../components/shared/DataDisplayerComponent";
 import ErrorScreenComponent from "../../components/shared/ErrorScreenComponent";
 import LoaderComponent from "../../components/shared/LoaderComponent";
+import { ExternalCallResult } from "../../shared/interfaces";
 
 export default function Budget() {
   const dispatch = useAppDispatch();
@@ -19,20 +20,24 @@ export default function Budget() {
 
   useEffect(() => {
     loadBudgets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function loadBudgets() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any = await getSpendilowUserBudgets().finally(
-      () => {
+    const externalCallResult: ExternalCallResult | string =
+      await getSpendilowUserBudgets().finally(() => {
         setAreBudgetsLoading(false);
-      }
-    );
+      });
 
-    if (externalCallResult.budgets) {
-      dispatch(updateUserBudgets(externalCallResult.budgets));
+    if ((externalCallResult as ExternalCallResult).budgets) {
+      dispatch(
+        updateUserBudgets((externalCallResult as ExternalCallResult).budgets)
+      );
     } else {
-      setBudgetsError({ state: true, message: externalCallResult[0] });
+      setBudgetsError({
+        state: true,
+        message: externalCallResult as string,
+      });
     }
   }
 

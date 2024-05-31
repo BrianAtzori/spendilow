@@ -34,7 +34,6 @@ export interface SpendilowUserLogin {
 
 export interface SpendilowBudgetAPIResponse {
   budget: SpendilowBudget;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   transactions: SpendilowTransaction[];
 }
 
@@ -42,6 +41,8 @@ export interface ExternalCallResult {
   success?: boolean;
   budgets?: SpendilowBudget[];
   transaction?: SpendilowTransaction;
+  transactions?: SpendilowTransaction[];
+  spendilowUser?: SpendilowUser;
 }
 
 export interface SpendilowError {

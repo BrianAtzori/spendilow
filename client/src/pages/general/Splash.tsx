@@ -18,6 +18,7 @@ export default function Splash() {
 
   useEffect(() => {
     preFlightChecks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function preFlightChecks() {

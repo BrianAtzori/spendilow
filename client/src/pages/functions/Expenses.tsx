@@ -14,6 +14,7 @@ import { updateUserTransactions } from "../../redux/reducers/transactions/userTr
 
 // ------ SERVICES ------
 import { getSpendilowUserTransactions } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
+import { ExternalCallResult } from "../../shared/interfaces";
 
 export default function Expenses() {
   // ------ HOOKS ------
@@ -32,16 +33,22 @@ export default function Expenses() {
 
   //------ FUNCTIONS ------
   async function loadTransactions() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const externalCallResult: any =
+    const externalCallResult: ExternalCallResult | string =
       await getSpendilowUserTransactions().finally(() => {
         setAreTransactionsLoading(false);
       });
 
-    if (externalCallResult.transactions) {
-      dispatch(updateUserTransactions(externalCallResult.transactions));
+    if ((externalCallResult as ExternalCallResult).transactions) {
+      dispatch(
+        updateUserTransactions(
+          (externalCallResult as ExternalCallResult).transactions
+        )
+      );
     } else {
-      setTransactionsError({ state: true, message: externalCallResult[0] });
+      setTransactionsError({
+        state: true,
+        message: externalCallResult as string,
+      });
     }
   }
 

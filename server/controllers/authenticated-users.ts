@@ -1,5 +1,5 @@
 // ------ Imports ------
-import { Request, Response } from "express"; //TS Import
+import { Response } from "express"; //TS Import
 import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");

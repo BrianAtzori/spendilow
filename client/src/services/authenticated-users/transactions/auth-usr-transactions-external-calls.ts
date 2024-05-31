@@ -1,5 +1,5 @@
 // ------ PACKAGES ------
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 // ------ ASSETS ------
 import { baseURL } from "../../";
@@ -15,19 +15,9 @@ import {
 } from "../../../shared/interfaces";
 
 const getSpendilowUserTransactions = async (): Promise<
-  SpendilowTransaction[] | string[]
+  ExternalCallResult | string
 > => {
-  let result: SpendilowTransaction[] | string[] = [
-    {
-      transaction_date: new Date(),
-      amount: 0,
-      title: "",
-      notes: "",
-      tags: "",
-      transaction_type: "",
-      target_id: "",
-    },
-  ];
+  let result: ExternalCallResult | string;
 
   try {
     result = await axios
@@ -44,7 +34,7 @@ const getSpendilowUserTransactions = async (): Promise<
         );
       });
   } catch (error) {
-    result[0] = apiErrorResponseHandler(
+    result = apiErrorResponseHandler(
       500,
       "Non siamo riusciti a recuperare le tue transazioni, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
     );
@@ -63,8 +53,7 @@ const createNewSpendilowUserTransaction = async (
       .post(baseURL + route + "/new", newSpendilowTransaction, {
         withCredentials: true,
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
+      .then((res: AxiosResponse) => {
         switch (res.data.success) {
           case true:
             return res.data.message;
@@ -156,8 +145,7 @@ const deleteSpendilowUserTransaction = async (
 };
 
 const editSpendilowUserTransaction = async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  editedTransaction: any
+  editedTransaction: SpendilowTransaction
 ): Promise<string> => {
   let result: string = "";
 
@@ -165,20 +153,22 @@ const editSpendilowUserTransaction = async (
     editedTransaction;
 
   editedTransaction.transaction_date =
-    editedTransaction.transaction_date.getUTCFullYear().toString() +
+    (editedTransaction.transaction_date as Date).getUTCFullYear().toString() +
     "/" +
-    (editedTransaction.transaction_date.getUTCMonth() + 1).toString() +
+    (
+      (editedTransaction.transaction_date as Date).getUTCMonth() + 1
+    ).toString() +
     "/" +
-    editedTransaction.transaction_date.getUTCDate().toString();
+    (editedTransaction.transaction_date as Date).getUTCDate().toString();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const transactionEditingBody: any = {
+  const transactionEditingBody: SpendilowTransaction = {
     amount,
     title,
     notes,
     tags,
     target_id,
     transaction_type,
+    transaction_date: " ",
   };
 
   transactionEditingBody.transaction_date = editedTransaction.transaction_date;

@@ -14,13 +14,31 @@ import LoaderComponent from "../../shared/LoaderComponent";
 import nextId from "react-id-generator";
 
 // ------ TYPESCRIPT ------
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  ExternalCallResult,
+  SpendilowError,
+  SpendilowTransaction,
+} from "../../../shared/interfaces";
+
+interface TransactionDataFunctionsProps {
+  transaction: SpendilowTransaction;
+  isEditingLoading: boolean;
+  handleChange: (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => void;
+  transactionMenuEditingError: SpendilowError;
+}
+
+// ------ TYPESCRIPT ------
 export default function TransactionDataFunctionsComponent({
   transaction,
   handleChange,
   isEditingLoading,
   transactionMenuEditingError,
-}: any) {
+}: TransactionDataFunctionsProps) {
   // ------ HOOKS ------
 
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -50,15 +68,19 @@ export default function TransactionDataFunctionsComponent({
 
   // ------ FUNCTIONS ------
   async function getAvailableBudgets() {
-    const externalCallResult: any = await getSpendilowUserBudgets().finally(
-      () => {
+    const externalCallResult: ExternalCallResult | string =
+      await getSpendilowUserBudgets().finally(() => {
         setAreAvailableBudgetsLoading(false);
-      }
-    );
-    if (externalCallResult.budgets) {
-      dispatch(updateUserBudgets(externalCallResult.budgets));
+      });
+    if ((externalCallResult as ExternalCallResult).budgets) {
+      dispatch(
+        updateUserBudgets((externalCallResult as ExternalCallResult).budgets)
+      );
     } else {
-      setBudgetsError({ state: true, message: externalCallResult[0] });
+      setBudgetsError({
+        state: true,
+        message: externalCallResult as string,
+      });
     }
   }
 
@@ -67,16 +89,14 @@ export default function TransactionDataFunctionsComponent({
     setIsLoading(true);
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await deleteSpendilowUserTransaction(
-        transaction.id
-      ).finally(() => {
-        setIsLoading(false);
-      });
+      const externalCallResult: ExternalCallResult | string =
+        await deleteSpendilowUserTransaction(transaction.id!).finally(() => {
+          setIsLoading(false);
+        });
 
       console.log(externalCallResult);
 
-      if (externalCallResult.success) {
+      if ((externalCallResult as ExternalCallResult).success) {
         window.location.href =
           import.meta.env.VITE_BASENAME + "/user/dashboard";
       } else {
@@ -226,7 +246,7 @@ export default function TransactionDataFunctionsComponent({
                 <div className="form-control desktop:w-full">
                   {transactionMenuEditingError.state && (
                     <ErrorComponent
-                      message={transactionMenuEditingError.message}
+                      message={transactionMenuEditingError.message!}
                     ></ErrorComponent>
                   )}
                 </div>

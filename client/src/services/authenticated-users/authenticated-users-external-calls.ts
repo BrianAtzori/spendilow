@@ -11,19 +11,12 @@ const route: string = "/authenticated-users";
 import { apiErrorResponseHandler } from "../general/apiErrorResponseHandler";
 
 // ------ TYPESCRIPT ------
-import { SpendilowUser } from "../../shared/interfaces";
+import { ExternalCallResult, SpendilowUser } from "../../shared/interfaces";
 
-const getSpendilowUserProfile = async (): Promise<SpendilowUser | string> => {
-  let result: SpendilowUser | string = {
-    id: "",
-    email: "",
-    isMFAActive: false,
-    savings: 0,
-    salary: 0,
-    profileimage: "",
-    workfield: "",
-    username: "",
-  };
+const getSpendilowUserProfile = async (): Promise<
+  ExternalCallResult | string
+> => {
+  let result: ExternalCallResult | string;
 
   try {
     result = await axios
