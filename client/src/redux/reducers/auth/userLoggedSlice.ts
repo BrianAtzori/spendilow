@@ -1,8 +1,8 @@
 // ------ REDUX ------
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const userLoggedSlice = createSlice({
-  name: "userLogged",
+  name: 'userLogged',
   initialState: {
     value: false,
   },

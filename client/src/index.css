@@ -6,16 +6,15 @@
 @tailwind components;
 @tailwind utilities;
 
-
-*{
-    margin: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  box-sizing: border-box;
 }
 
-html{
-    scroll-behavior: smooth;
+html {
+  scroll-behavior: smooth;
 }
 
-body{
-    background-image: url("./assets/pattern/ffflux.svg");
+body {
+  background-image: url('./assets/pattern/ffflux.svg');
 }

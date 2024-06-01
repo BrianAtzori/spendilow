@@ -1,14 +1,14 @@
 // ------ REDUX ------
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 
 // ------ SLICES ------
-import userLoggedReducer from "./reducers/auth/userLoggedSlice";
-import userProfileReducer from "./reducers/user/userProfileSlice";
-import userTransactionsSlice from "./reducers/transactions/userTransactionsSlice";
-import transactionModalSlice from "./reducers/interactions/transactionModalSlice";
-import transactionMenuModalSlice from "./reducers/interactions/transactionMenuModalSlice";
-import userBudgetSlice from "./reducers/budgets/userBudgetSlice";
-import budgetMenuModalSlice from "./reducers/interactions/budgetMenuModalSlice";
+import userLoggedReducer from './reducers/auth/userLoggedSlice';
+import userProfileReducer from './reducers/user/userProfileSlice';
+import userTransactionsSlice from './reducers/transactions/userTransactionsSlice';
+import transactionModalSlice from './reducers/interactions/transactionModalSlice';
+import transactionMenuModalSlice from './reducers/interactions/transactionMenuModalSlice';
+import userBudgetSlice from './reducers/budgets/userBudgetSlice';
+import budgetMenuModalSlice from './reducers/interactions/budgetMenuModalSlice';
 
 export const store = configureStore({
   reducer: {

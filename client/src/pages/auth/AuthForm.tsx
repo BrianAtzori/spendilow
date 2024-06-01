@@ -1,12 +1,12 @@
 // ------ REACT ------
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 // ------ COMPONENTS & PAGES ------
-import SignUpComponent from "../../components/auth/SignUpComponent";
-import LoginComponent from "../../components/auth/LoginComponent";
-import MFAComponent from "../../components/auth/MFAComponent";
-import MFAVerification from "../../components/auth/MFAVerification";
+import SignUpComponent from '../../components/auth/SignUpComponent';
+import LoginComponent from '../../components/auth/LoginComponent';
+import MFAComponent from '../../components/auth/MFAComponent';
+import MFAVerification from '../../components/auth/MFAVerification';
 
 export default function AuthForm() {
   const { mode } = useParams();
@@ -14,13 +14,13 @@ export default function AuthForm() {
 
   return (
     <>
-      {authMode === "login" && <LoginComponent></LoginComponent>}
+      {authMode === 'login' && <LoginComponent></LoginComponent>}
 
-      {authMode === "sign-up" && <SignUpComponent></SignUpComponent>}
+      {authMode === 'sign-up' && <SignUpComponent></SignUpComponent>}
 
-      {authMode === "mfa" && <MFAComponent></MFAComponent>}
+      {authMode === 'mfa' && <MFAComponent></MFAComponent>}
 
-      {authMode === "mfa-verification" && <MFAVerification></MFAVerification>}
+      {authMode === 'mfa-verification' && <MFAVerification></MFAVerification>}
     </>
   );
 }

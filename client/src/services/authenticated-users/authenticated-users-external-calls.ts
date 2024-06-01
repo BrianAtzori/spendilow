@@ -1,26 +1,24 @@
 // ------ PACKAGES ------
-import axios from "axios";
+import axios from 'axios';
 
 // ------ ASSETS ------
-import { baseURL } from "..";
+import { baseURL } from '..';
 
 // ------ DATA ------
-const route: string = "/authenticated-users";
+const route: string = '/authenticated-users';
 
 // ------ SERVICES ------
-import { apiErrorResponseHandler } from "../general/apiErrorResponseHandler";
+import { apiErrorResponseHandler } from '../general/apiErrorResponseHandler';
 
 // ------ TYPESCRIPT ------
-import { ExternalCallResult, SpendilowUser } from "../../shared/interfaces";
+import { ExternalCallResult, SpendilowUser } from '../../shared/interfaces';
 
-const getSpendilowUserProfile = async (): Promise<
-  ExternalCallResult | string
-> => {
+const getSpendilowUserProfile = async (): Promise<ExternalCallResult | string> => {
   let result: ExternalCallResult | string;
 
   try {
     result = await axios
-      .get(baseURL + route + "/get-profile", {
+      .get(baseURL + route + '/get-profile', {
         withCredentials: true,
       })
       .then((res) => {
@@ -29,13 +27,13 @@ const getSpendilowUserProfile = async (): Promise<
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti a recuperare una sessione di accesso per caricare il tuo profilo, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo."
+          'Non siamo riusciti a recuperare una sessione di accesso per caricare il tuo profilo, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo.',
         );
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti a recuperare una sessione di accesso per caricare il tuo profilo,i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti a recuperare una sessione di accesso per caricare il tuo profilo,i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
@@ -43,26 +41,23 @@ const getSpendilowUserProfile = async (): Promise<
 };
 
 const editSpendilowUserProfile = async (editedSpendilowUser: SpendilowUser) => {
-  let result: string = "";
+  let result: string = '';
 
   try {
     result = await axios
-      .patch(baseURL + route + "/mod/", editedSpendilowUser, {
+      .patch(baseURL + route + '/mod/', editedSpendilowUser, {
         withCredentials: true,
       })
       .then(() => {
-        return "/user/dashboard";
+        return '/user/dashboard';
       })
       .catch((error) => {
-        return apiErrorResponseHandler(
-          error.response.status,
-          error.response.data.errorMessage
-        );
+        return apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "#500 - I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      '#500 - I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
@@ -70,38 +65,35 @@ const editSpendilowUserProfile = async (editedSpendilowUser: SpendilowUser) => {
 };
 
 const logoutSpendilowUserProfile = async (target: string) => {
-  let result: string = "";
+  let result: string = '';
 
   try {
     result = await axios
-      .get(baseURL + route + "/logout/", { withCredentials: true })
+      .get(baseURL + route + '/logout/', { withCredentials: true })
       .then((res) => {
-        if (res.data["logged-out"]) {
+        if (res.data['logged-out']) {
           switch (target) {
-            case "change":
-              return "/auth/login";
+            case 'change':
+              return '/auth/login';
               break;
-            case "logout":
-              return "/";
+            case 'logout':
+              return '/';
               break;
             default:
-              return "/auth/sign-up";
+              return '/auth/sign-up';
               break;
           }
         } else {
-          return "/auth/sign-up";
+          return '/auth/sign-up';
         }
       })
       .catch((error) => {
-        return apiErrorResponseHandler(
-          error.response.status,
-          error.response.data.errorMessage
-        );
+        return apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "#500 - I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      '#500 - I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
@@ -109,26 +101,23 @@ const logoutSpendilowUserProfile = async (target: string) => {
 };
 
 const deleteSpendilowUserProfile = async () => {
-  let result: string = "";
+  let result: string = '';
 
   try {
     result = await axios
-      .delete(baseURL + route + "/del/", {
+      .delete(baseURL + route + '/del/', {
         withCredentials: true,
       })
       .then(() => {
-        return "/";
+        return '/';
       })
       .catch((error) => {
-        return apiErrorResponseHandler(
-          error.response.status,
-          error.response.data.errorMessage
-        );
+        return apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "#500 - I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      '#500 - I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 

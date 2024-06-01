@@ -1,5 +1,5 @@
 // ------ REACT ------
-import React from "react";
+import React from 'react';
 
 // ------ TYPESCRIPT ------
 interface errorProps {
@@ -8,25 +8,22 @@ interface errorProps {
 
 export default function ErrorScreenComponent({ message }: errorProps) {
   return (
-    <div className="hero min-h-screen">
-      <div className="hero-content">
-        <div className="card">
-          <div className="card-body">
-            <div
-              role="alert"
-              className="alert alert-error self-center font-heading text-neutral"
-            >
+    <div className='hero min-h-screen'>
+      <div className='hero-content'>
+        <div className='card'>
+          <div className='card-body'>
+            <div role='alert' className='alert alert-error self-center font-heading text-neutral'>
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="stroke-current shrink-0 h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
+                xmlns='http://www.w3.org/2000/svg'
+                className='stroke-current shrink-0 h-6 w-6'
+                fill='none'
+                viewBox='0 0 24 24'
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
                 />
               </svg>
               <span>{message}</span>

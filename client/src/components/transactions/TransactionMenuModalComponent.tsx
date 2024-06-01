@@ -1,28 +1,26 @@
 // ------ REACT ------
-import React, { useRef, useEffect, SyntheticEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useRef, useEffect, SyntheticEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // ------ COMPONENTS & PAGES ------
-import ErrorScreenComponent from "../shared/ErrorScreenComponent";
-import LoaderComponent from "../shared/LoaderComponent";
-import TransactionDataComponent from "./transaction-menu-modal-components/TransactionDataComponent";
-import TransactionDataFunctionsComponent from "./transaction-menu-modal-components/TransactionDataFunctionsComponent";
+import ErrorScreenComponent from '../shared/ErrorScreenComponent';
+import LoaderComponent from '../shared/LoaderComponent';
+import TransactionDataComponent from './transaction-menu-modal-components/TransactionDataComponent';
+import TransactionDataFunctionsComponent from './transaction-menu-modal-components/TransactionDataFunctionsComponent';
 
 // ------ REDUX ------
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector } from '../../redux/hooks';
 
 // ------ SERVICES ------
-import { getSpendilowUserTransaction } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
-import { editSpendilowUserTransaction } from "../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
+import { getSpendilowUserTransaction } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
+import { editSpendilowUserTransaction } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
 
 // ------ TYPESCRIPT ------
-import {
-  ExternalCallResult,
-  SpendilowTransaction,
-} from "../../shared/interfaces";
+import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
 
 interface TransactionMenuModalProps {
   visible: boolean;
+  // eslint-disable-next-line no-unused-vars
   onClose: (value: React.SetStateAction<boolean>) => void;
 }
 
@@ -41,20 +39,21 @@ export default function TransactionMenuModalComponent({
   }, [visible]);
 
   const currentTransactionID: string = useAppSelector(
-    (state) => state.transactionMenuModal.transactionID
+    (state) => state.transactionMenuModal.transactionID,
   );
 
-  const [spendilowUserTransaction, setNewSpendilowUserTransaction] =
-    useState<SpendilowTransaction>({
-      id: "",
+  const [spendilowUserTransaction, setNewSpendilowUserTransaction] = useState<SpendilowTransaction>(
+    {
+      id: '',
       transaction_date: new Date(),
       amount: 0,
-      title: "",
-      notes: "",
-      tags: "",
-      transaction_type: "Expense",
-      target_id: "",
-    });
+      title: '',
+      notes: '',
+      tags: '',
+      transaction_type: 'Expense',
+      target_id: '',
+    },
+  );
 
   const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -62,16 +61,15 @@ export default function TransactionMenuModalComponent({
 
   const [transactionMenuError, setTransactionMenuError] = useState({
     state: false,
-    message: "Errore in fase di aggiunta della transazione.",
+    message: 'Errore in fase di aggiunta della transazione.',
   });
 
   const [isEditingLoading, setIsEditingLoading] = useState(false);
 
-  const [transactionMenuEditingError, setTransactionMenuEditingError] =
-    useState({
-      state: false,
-      message: "Errore in fase di modifica della transazione.",
-    });
+  const [transactionMenuEditingError, setTransactionMenuEditingError] = useState({
+    state: false,
+    message: 'Errore in fase di modifica della transazione.',
+  });
 
   // ------ DIALOG HANDLING ------
   const handleClose = () => {
@@ -90,9 +88,9 @@ export default function TransactionMenuModalComponent({
     event:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    if (event.target.name === "transaction_date") {
+    if (event.target.name === 'transaction_date') {
       setNewSpendilowUserTransaction({
         ...spendilowUserTransaction,
         [event.target.name]: new Date(event.target.value),
@@ -111,19 +109,19 @@ export default function TransactionMenuModalComponent({
 
     setTransactionMenuError({
       state: false,
-      message: "",
+      message: '',
     });
 
     if (
       spendilowUserTransaction.transaction_date === undefined ||
       spendilowUserTransaction.amount === undefined ||
-      spendilowUserTransaction.title === "" ||
-      spendilowUserTransaction.transaction_type === "" ||
+      spendilowUserTransaction.title === '' ||
+      spendilowUserTransaction.transaction_type === '' ||
       spendilowUserTransaction.transaction_date === null
     ) {
       setTransactionMenuEditingError({
         state: true,
-        message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
+        message: 'Verifica i dati inseriti, alcuni campi sono vuoti!',
       });
     } else {
       await editTransaction();
@@ -132,15 +130,14 @@ export default function TransactionMenuModalComponent({
 
   // ------ FUNCTIONS ------
   async function getTransaction() {
-    const externalCallResult: ExternalCallResult | string =
-      await getSpendilowUserTransaction(currentTransactionID).finally(() => {
-        setIsLoading(false);
-      });
+    const externalCallResult: ExternalCallResult | string = await getSpendilowUserTransaction(
+      currentTransactionID,
+    ).finally(() => {
+      setIsLoading(false);
+    });
 
     if ((externalCallResult as ExternalCallResult).transaction) {
-      setNewSpendilowUserTransaction(
-        (externalCallResult as ExternalCallResult).transaction!
-      );
+      setNewSpendilowUserTransaction((externalCallResult as ExternalCallResult).transaction!);
     } else {
       setTransactionMenuError({
         state: true,
@@ -150,40 +147,28 @@ export default function TransactionMenuModalComponent({
   }
 
   async function editTransaction() {
-    const response = confirm("Vuoi modificare la transazione?");
+    const response = confirm('Vuoi modificare la transazione?');
     setIsLoading(true);
 
-    const {
-      id,
-      amount,
-      title,
-      notes,
-      tags,
-      target_id,
-      transaction_date,
-      transaction_type,
-    } = spendilowUserTransaction;
+    const { id, amount, title, notes, tags, target_id, transaction_date, transaction_type } =
+      spendilowUserTransaction;
 
     if (response) {
-      const externalCallResult: ExternalCallResult | string =
-        await editSpendilowUserTransaction({
-          id,
-          amount,
-          title,
-          notes,
-          tags,
-          target_id,
-          transaction_date,
-          transaction_type,
-        }).finally(() => {
-          setIsEditingLoading(false);
-        });
-
-      console.log(externalCallResult);
+      const externalCallResult: ExternalCallResult | string = await editSpendilowUserTransaction({
+        id,
+        amount,
+        title,
+        notes,
+        tags,
+        target_id,
+        transaction_date,
+        transaction_type,
+      }).finally(() => {
+        setIsEditingLoading(false);
+      });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href =
-          import.meta.env.VITE_BASENAME + "/user/dashboard";
+        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
       } else {
         setTransactionMenuEditingError({
           state: true,
@@ -196,34 +181,23 @@ export default function TransactionMenuModalComponent({
   }
 
   return (
-    <dialog
-      ref={modalRef}
-      id="menu_transaction_modal"
-      className="modal"
-      onCancel={handleESC}
-    >
+    <dialog ref={modalRef} id='menu_transaction_modal' className='modal' onCancel={handleESC}>
       <button
-        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 bg-base-100"
+        className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 bg-base-100'
         onClick={handleClose}
       >
         ✕
       </button>
-      <form
-        method="dialog"
-        className="modal-box"
-        onSubmit={verifyInputThenTriggerEditing}
-      >
+      <form method='dialog' className='modal-box' onSubmit={verifyInputThenTriggerEditing}>
         <LoaderComponent
           isLoading={isLoading}
-          message={"Modifica della transazione in corso 💰"}
+          message={'Modifica della transazione in corso 💰'}
         ></LoaderComponent>
         {transactionMenuError.state ? (
           <>
-            <ErrorScreenComponent
-              message={transactionMenuError["message"]}
-            ></ErrorScreenComponent>
-            <Link to="/">
-              <button className="btn btn-accent font-primary bg-accent place-self-end fixed bottom-3 right-3 shadow">
+            <ErrorScreenComponent message={transactionMenuError['message']}></ErrorScreenComponent>
+            <Link to='/'>
+              <button className='btn btn-accent font-primary bg-accent place-self-end fixed bottom-3 right-3 shadow'>
                 Torna alla home
               </button>
             </Link>

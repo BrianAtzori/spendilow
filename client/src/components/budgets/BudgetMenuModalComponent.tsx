@@ -1,31 +1,29 @@
-import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
-import LoaderComponent from "../shared/LoaderComponent";
-import ErrorScreenComponent from "../shared/ErrorScreenComponent";
-import { Link } from "react-router-dom";
+import React, { SyntheticEvent, useEffect, useRef, useState } from 'react';
+import { useAppSelector } from '../../redux/hooks';
+import LoaderComponent from '../shared/LoaderComponent';
+import ErrorScreenComponent from '../shared/ErrorScreenComponent';
+import { Link } from 'react-router-dom';
 import {
   editSpendilowUserBudget,
   getSpendilowUserBudget,
-} from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
-import TransactionsDisplayerComponent from "../transactions/TransactionsDisplayerComponent";
-import NoResultsComponent from "../shared/NoResultsComponent";
-import BudgetDataFunctionsComponent from "./BudgetDataFunctionsComponent";
+} from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
+import TransactionsDisplayerComponent from '../transactions/TransactionsDisplayerComponent';
+import NoResultsComponent from '../shared/NoResultsComponent';
+import BudgetDataFunctionsComponent from './BudgetDataFunctionsComponent';
 import {
   SpendilowError,
   SpendilowBudgetAPIResponse,
   SpendilowBudget,
   ExternalCallResult,
-} from "../../shared/interfaces";
+} from '../../shared/interfaces';
 
 interface BudgetMenuModalProps {
   visible: boolean;
+  // eslint-disable-next-line no-unused-vars
   onClose: (value: React.SetStateAction<boolean>) => void;
 }
 
-export default function BudgetMenuModalComponent({
-  visible,
-  onClose,
-}: BudgetMenuModalProps) {
+export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMenuModalProps) {
   // ------ HOOKS ------
   useEffect(() => {
     if (!modalRef.current) {
@@ -36,19 +34,16 @@ export default function BudgetMenuModalComponent({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  const currentBudgetId: string = useAppSelector(
-    (state) => state.budgetMenuModal.budgetID
-  );
+  const currentBudgetId: string = useAppSelector((state) => state.budgetMenuModal.budgetID);
 
-  const [spendilowUserBudget, setSpendilowUserBudget] =
-    useState<SpendilowBudgetAPIResponse>({
-      budget: {
-        id: "",
-        name: "",
-        description: "",
-      },
-      transactions: [],
-    });
+  const [spendilowUserBudget, setSpendilowUserBudget] = useState<SpendilowBudgetAPIResponse>({
+    budget: {
+      id: '',
+      name: '',
+      description: '',
+    },
+    transactions: [],
+  });
 
   const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -57,13 +52,12 @@ export default function BudgetMenuModalComponent({
 
   const [budgetMenuError, setBudgetMenuError] = useState<SpendilowError>({
     state: false,
-    message: "Errore in fase di recupero del budget.",
+    message: 'Errore in fase di recupero del budget.',
   });
-  const [budgetMenuEditingError, setBudgetMenuEditingError] =
-    useState<SpendilowError>({
-      state: false,
-      message: "Errore in fase di modifica del budget.",
-    });
+  const [budgetMenuEditingError, setBudgetMenuEditingError] = useState<SpendilowError>({
+    state: false,
+    message: 'Errore in fase di modifica del budget.',
+  });
 
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -95,18 +89,18 @@ export default function BudgetMenuModalComponent({
 
     setBudgetMenuEditingError({
       state: false,
-      message: "",
+      message: '',
     });
 
     if (
       spendilowUserBudget.budget.name === undefined ||
       spendilowUserBudget.budget.description === undefined ||
-      spendilowUserBudget.budget.name === "" ||
-      spendilowUserBudget.budget.description === ""
+      spendilowUserBudget.budget.name === '' ||
+      spendilowUserBudget.budget.description === ''
     ) {
       setBudgetMenuEditingError({
         state: true,
-        message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
+        message: 'Verifica i dati inseriti, alcuni campi sono vuoti!',
       });
     } else {
       await editBudget();
@@ -114,14 +108,10 @@ export default function BudgetMenuModalComponent({
   }
   // ------ FUNCTIONS ------
   async function getBudget() {
-    const externalCallResult:
-      | SpendilowBudgetAPIResponse
-      | string
-      | SpendilowBudget = await getSpendilowUserBudget(currentBudgetId).finally(
-      () => {
+    const externalCallResult: SpendilowBudgetAPIResponse | string | SpendilowBudget =
+      await getSpendilowUserBudget(currentBudgetId).finally(() => {
         setIsLoading(false);
-      }
-    );
+      });
 
     if (
       (externalCallResult as SpendilowBudgetAPIResponse).budget &&
@@ -137,26 +127,22 @@ export default function BudgetMenuModalComponent({
   }
 
   async function editBudget() {
-    const response = confirm("Vuoi modificare il budget?");
+    const response = confirm('Vuoi modificare il budget?');
     setIsLoading(true);
 
     const { id, name, description } = spendilowUserBudget.budget;
 
     if (response) {
-      const externalCallResult: ExternalCallResult | string =
-        await editSpendilowUserBudget({
-          id,
-          name,
-          description,
-        }).finally(() => {
-          setIsEditingLoading(false);
-        });
-
-      console.log(externalCallResult);
+      const externalCallResult: ExternalCallResult | string = await editSpendilowUserBudget({
+        id,
+        name,
+        description,
+      }).finally(() => {
+        setIsEditingLoading(false);
+      });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href =
-          import.meta.env.VITE_BASENAME + "/user/dashboard";
+        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
       } else {
         setBudgetMenuEditingError({
           state: true,
@@ -169,62 +155,49 @@ export default function BudgetMenuModalComponent({
   }
 
   return (
-    <dialog
-      ref={modalRef}
-      id="menu_transaction_modal"
-      className="modal"
-      onCancel={handleESC}
-    >
+    <dialog ref={modalRef} id='menu_transaction_modal' className='modal' onCancel={handleESC}>
       <button
-        className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 bg-base-100"
+        className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 bg-base-100'
         onClick={handleClose}
       >
         ✕
       </button>
-      <form
-        method="dialog"
-        className="modal-box"
-        onSubmit={verifyInputThenTriggerEditing}
-      >
+      <form method='dialog' className='modal-box' onSubmit={verifyInputThenTriggerEditing}>
         <LoaderComponent
           isLoading={isLoading}
-          message={"Modifica del budget in corso 💰"}
+          message={'Modifica del budget in corso 💰'}
         ></LoaderComponent>
         {budgetMenuError.state ? (
           <>
-            <ErrorScreenComponent
-              message={budgetMenuError["message"]!}
-            ></ErrorScreenComponent>
-            <Link to="/">
-              <button className="btn btn-accent font-primary bg-accent place-self-end fixed bottom-3 right-3 shadow">
+            <ErrorScreenComponent message={budgetMenuError['message']!}></ErrorScreenComponent>
+            <Link to='/'>
+              <button className='btn btn-accent font-primary bg-accent place-self-end fixed bottom-3 right-3 shadow'>
                 Torna alla home
               </button>
             </Link>
           </>
         ) : (
           <>
-            <div className="flex flex-row gap-2 justify-between align-middle">
-              <div className="flex flex-row gap-2 justify-start align-middle">
-                <h1 className="font-primary font-bold">
-                  {spendilowUserBudget.budget.name}
-                </h1>
+            <div className='flex flex-row gap-2 justify-between align-middle'>
+              <div className='flex flex-row gap-2 justify-start align-middle'>
+                <h1 className='font-primary font-bold'>{spendilowUserBudget.budget.name}</h1>
               </div>
             </div>
-            <div className="divider font-primary divider-neutral opacity-50"></div>
-            <div className="font-body text-sm">
-              <label className="label">
-                <span className="label-text font-bold">Descrizione:</span>
+            <div className='divider font-primary divider-neutral opacity-50'></div>
+            <div className='font-body text-sm'>
+              <label className='label'>
+                <span className='label-text font-bold'>Descrizione:</span>
               </label>
-              <p className="mb-2">{spendilowUserBudget.budget.description}</p>
-              <label className="label">
-                <span className="label-text font-bold">Totale:</span>
+              <p className='mb-2'>{spendilowUserBudget.budget.description}</p>
+              <label className='label'>
+                <span className='label-text font-bold'>Totale:</span>
               </label>
-              <div className="flex flex-row flex-wrap justify-start">0.0</div>
-              <div className="divider font-primary divider-neutral opacity-50"></div>
+              <div className='flex flex-row flex-wrap justify-start'>0.0</div>
+              <div className='divider font-primary divider-neutral opacity-50'></div>
               {!isFormVisible ? (
                 <>
-                  <label className="label">
-                    <span className="label-text font-bold">Transazioni:</span>
+                  <label className='label'>
+                    <span className='label-text font-bold'>Transazioni:</span>
                   </label>
                   {spendilowUserBudget.transactions.length === 0 ? (
                     <>

@@ -1,29 +1,26 @@
 // ------ PACKAGES ------
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from 'axios';
 
 // ------ ASSETS ------
-import { baseURL } from "../../";
+import { baseURL } from '../../';
 
 // ------ DATA ------
-const route: string = "/authenticated-users/budgets";
+const route: string = '/authenticated-users/budgets';
 
 // ------ SERVICES ------
-import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
+import { apiErrorResponseHandler } from '../../general/apiErrorResponseHandler';
 
 // ------ TYPESCRIPT ------
-import {
-  ExternalCallResult,
-  SpendilowBudget,
-} from "../../../shared/interfaces";
+import { ExternalCallResult, SpendilowBudget } from '../../../shared/interfaces';
 
 const createNewSpendilowUserBudget = async (
-  newSpendilowBudget: SpendilowBudget
+  newSpendilowBudget: SpendilowBudget,
 ): Promise<string> => {
-  let result: string = "";
+  let result: string = '';
 
   try {
     result = await axios
-      .post(baseURL + route + "/new", newSpendilowBudget, {
+      .post(baseURL + route + '/new', newSpendilowBudget, {
         withCredentials: true,
       })
       .then((res: AxiosResponse) => {
@@ -34,39 +31,34 @@ const createNewSpendilowUserBudget = async (
           case false:
             return apiErrorResponseHandler(
               400,
-              "Qualcosa é andato storto nella creazione della transazione, ricontrolla i dati e riprova oppure contatta il supporto con questo messaggio:" +
-                res.data.message
+              'Qualcosa é andato storto nella creazione della transazione, ricontrolla i dati e riprova oppure contatta il supporto con questo messaggio:' +
+                res.data.message,
             );
             break;
           default:
-            return "/user/dashboard";
+            return '/user/dashboard';
             break;
         }
       })
       .catch((error) => {
-        return apiErrorResponseHandler(
-          error.response.status,
-          error.response.data.errorMessage
-        );
+        return apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "#500 - Qualcosa é andato storto nella creazione della  I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      '#500 - Qualcosa é andato storto nella creazione della  I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
   return result;
 };
 
-const getSpendilowUserBudgets = async (): Promise<
-  ExternalCallResult | string
-> => {
+const getSpendilowUserBudgets = async (): Promise<ExternalCallResult | string> => {
   let result: ExternalCallResult | string;
 
   try {
     result = await axios
-      .get(baseURL + route + "/get/all", {
+      .get(baseURL + route + '/get/all', {
         withCredentials: true,
       })
       .then((res) => {
@@ -75,26 +67,24 @@ const getSpendilowUserBudgets = async (): Promise<
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti a recuperare le tue transazioni, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+          'Non siamo riusciti a recuperare le tue transazioni, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto.',
         );
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti a recuperare le tue transazioni, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti a recuperare le tue transazioni, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
   return result;
 };
 
-const getSpendilowUserBudget = async (
-  budgetId: string
-): Promise<SpendilowBudget | string> => {
+const getSpendilowUserBudget = async (budgetId: string): Promise<SpendilowBudget | string> => {
   let result: SpendilowBudget | string = {
-    id: "",
-    name: "",
-    description: "",
+    id: '',
+    name: '',
+    description: '',
   };
   try {
     result = await axios
@@ -107,23 +97,21 @@ const getSpendilowUserBudget = async (
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti a recuperare il tuo budget, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+          'Non siamo riusciti a recuperare il tuo budget, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto.',
         );
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti a recuperare il tuo budget, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti a recuperare il tuo budget, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
   return result;
 };
 
-const editSpendilowUserBudget = async (
-  editedBudget: SpendilowBudget
-): Promise<string> => {
-  let result: string = "";
+const editSpendilowUserBudget = async (editedBudget: SpendilowBudget): Promise<string> => {
+  let result: string = '';
 
   try {
     result = await axios
@@ -136,23 +124,21 @@ const editSpendilowUserBudget = async (
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti a modificare il tuo budget, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+          'Non siamo riusciti a modificare il tuo budget, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto.',
         );
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti a modificare il tuo budget, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti a modificare il tuo budget, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
   return result;
 };
 
-const deleteSpendilowUserBudget = async (
-  budgetId?: string
-): Promise<string> => {
-  let result: string = "";
+const deleteSpendilowUserBudget = async (budgetId?: string): Promise<string> => {
+  let result: string = '';
 
   try {
     result = await axios
@@ -165,13 +151,13 @@ const deleteSpendilowUserBudget = async (
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti ad eliminare questo budget, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+          'Non siamo riusciti ad eliminare questo budget, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto.',
         );
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti ad eliminare questo budget, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti ad eliminare questo budget, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 

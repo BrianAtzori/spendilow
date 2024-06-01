@@ -1,22 +1,19 @@
 // ------ REACT ------
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 // ------ PAGES & COMPONENTS
-import ErrorComponent from "../shared/ErrorComponent";
+import ErrorComponent from '../shared/ErrorComponent';
 
 // ------ SERVICES ------
-import { deleteSpendilowUserBudget } from "../../services/authenticated-users/budgets/auth-usr-budgets-external-calls";
+import { deleteSpendilowUserBudget } from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
 
 // ------ TYPESCRIPT ------
-import {
-  ExternalCallResult,
-  SpendilowBudget,
-  SpendilowError,
-} from "../../shared/interfaces";
+import { ExternalCallResult, SpendilowBudget, SpendilowError } from '../../shared/interfaces';
 
 interface BudgetDataFunctionsProps {
   budget: SpendilowBudget;
   isEditingLoading: boolean;
+  // eslint-disable-next-line no-unused-vars
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   budgetMenuEditingError: SpendilowError;
   isFormVisible: boolean;
@@ -36,25 +33,23 @@ export default function BudgetDataFunctionsComponent({
 
   const [budgetMenuDeletionError, setBudgetMenuDeletionError] = useState({
     state: false,
-    message: "Errore in fase di eliminazione del budget.",
+    message: 'Errore in fase di eliminazione del budget.',
   });
 
   // ------ FUNCTIONS ------
   async function deleteBudget() {
-    const response = confirm("Vuoi eliminare questo budget?");
+    const response = confirm('Vuoi eliminare questo budget?');
     setIsLoading(true);
 
     if (response) {
-      const externalCallResult: ExternalCallResult | string =
-        await deleteSpendilowUserBudget(budget.id).finally(() => {
-          setIsLoading(false);
-        });
-
-      console.log(externalCallResult);
+      const externalCallResult: ExternalCallResult | string = await deleteSpendilowUserBudget(
+        budget.id,
+      ).finally(() => {
+        setIsLoading(false);
+      });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href =
-          import.meta.env.VITE_BASENAME + "/user/dashboard";
+        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
       } else {
         setBudgetMenuDeletionError({
           state: true,
@@ -68,49 +63,49 @@ export default function BudgetDataFunctionsComponent({
 
   return (
     <>
-      <div className="flex flex-col gap-2">
+      <div className='flex flex-col gap-2'>
         {isFormVisible && (
-          <div className="form-control desktop:w-full">
-            <div className="flex flex-col gap-4 font-heading desktop:flex-row desktop:flex-wrap desktop:justify-between">
-              <div className="form-control desktop:w-5/12">
-                <label className="label">
-                  <span className="label-text font-bold">Nome</span>
+          <div className='form-control desktop:w-full'>
+            <div className='flex flex-col gap-4 font-heading desktop:flex-row desktop:flex-wrap desktop:justify-between'>
+              <div className='form-control desktop:w-5/12'>
+                <label className='label'>
+                  <span className='label-text font-bold'>Nome</span>
                 </label>
                 <input
-                  className="input input-bordered"
-                  id="name"
-                  name="name"
-                  placeholder="Viaggio 2024"
+                  className='input input-bordered'
+                  id='name'
+                  name='name'
+                  placeholder='Viaggio 2024'
                   onChange={handleChange}
                   value={budget.name}
                 />
               </div>
-              <div className="form-control desktop:w-5/12">
-                <label className="label">
-                  <span className="label-text font-bold">Descrizione</span>
+              <div className='form-control desktop:w-5/12'>
+                <label className='label'>
+                  <span className='label-text font-bold'>Descrizione</span>
                 </label>
                 <input
-                  className="input input-bordered"
-                  id="description"
-                  name="description"
-                  placeholder="Un viaggio bellissimo"
+                  className='input input-bordered'
+                  id='description'
+                  name='description'
+                  placeholder='Un viaggio bellissimo'
                   onChange={handleChange}
                   value={budget.description}
                 />
               </div>
-              <div className="form-control desktop:w-full">
+              <div className='form-control desktop:w-full'>
                 {isEditingLoading ? (
                   <>
-                    <button className="btn btn-accent font-primary">
-                      <span className="loading loading-dots loading-md"></span>
+                    <button className='btn btn-accent font-primary'>
+                      <span className='loading loading-dots loading-md'></span>
                     </button>
                   </>
                 ) : (
                   <>
                     <input
-                      type="submit"
-                      className="btn btn-accent font-primary"
-                      value="Conferma modifiche"
+                      type='submit'
+                      className='btn btn-accent font-primary'
+                      value='Conferma modifiche'
                     ></input>
                   </>
                 )}
@@ -118,43 +113,36 @@ export default function BudgetDataFunctionsComponent({
             </div>
           </div>
         )}
-        <div className="form-control desktop:w-full">
+        <div className='form-control desktop:w-full'>
           {budgetMenuEditingError.state && (
-            <ErrorComponent
-              message={budgetMenuEditingError.message!}
-            ></ErrorComponent>
+            <ErrorComponent message={budgetMenuEditingError.message!}></ErrorComponent>
           )}
         </div>
 
         {!isFormVisible && (
           <button
-            className="btn btn-accent font-primary"
+            className='btn btn-accent font-primary'
             onClick={() => setIsFormVisible(!isFormVisible)}
           >
             Modifica il budget
           </button>
         )}
 
-        <div className="form-control">
+        <div className='form-control'>
           {budgetMenuDeletionError.state && (
-            <ErrorComponent
-              message={budgetMenuDeletionError.message}
-            ></ErrorComponent>
+            <ErrorComponent message={budgetMenuDeletionError.message}></ErrorComponent>
           )}
         </div>
-        <div className="form-control desktop:w-full">
+        <div className='form-control desktop:w-full'>
           {isDeletionLoading ? (
             <>
-              <button className="btn btn-accent font-primary">
-                <span className="loading loading-dots loading-md"></span>
+              <button className='btn btn-accent font-primary'>
+                <span className='loading loading-dots loading-md'></span>
               </button>
             </>
           ) : (
             <>
-              <button
-                className="btn btn-accent font-primary"
-                onClick={deleteBudget}
-              >
+              <button className='btn btn-accent font-primary' onClick={deleteBudget}>
                 Elimina questo budget
               </button>
             </>

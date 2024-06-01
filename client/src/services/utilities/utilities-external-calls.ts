@@ -1,30 +1,27 @@
 // ------ PACKAGES ------
-import axios from "axios";
+import axios from 'axios';
 
 // ------ ASSETS ------
-import { baseURL } from "..";
+import { baseURL } from '..';
 
-const route: string = "/utilities"
+const route: string = '/utilities';
 
 const checkServerAlive = async function (): Promise<boolean> {
+  let isServerAlive: boolean = false;
 
-    let isServerAlive: boolean = false;
+  isServerAlive = await axios
+    .get(baseURL + route + '/check-server-alive/')
+    .then((res) => {
+      if (res.data.available) {
+        return true;
+      }
+      return false;
+    })
+    .catch(function () {
+      return false;
+    });
 
-    isServerAlive = await axios
-        .get(baseURL + route + "/check-server-alive/")
-        .then((res) => {
-            if (res.data.available) {
-                return true
-            }
-            return false
-        })
-        .catch(function () {
-            return false
-        })
+  return isServerAlive;
+};
 
-    return isServerAlive
-}
-
-export {
-    checkServerAlive
-}
+export { checkServerAlive };
