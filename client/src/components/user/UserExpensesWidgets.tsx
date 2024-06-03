@@ -3,16 +3,15 @@ import React from 'react';
 
 // ------ REDUX ------
 import { useAppSelector } from '../../redux/hooks';
+import { SpendilowTransaction, SpendilowUser } from '../../shared/interfaces';
 
 export default function UserExpensesWidgets() {
   // ----- HOOKS ------
-  const transactions: spendilowTransaction[] = useAppSelector(
+  const transactions: SpendilowTransaction[] = useAppSelector(
     (state) => state.userTransactions.transactions,
   );
 
-  const currentSpendilowUser: spendilowUserProfile = useAppSelector(
-    (state) => state.userProfile.value,
-  );
+  const currentSpendilowUser: SpendilowUser = useAppSelector((state) => state.userProfile.value);
 
   // ------ DATA HANDLING ------
   const currentDate = new Date();
@@ -90,7 +89,7 @@ export default function UserExpensesWidgets() {
       <div className='hero tablet:place-items-start'>
         <div className='hero-content flex-col gap-3 min-w-full'>
           <div className='text-left shadow card card-body bg-base-100 tablet:w-full'>
-            <h1 className='text-5xl font-bold font-primary'>Le tue spese</h1>
+            <h1 className='text-5xl font-bold font-primary'>I tuoi movimenti</h1>
             <div className='font-body'>
               <p className=''>
                 Qui potrai trovare il resoconto di tutte le tue entrate e le uscite, insieme ai tuoi
@@ -194,7 +193,7 @@ export default function UserExpensesWidgets() {
                 </div>
                 <div className='stat-title'>I tuoi risparmi totali:</div>
                 <div className='stat-value'>{userExpensesValuesGeneration('total')}</div>
-                <div className='stat-desc'>Uno sforzo oggi, un frutto domani 🍎</div>
+                <div className='stat-desc'>Risparmi iniziali + Entrate + Budget - Spese 💰</div>
               </div>
             </div>
             <div className='stats shadow font-heading tablet:w-5/12 tablet:max-w-xl overflow-hidden'>
@@ -218,10 +217,7 @@ export default function UserExpensesWidgets() {
                 <div className='stat-value text-success'>
                   {userExpensesValuesGeneration('incomes')}
                 </div>
-                <div className='stat-desc'>
-                  Con uno stipendio mensile di
-                  <div className='badge badge-primary mx-2'>{currentSpendilowUser.salary}</div>
-                </div>
+                <div className='stat-desc'>Tutti i movimenti inseriti come "Entrate" ➕</div>
               </div>
             </div>
             <div className='stats shadow font-heading tablet:w-5/12 tablet:max-w-xl overflow-hidden'>
@@ -242,7 +238,7 @@ export default function UserExpensesWidgets() {
                 <div className='stat-value text-info'>
                   {userExpensesValuesGeneration('budgets')}
                 </div>
-                <div className='stat-desc'>A cosa saranno destinati i tuoi risparmi?</div>
+                <div className='stat-desc'>Il totale che hai destinato ai tuoi budget 🐽</div>
               </div>
             </div>
             <div className='stats shadow font-heading tablet:w-5/12 tablet:max-w-xl overflow-hidden'>

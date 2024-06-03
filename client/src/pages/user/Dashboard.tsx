@@ -104,8 +104,8 @@ export default function Dashboard() {
           <UserProfileWidgets></UserProfileWidgets>
           <div className='divider font-primary divider-neutral opacity-50 mx-8'></div>
           <DataDisplayerComponent
-            title='Le tue spese'
-            subtitle="Dai un'occhiata alle spese degli ultimi 30 giorni 🗓️"
+            title='Ultimi movimenti'
+            subtitle="Dai un'occhiata alle transazioni inserite negli ultimi 30 giorni 🗓️"
             mode='transactions'
             // payload={{}}
             isLoading={transactionsLoading}

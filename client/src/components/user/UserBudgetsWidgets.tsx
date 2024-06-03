@@ -19,8 +19,8 @@ export default function UserBudgetsWidgets() {
               <div className='divider font-primary divider-neutral opacity-50 mx-8 desktop:hidden'></div>
               <ul className='list-disc flex flex-col gap-3'>
                 <li>
-                  Ogni entrata inserita dentro Spendilow di default farà parte del tuo budget{' '}
-                  <strong>"Risparmi"</strong>
+                  Ogni <strong>entrata</strong> inserita dentro Spendilow di default farà parte del
+                  tuo budget <strong>"Risparmi"</strong>
                 </li>
                 <li>
                   Puoi <strong>creare un budget</strong> con il bottone presente in questa sezione e

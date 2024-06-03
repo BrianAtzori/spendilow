@@ -163,13 +163,13 @@ export default function SignUpComponent() {
             </div>
             <div className='form-control'>
               <label className='label'>
-                <span className='label-text'>Risparmi</span>
+                <span className='label-text'>Risparmi di partenza</span>
               </label>
               <input
                 className='input input-bordered'
                 id='savings'
                 name='savings'
-                placeholder='Risparmi'
+                placeholder='Quanto possiedi al momento'
                 onChange={handleChange}
                 type='number'
               />

@@ -62,7 +62,7 @@ export default function Budget() {
             <UserBudgetsWidgets></UserBudgetsWidgets>
             <DataDisplayerComponent
               title='Elenco'
-              subtitle='Ecco i budget, lo strumento con cui puoi porti degli obiettivi finanziari 💸'
+              subtitle='Ecco i budget, lo strumento con cui puoi fissare degli obiettivi finanziari 💸'
               mode='budgets'
               isLoading={budgetsLoading}
               error={budgetsError.state}

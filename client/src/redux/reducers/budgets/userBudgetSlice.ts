@@ -6,7 +6,7 @@ export const userBudgetsSlice = createSlice({
   initialState: {
     budgets: [
       {
-        id: 1,
+        id: '1',
         name: '',
         description: '',
       },

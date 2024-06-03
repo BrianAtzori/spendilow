@@ -10,12 +10,12 @@ import ErrorComponent from './ErrorComponent';
 // ------ REDUX ------
 import { useAppSelector } from '../../redux/hooks';
 import BudgetDisplayerComponent from '../budgets/BudgetDisplayerComponent';
+import { SpendilowBudget, SpendilowTransaction } from '../../shared/interfaces';
 
 interface DataDisplayerComponentProps {
   title: string;
   subtitle: string;
   mode: string;
-  // payload: object | object[];
   isLoading: boolean;
   error: boolean;
   errorMessage: string;
@@ -35,7 +35,6 @@ export default function DataDisplayerComponent({
 
   const [displayerMode] = useState(mode);
 
-  //TODO: Quando avremo i budget lo trasformiamo in una funziona che ritorna quello che mi interessa o il componente che vogliamo renderizzare
   const transactions: SpendilowTransaction[] = useAppSelector(
     (state) => state.userTransactions.transactions,
   );
@@ -87,7 +86,7 @@ export default function DataDisplayerComponent({
                       ) : (
                         <>
                           <p className='text-sm mb-4 tablet:hidden text-neutral-500 font-heading'>
-                            (☝🏼 Clicca su una transazione per visualizzarne i dettagli e interagire)
+                            (☝🏼 Clicca su un budget per visualizzarne i dettagli e interagire)
                           </p>
                           <BudgetDisplayerComponent
                             userBudgets={budgets}

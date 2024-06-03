@@ -113,10 +113,10 @@ export default function UserProfileWidgets() {
                     />
                   </svg>
                 </div>
-                <div className='stat-title'>I risparmi degli ultimi 30 giorni:</div>
+                <div className='stat-title'>Negli ultimi 30 giorni hai risparmiato:</div>
                 <div className='stat-value'>{userExpensesValuesGeneration('total')}</div>
                 <div className='stat-desc'>
-                  Continua cosí, parti da una base di
+                  I tuoi risparmi di partenza erano:
                   <div className='badge badge-primary mx-2'>{currentSpendilowUser.savings}</div>
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default function UserProfileWidgets() {
                     />
                   </svg>
                 </div>
-                <div className='stat-title'>Entrate mensili:</div>
+                <div className='stat-title'>Stipendio mensile:</div>
                 <div className='stat-value'>{currentSpendilowUser.salary}</div>
                 <div className='stat-desc'>
                   Lavorando come o nell'ambito di
@@ -165,7 +165,7 @@ export default function UserProfileWidgets() {
                       />
                     </svg>
                   </div>
-                  <div className='stat-title'>Movimento piú recente:</div>
+                  <div className='stat-title'>Ultimo movimento inserito:</div>
                   <div className='stat-desc'>Inserisci una transazione per iniziare</div>
                 </div>
               </div>
@@ -187,7 +187,7 @@ export default function UserProfileWidgets() {
                       />
                     </svg>
                   </div>
-                  <div className='stat-title'>Movimento piú recente:</div>
+                  <div className='stat-title'>Ultimo movimento inserito:</div>
                   {transactions[0].transaction_type === 'Expense' && (
                     <>
                       <div className='stat-value text-error'>{transactions[0].amount}</div>
