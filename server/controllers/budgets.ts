@@ -57,14 +57,12 @@ const getAllBudgets = async (req: any, res: Response) => {
     req.user.id
   );
 
-  if (true) {
-    if (successState) {
-      res.status(StatusCodes.OK).json({ budgets: payload });
-    } else {
-      throw new Error(
-        `La lettura dei budget non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
-      );
-    }
+  if (successState) {
+    res.status(StatusCodes.OK).json({ budgets: payload });
+  } else {
+    throw new Error(
+      `La lettura dei budget non é andata a buon fine, riprova oppure contatta il supporto comunicando questo errore: ${payload}`
+    );
   }
 };
 
