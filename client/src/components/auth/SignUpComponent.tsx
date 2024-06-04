@@ -1,18 +1,10 @@
-// ------ REACT ------
 import React, { SyntheticEvent, useState } from 'react';
-
-// ------ ASSETS ------
 import spendilowLogo from '../../assets/logo/spendilow-logo-svg.svg';
-
-// ------ COMPONENTS & PAGES ------
 import ErrorComponent from '../shared/ErrorComponent';
-
-// ------ SERVICES ------
 import { signUpNewSpendilowUser } from '../../services/users/users-external-calls';
 import { SpendilowUser } from '../../shared/interfaces';
 
 export default function SignUpComponent() {
-  // ------ HOOKS ------
   const [newSpendilowUser, setNewSpendilowUser] = useState<SpendilowUser>({
     email: '',
     password: '',
@@ -31,7 +23,6 @@ export default function SignUpComponent() {
     message: 'Errore in fase di registrazione',
   });
 
-  // ------ FORM HANDLING ------
   const passwordCheck = new RegExp(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])(?=.*[a-zA-Z\d@#$%^&+=]).{8,}$/,
   );
@@ -109,7 +100,6 @@ export default function SignUpComponent() {
     }
   }
 
-  // ------ FUNCTIONS ------
   async function signUp() {
     const externalCallResult: string = await signUpNewSpendilowUser(newSpendilowUser).finally(
       () => {

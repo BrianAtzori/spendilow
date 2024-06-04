@@ -1,16 +1,7 @@
-// ------ PACKAGES ------
 import axios from 'axios';
-
-// ------ ASSETS ------
 import { baseURL } from '..';
-
-// ------ DATA ------
 const route: string = '/authenticated-users';
-
-// ------ SERVICES ------
 import { apiErrorResponseHandler } from '../general/apiErrorResponseHandler';
-
-// ------ TYPESCRIPT ------
 import { ExternalCallResult, SpendilowUser } from '../../shared/interfaces';
 
 const getSpendilowUserProfile = async (): Promise<ExternalCallResult | string> => {

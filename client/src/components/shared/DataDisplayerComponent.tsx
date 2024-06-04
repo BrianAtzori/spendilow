@@ -1,13 +1,8 @@
-// ------ REACT ------
-import React, { useState } from 'react';
-
-// ------ PAGES & COMPONENTS ------
+import { useState } from 'react';
 import NoResultsComponent from './NoResultsComponent';
 import TransactionsDisplayerComponent from '../transactions/TransactionsDisplayerComponent';
 import LoaderComponent from './LoaderComponent';
 import ErrorComponent from './ErrorComponent';
-
-// ------ REDUX ------
 import { useAppSelector } from '../../redux/hooks';
 import BudgetDisplayerComponent from '../budgets/BudgetDisplayerComponent';
 import { SpendilowBudget, SpendilowTransaction } from '../../shared/interfaces';
@@ -31,8 +26,6 @@ export default function DataDisplayerComponent({
   error,
   errorMessage,
 }: DataDisplayerComponentProps) {
-  // ------ HOOKS ------
-
   const [displayerMode] = useState(mode);
 
   const transactions: SpendilowTransaction[] = useAppSelector(

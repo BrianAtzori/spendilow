@@ -1,11 +1,6 @@
-// ------ REACT ------
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-// ------ ASSETS ------
 import spendilowLogo from '../../assets/logo/spendilow-logo-svg.svg';
-
-// ------ SERVICES ------
 import { activateMFA } from '../../services/users/users-external-calls';
 
 export default function MFAComponent() {

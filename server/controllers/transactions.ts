@@ -1,5 +1,4 @@
-// ------ Imports ------
-import { Response } from "express"; //TS Import
+import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
@@ -233,7 +232,6 @@ const bulkDataCreation = async (req: any, res: any) => {
   res.status(StatusCodes.CREATED).json({ message: "OK" });
 };
 
-// ------ Exports ------
 module.exports = {
   createTransaction,
   getAllTransactions,

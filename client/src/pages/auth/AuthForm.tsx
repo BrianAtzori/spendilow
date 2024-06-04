@@ -1,8 +1,5 @@
-// ------ REACT ------
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-// ------ COMPONENTS & PAGES ------
 import SignUpComponent from '../../components/auth/SignUpComponent';
 import LoginComponent from '../../components/auth/LoginComponent';
 import MFAComponent from '../../components/auth/MFAComponent';

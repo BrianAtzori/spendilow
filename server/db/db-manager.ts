@@ -1,6 +1,5 @@
 import { SqlError } from "mariadb";
 
-// ------ Imports ------
 const BadRequestError = require("../errors");
 const dbConnectionPool = require("./db-connector");
 
@@ -802,7 +801,6 @@ const deleteBudgetFromTransactions = async (
   return rows;
 };
 
-// ------ Exports ------
 module.exports = {
   databaseInteraction,
 };

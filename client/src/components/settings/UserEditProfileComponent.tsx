@@ -1,20 +1,10 @@
-//------ REACT ------
 import React, { SyntheticEvent, useState } from 'react';
-
-//------ REDUX ------
 import { useAppSelector } from '../../redux/hooks';
-
-// ------ COMPONENTS & PAGES ------
 import ErrorComponent from '../shared/ErrorComponent';
-
-// ------ SERVICES ------
 import { editSpendilowUserProfile } from '../../services/authenticated-users/authenticated-users-external-calls';
-
-// ------ TYPESCRIPT ------
 import { SpendilowUser } from '../../shared/interfaces';
 
 export default function UserEditProfileComponent() {
-  // ------ HOOKS ------
   const currentSpendilowUser: SpendilowUser = useAppSelector((state) => state.userProfile.value);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +16,6 @@ export default function UserEditProfileComponent() {
 
   const [inEditSpendilowUser, setInEditSpendilowUser] = useState(currentSpendilowUser);
 
-  // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInEditSpendilowUser({
       ...inEditSpendilowUser,
@@ -84,7 +73,6 @@ export default function UserEditProfileComponent() {
     }
   }
 
-  // ------ FUNCTIONS ------
   async function editProfile() {
     const response = confirm('Vuoi modificare il tuo profilo?');
     setIsLoading(true);

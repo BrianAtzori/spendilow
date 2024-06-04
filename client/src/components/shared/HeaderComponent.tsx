@@ -1,12 +1,6 @@
-// ------ REACT ------
-import React from 'react';
 import { Link } from 'react-router-dom';
-
-// ------ ASSETS ------
 import spendilowLogo from '../../assets/logo/spendilow-logo-svg.svg';
 import { TiThMenu } from 'react-icons/ti';
-
-// ------ REDUX ------
 import { useAppSelector } from '../../redux/hooks';
 
 export default function HeaderComponent() {

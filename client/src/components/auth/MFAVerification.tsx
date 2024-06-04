@@ -1,17 +1,9 @@
-// ------ REACT ------
 import React, { useState, SyntheticEvent } from 'react';
-
-// ------ ASSETS ------
 import spendilowLogo from '../../assets/logo/spendilow-logo-svg.svg';
-
-// ------ COMPONENTS & PAGES ------
 import ErrorComponent from '../shared/ErrorComponent';
-
-// ------ SERVICES ------
 import { verifyMFA } from '../../services/users/users-external-calls';
 
 export default function MFAVerification() {
-  // ------ HOOKS ------
   const [userChallenge, setUserChallenge] = useState('');
 
   const [mfaError, setMfaError] = useState({
@@ -21,7 +13,6 @@ export default function MFAVerification() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserChallenge(event.target.value);
   };
@@ -44,7 +35,6 @@ export default function MFAVerification() {
     }
   }
 
-  // ------ FUNCTIONS ------
   async function MFAChallengeVerification() {
     const externalCallResult: string = await verifyMFA(userChallenge).finally(() => {
       setIsLoading(false);

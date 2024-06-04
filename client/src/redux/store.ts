@@ -1,7 +1,4 @@
-// ------ REDUX ------
 import { configureStore } from '@reduxjs/toolkit';
-
-// ------ SLICES ------
 import userLoggedReducer from './reducers/auth/userLoggedSlice';
 import userProfileReducer from './reducers/user/userProfileSlice';
 import userTransactionsSlice from './reducers/transactions/userTransactionsSlice';

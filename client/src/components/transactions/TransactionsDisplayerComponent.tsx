@@ -1,18 +1,10 @@
-// ------ REACT ------
-import React from 'react';
-
-// ------ REDUX ------
 import { useAppDispatch } from '../../redux/hooks';
 import {
   setTransactionMenuModalSliceShowing,
   setTransactionMenuModalSliceTransaction,
 } from '../../redux/reducers/interactions/transactionMenuModalSlice';
-
-// ------ SERVICES ------
 import nextId from 'react-id-generator';
 import { deleteSpendilowUserTransaction } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
-
-// ------ TYPESCRIPT ------
 import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 
@@ -20,15 +12,11 @@ type TransactionDisplayerProp = {
   userTransactions: SpendilowTransaction[];
 };
 
-//A responsive table that render a set of transactions from props
-
 export default function TransactionsDisplayerComponent({
   userTransactions,
 }: TransactionDisplayerProp) {
-  // ------ HOOKS ------
   const dispatch = useAppDispatch();
 
-  // ------ DATA DISPLAY HANDLING ------
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
       case 'Income':
@@ -157,7 +145,6 @@ export default function TransactionsDisplayerComponent({
     return transformedDate[2] + '/' + transformedDate[1] + '/' + transformedDate[0];
   };
 
-  // ------ FUNCTIONS ------
   async function deleteTransaction(transactionID: string) {
     const response = confirm('Vuoi eliminare questa transazione?');
 

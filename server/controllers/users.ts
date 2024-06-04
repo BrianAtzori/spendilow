@@ -1,5 +1,4 @@
-// ------ Imports ------
-import { Request, Response } from "express"; //TS Import
+import { Request, Response } from "express";
 const SpendilowUser = require("../classes/spendilow-user");
 import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
@@ -142,7 +141,6 @@ const verifyMFA = async (req: Request, res: Response) => {
   }
 };
 
-// ------ Exports ------
 module.exports = {
   registerUser,
   loginUser,

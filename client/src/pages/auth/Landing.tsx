@@ -1,11 +1,5 @@
-// ------ REACT ------
-import React from 'react';
 import { Link } from 'react-router-dom';
-
-// ------ ASSETS ------
 import landingImage from '../../assets/auth/landing-image-piggy.jpeg';
-
-//* In this component i can choose to go to login page or to sign up page
 
 export default function Landing() {
   return (

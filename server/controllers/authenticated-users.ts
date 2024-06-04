@@ -1,10 +1,8 @@
-// ------ Imports ------
-import { Response } from "express"; //TS Import
+import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 
-// ------ MODIFY USER ------
 const modifyUser = async (req: any, res: Response) => {
   if (!req.body) {
     throw new BadRequestError(
@@ -175,7 +173,6 @@ const logoutUserProfile = async (req: any, res: Response) => {
     .json({ "logged-out": true });
 };
 
-// ------ Exports ------
 module.exports = {
   modifyUser,
   deleteUser,

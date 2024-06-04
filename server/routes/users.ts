@@ -23,5 +23,4 @@ usersRouter.get("/mfa-activation/", activateMFA);
 // ------ VERIFY MFA ------
 usersRouter.post("/mfa-verification/", verifyMFA);
 
-// ------ Exports ------
 module.exports = usersRouter;

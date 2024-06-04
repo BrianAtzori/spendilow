@@ -26,7 +26,6 @@ interface BudgetMenuModalProps {
 }
 
 export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMenuModalProps) {
-  // ------ HOOKS ------
   useEffect(() => {
     if (!modalRef.current) {
       return;
@@ -65,7 +64,6 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
 
   const [isFormVisible, setIsFormVisible] = useState(false);
 
-  // ------ DIALOG HANDLING ------
   const handleClose = () => {
     if (onClose) {
       onClose(false); //Update Show Dialog State
@@ -77,7 +75,6 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
     handleClose();
   };
 
-  // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSpendilowUserBudget({
       ...spendilowUserBudget,
@@ -110,7 +107,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
       await editBudget();
     }
   }
-  // ------ FUNCTIONS ------
+
   async function getBudget() {
     const externalCallResult: SpendilowBudgetAPIResponse | string | SpendilowBudget =
       await getSpendilowUserBudget(currentBudgetId).finally(() => {

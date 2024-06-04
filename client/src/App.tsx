@@ -1,8 +1,4 @@
-// ------ REACT ------
-import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-
-// ------ COMPONENTS & PAGES ------
 import Splash from './pages/general/Splash';
 import Header from './components/shared/HeaderComponent';
 import Footer from './components/shared/FooterComponent';
@@ -14,8 +10,6 @@ import Budget from './pages/functions/Budget';
 import FloatingMenuComponent from './components/shared/FloatingMenuComponent';
 import AddTransactionModalComponent from './components/transactions/AddTransactionModalComponent';
 import TransactionMenuModalComponent from './components/transactions/TransactionMenuModalComponent';
-
-// ------ REDUX ------
 import { useAppSelector } from './redux/hooks';
 import { useAppDispatch } from './redux/hooks';
 import { setTransactionModalShowing } from './redux/reducers/interactions/transactionModalSlice';
@@ -25,7 +19,6 @@ import { setBudgetMenuModalSliceShowing } from './redux/reducers/interactions/bu
 import BudgetMenuModalComponent from './components/budgets/BudgetMenuModalComponent';
 
 function App() {
-  // ------ HOOKS ------
   const userLogged: boolean = useAppSelector((state) => state.userLogged.value);
   const modalShowing: boolean = useAppSelector((state) => state.transactionModal.isShowing);
   const menuTransactionsShowing: boolean = useAppSelector(

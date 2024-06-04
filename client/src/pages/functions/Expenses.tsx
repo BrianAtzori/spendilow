@@ -1,25 +1,16 @@
-// ------ REACT ------
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-// ------ PAGES & COMPONENTS ------
 import UserExpensesWidgets from '../../components/user/UserExpensesWidgets';
 import ErrorScreenComponent from '../../components/shared/ErrorScreenComponent';
 import LoaderComponent from '../../components/shared/LoaderComponent';
 import DataDisplayerComponent from '../../components/shared/DataDisplayerComponent';
-
-// ------ REDUX ------
 import { useAppDispatch } from '../../redux/hooks';
 import { updateUserTransactions } from '../../redux/reducers/transactions/userTransactionsSlice';
-
-// ------ SERVICES ------
 import { getSpendilowUserTransactions } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
 import { ExternalCallResult } from '../../shared/interfaces';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 
 export default function Expenses() {
-  // ------ HOOKS ------
-
   const dispatch = useAppDispatch();
 
   const [transactionsLoading, setAreTransactionsLoading] = useState(true);
@@ -32,7 +23,6 @@ export default function Expenses() {
     loadTransactions();
   });
 
-  //------ FUNCTIONS ------
   async function loadTransactions() {
     const externalCallResult: ExternalCallResult | string =
       await getSpendilowUserTransactions().finally(() => {

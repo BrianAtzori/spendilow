@@ -1,16 +1,7 @@
-// ------ REACT ------
-import React, { useState } from 'react';
-
-// ------ PAGES & COMPONENTS
+import { useState } from 'react';
 import ErrorComponent from '../shared/ErrorComponent';
-
-// ------ SERVICES ------
 import { deleteSpendilowUserBudget } from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
-
-// ------ REDUX ------
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
-
-// ------ TYPESCRIPT ------
 import { ExternalCallResult, SpendilowBudget, SpendilowError } from '../../shared/interfaces';
 import { useDispatch } from 'react-redux';
 
@@ -32,7 +23,6 @@ export default function BudgetDataFunctionsComponent({
   isFormVisible,
   setIsFormVisible,
 }: BudgetDataFunctionsProps) {
-  // ------ HOOKS ------
   const [isDeletionLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -42,7 +32,6 @@ export default function BudgetDataFunctionsComponent({
     message: 'Errore in fase di eliminazione del budget.',
   });
 
-  // ------ FUNCTIONS ------
   async function deleteBudget() {
     const response = confirm('Vuoi eliminare questo budget?');
     setIsLoading(true);

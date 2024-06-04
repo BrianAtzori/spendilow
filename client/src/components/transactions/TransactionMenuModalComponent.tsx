@@ -1,21 +1,12 @@
-// ------ REACT ------
-import React, { useRef, useEffect, SyntheticEvent, useState } from 'react';
+import { useRef, useEffect, SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-// ------ COMPONENTS & PAGES ------
 import ErrorScreenComponent from '../shared/ErrorScreenComponent';
 import LoaderComponent from '../shared/LoaderComponent';
 import TransactionDataComponent from './transaction-menu-modal-components/TransactionDataComponent';
 import TransactionDataFunctionsComponent from './transaction-menu-modal-components/TransactionDataFunctionsComponent';
-
-// ------ REDUX ------
 import { useAppSelector } from '../../redux/hooks';
-
-// ------ SERVICES ------
 import { getSpendilowUserTransaction } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
 import { editSpendilowUserTransaction } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
-
-// ------ TYPESCRIPT ------
 import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 import { useDispatch } from 'react-redux';
@@ -30,7 +21,6 @@ export default function TransactionMenuModalComponent({
   visible,
   onClose,
 }: TransactionMenuModalProps) {
-  // ------ HOOKS ------
   useEffect(() => {
     if (!modalRef.current) {
       return;
@@ -75,7 +65,6 @@ export default function TransactionMenuModalComponent({
     message: 'Errore in fase di modifica della transazione.',
   });
 
-  // ------ DIALOG HANDLING ------
   const handleClose = () => {
     if (onClose) {
       onClose(false); //Update Show Dialog State
@@ -87,7 +76,6 @@ export default function TransactionMenuModalComponent({
     handleClose();
   };
 
-  // ------ FORM HANDLING ------
   const handleChange = (
     event:
       | React.ChangeEvent<HTMLInputElement>
@@ -132,7 +120,6 @@ export default function TransactionMenuModalComponent({
     }
   }
 
-  // ------ FUNCTIONS ------
   async function getTransaction() {
     const externalCallResult: ExternalCallResult | string = await getSpendilowUserTransaction(
       currentTransactionID,

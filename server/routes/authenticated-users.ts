@@ -23,5 +23,4 @@ authenticatedUsersRouter.get("/get-profile/", getUserProfile);
 // ------ LOGOUT USER PROFILE ------
 authenticatedUsersRouter.get("/logout/", logoutUserProfile);
 
-// ------ Exports ------
 module.exports = authenticatedUsersRouter;

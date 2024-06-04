@@ -1,18 +1,10 @@
-// ------ REACT ------
-import React, { useState } from 'react';
-
-// ------ COMPONENTS & PAGES ------
+import { useState } from 'react';
 import ErrorComponent from '../shared/ErrorComponent';
-
-// ------ REDUX ------
 import { useAppDispatch } from '../../redux/hooks';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
-
-// ------ SERVICES ------
 import { logoutSpendilowUserProfile } from '../../services/authenticated-users/authenticated-users-external-calls';
 
 export default function ChangeOrLogoutComponent() {
-  // ------ HOOKS ------
   const [isLoading, setIsLoading] = useState(false);
 
   const [profileError, setProfileError] = useState({
@@ -22,7 +14,6 @@ export default function ChangeOrLogoutComponent() {
 
   const dispatch = useAppDispatch();
 
-  // ------ FUNCTIONS ------
   async function deleteCookiesAndLogout(operation: string) {
     const response = confirm('Vuoi uscire dal tuo profilo?');
     setIsLoading(true);

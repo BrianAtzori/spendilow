@@ -1,18 +1,11 @@
-// ------ REACT ------
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-// ------ PAGES & COMPONENTS ------
 import LoaderComponent from '../../components/shared/LoaderComponent';
 import UserProfileWidgets from '../../components/user/UserProfileWidgets';
-
-// ------ REDUX ------
 import { useAppDispatch } from '../../redux/hooks';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 import { updateUserProfile } from '../../redux/reducers/user/userProfileSlice';
 import { updateUserTransactions } from '../../redux/reducers/transactions/userTransactionsSlice';
-
-// ------ SERVICES ------
 import { getSpendilowUserProfile } from '../../services/authenticated-users/authenticated-users-external-calls';
 import ErrorScreenComponent from '../../components/shared/ErrorScreenComponent';
 import DataDisplayerComponent from '../../components/shared/DataDisplayerComponent';
@@ -21,7 +14,6 @@ import dayjs from 'dayjs';
 import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
 
 export default function Dashboard() {
-  //------ HOOKS ------
   useEffect(() => {
     loadDashboard();
     loadTransactions();
@@ -41,8 +33,6 @@ export default function Dashboard() {
   });
 
   const dispatch = useAppDispatch();
-
-  //------ FUNCTIONS ------
   async function loadDashboard() {
     const externalCallResult: ExternalCallResult | string = await getSpendilowUserProfile().finally(
       () => {

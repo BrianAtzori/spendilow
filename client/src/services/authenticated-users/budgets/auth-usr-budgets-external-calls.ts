@@ -1,16 +1,7 @@
-// ------ PACKAGES ------
 import axios, { AxiosResponse } from 'axios';
-
-// ------ ASSETS ------
 import { baseURL } from '../../';
-
-// ------ DATA ------
 const route: string = '/authenticated-users/budgets';
-
-// ------ SERVICES ------
 import { apiErrorResponseHandler } from '../../general/apiErrorResponseHandler';
-
-// ------ TYPESCRIPT ------
 import { ExternalCallResult, SpendilowBudget } from '../../../shared/interfaces';
 
 const createNewSpendilowUserBudget = async (

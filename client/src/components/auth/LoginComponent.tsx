@@ -1,20 +1,14 @@
-// ------ REACT ------
 import React, { useState, SyntheticEvent } from 'react';
 
-// ------ ASSETS ------
 import spendilowLogo from '../../assets/logo/spendilow-logo-svg.svg';
 
-// ------ COMPONENTS & PAGES ------
 import ErrorComponent from '../shared/ErrorComponent';
 
-// ------ SERVICES ------
 import { loginSpendilowUser } from '../../services/users/users-external-calls';
 
-// ------ TYPESCRIPT ------
 import { SpendilowUserLogin } from '../../shared/interfaces';
 
 export default function LoginComponent() {
-  // ------ HOOKS ------
   const [userCredentials, setUserCredentials] = useState<SpendilowUserLogin>({
     email: '',
     password: '',
@@ -27,7 +21,6 @@ export default function LoginComponent() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUserCredentials({
       ...userCredentials,
@@ -53,7 +46,6 @@ export default function LoginComponent() {
     }
   }
 
-  // ------ FUNCTIONS ------
   async function login() {
     const externalCallResult: string = await loginSpendilowUser(userCredentials).finally(() => {
       setIsLoading(false);

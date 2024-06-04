@@ -1,13 +1,6 @@
-// ------ PACKAGES ------
 import axios, { AxiosResponse } from 'axios';
-
-// ------ ASSETS ------
 import { baseURL } from '../../';
-
-// ------ DATA ------
 const route: string = '/authenticated-users/transactions';
-
-// ------ SERVICES ------
 import { apiErrorResponseHandler } from '../../general/apiErrorResponseHandler';
 import { ExternalCallResult, SpendilowTransaction } from '../../../shared/interfaces';
 

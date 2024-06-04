@@ -1,10 +1,5 @@
-// ------ REACT ------
-import React, { useEffect, useState } from 'react';
-
-// ------ PAGES & COMPONENTS
+import { useEffect, useState } from 'react';
 import ErrorComponent from '../../shared/ErrorComponent';
-
-// ------ SERVICES ------
 import { deleteSpendilowUserTransaction } from '../../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
 import { getSpendilowUserBudgets } from '../../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
 import { updateUserBudgets } from '../../../redux/reducers/budgets/userBudgetSlice';
@@ -12,8 +7,6 @@ import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux/hooks';
 import LoaderComponent from '../../shared/LoaderComponent';
 import nextId from 'react-id-generator';
-
-// ------ TYPESCRIPT ------
 import {
   ExternalCallResult,
   SpendilowError,
@@ -33,15 +26,12 @@ interface TransactionDataFunctionsProps {
   transactionMenuEditingError: SpendilowError;
 }
 
-// ------ TYPESCRIPT ------
 export default function TransactionDataFunctionsComponent({
   transaction,
   handleChange,
   isEditingLoading,
   transactionMenuEditingError,
 }: TransactionDataFunctionsProps) {
-  // ------ HOOKS ------
-
   const [isFormVisible, setIsFormVisible] = useState(false);
 
   useEffect(() => {
@@ -65,7 +55,6 @@ export default function TransactionDataFunctionsComponent({
 
   const dispatch = useDispatch();
 
-  // ------ FUNCTIONS ------
   async function getAvailableBudgets() {
     const externalCallResult: ExternalCallResult | string = await getSpendilowUserBudgets().finally(
       () => {

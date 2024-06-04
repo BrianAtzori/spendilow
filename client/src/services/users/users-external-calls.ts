@@ -1,16 +1,7 @@
-// ------ PACKAGES ------
 import axios from 'axios';
-
-// ------ ASSETS ------
 import { baseURL } from '..';
-
-// ------ DATA ------
 const route: string = '/users';
-
-// ------ SERVICES ------
 import { apiErrorResponseHandler } from '../general/apiErrorResponseHandler';
-
-// ------ TYPESCRIPT ------
 import { SpendilowUser, SpendilowUserLogin } from '../../shared/interfaces';
 
 const signUpNewSpendilowUser = async function (newSpendilowUser: SpendilowUser): Promise<string> {

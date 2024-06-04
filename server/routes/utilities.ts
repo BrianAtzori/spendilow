@@ -9,5 +9,4 @@ const {checkServerAlive} = require("../controllers/utilities")
 // ------ CHECK SERVER ALIVE ------
 utilitiesRouter.get("/check-server-alive/",checkServerAlive)
 
-// ------ Exports ------
 module.exports = utilitiesRouter;

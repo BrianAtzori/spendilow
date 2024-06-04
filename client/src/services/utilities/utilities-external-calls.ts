@@ -1,7 +1,4 @@
-// ------ PACKAGES ------
 import axios from 'axios';
-
-// ------ ASSETS ------
 import { baseURL } from '..';
 
 const route: string = '/utilities';

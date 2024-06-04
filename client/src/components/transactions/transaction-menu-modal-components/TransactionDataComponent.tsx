@@ -1,7 +1,3 @@
-// ------ REACT ------
-import React from 'react';
-
-// ------ SERVICE ------
 import nextId from 'react-id-generator';
 import { SpendilowTransaction } from '../../../shared/interfaces';
 
@@ -10,7 +6,6 @@ interface TransactionDataProps {
 }
 
 export default function TransactionDataComponent({ transaction }: TransactionDataProps) {
-  // ------ DATA DISPLAY HANDLING ------
   const transactionTypeIconCreator = (type: string) => {
     switch (type) {
       case 'Income':

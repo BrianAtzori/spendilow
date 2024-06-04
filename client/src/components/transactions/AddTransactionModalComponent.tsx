@@ -1,10 +1,7 @@
-// ------ REACT ------
-import React, { useRef, useEffect, SyntheticEvent, useState, ChangeEvent } from 'react';
+import { useRef, useEffect, SyntheticEvent, useState, ChangeEvent } from 'react';
 
-// ------ COMPONENTS & PAGES ------
 import ErrorComponent from '../shared/ErrorComponent';
 
-// ------ SERVICES ------
 import { createNewSpendilowUserTransaction } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
 import { getSpendilowUserBudgets } from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
 import { updateUserBudgets } from '../../redux/reducers/budgets/userBudgetSlice';
@@ -20,7 +17,6 @@ import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice
 // https://stackoverflow.com/questions/76955824/how-to-control-daisyui-modal-after-update-to-v3-in-reactjs
 // https://stackoverflow.com/questions/40366407/typescript-modal-window
 
-// ------ TYPESCRIPT ------
 interface AddTransactionModalProps {
   visible: boolean;
   // eslint-disable-next-line no-unused-vars
@@ -31,8 +27,6 @@ export default function AddTransactionModalComponent({
   visible,
   onClose,
 }: AddTransactionModalProps) {
-  // ------ HOOKS ------
-
   const modalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -76,7 +70,6 @@ export default function AddTransactionModalComponent({
 
   const dispatch = useDispatch();
 
-  // ------ DIALOG HANDLING ------
   const handleClose = () => {
     if (onClose) {
       onClose(false); //Update Show Dialog State
@@ -88,7 +81,6 @@ export default function AddTransactionModalComponent({
     handleClose();
   };
 
-  // ------ FORM HANDLING ------
   const handleChange = (
     event:
       | React.ChangeEvent<HTMLInputElement>
@@ -138,7 +130,6 @@ export default function AddTransactionModalComponent({
     }
   }
 
-  // ------ FUNCTIONS ------
   async function getAvailableBudgets() {
     const externalCallResult: ExternalCallResult | string = await getSpendilowUserBudgets().finally(
       () => {

@@ -1,7 +1,4 @@
-// ------ REACT ------
 import React from 'react';
-
-// ------ TYPESCRIPT ------
 interface errorProps {
   message: string;
 }

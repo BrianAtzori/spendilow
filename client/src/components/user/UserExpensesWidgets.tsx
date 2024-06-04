@@ -1,19 +1,13 @@
-// ------ REACT ------
-import React from 'react';
-
-// ------ REDUX ------
 import { useAppSelector } from '../../redux/hooks';
 import { SpendilowTransaction, SpendilowUser } from '../../shared/interfaces';
 
 export default function UserExpensesWidgets() {
-  // ----- HOOKS ------
   const transactions: SpendilowTransaction[] = useAppSelector(
     (state) => state.userTransactions.transactions,
   );
 
   const currentSpendilowUser: SpendilowUser = useAppSelector((state) => state.userProfile.value);
 
-  // ------ DATA HANDLING ------
   const currentDate = new Date();
 
   const userExpensesValuesGeneration = (mode: string) => {

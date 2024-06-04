@@ -1,7 +1,3 @@
-// ------ REACT ------
-import React from 'react';
-
-// ------ ASSETS ------
 import spendilowLogo from '../../assets/logo/spendilow-logo-svg.svg';
 import { IoLogoGithub } from 'react-icons/io';
 import { IoLogoLinkedin } from 'react-icons/io';

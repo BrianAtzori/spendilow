@@ -1,16 +1,9 @@
-// ------ REACT ------
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
-
-// ------ COMPONENTS & PAGES ------
 import LoaderComponent from '../../components/shared/LoaderComponent';
 import ErrorScreenComponent from '../../components/shared/ErrorScreenComponent';
 import Landing from '../auth/Landing';
-
-// ------ SERVICES ------
 import { checkServerAlive } from '../../services/utilities/utilities-external-calls';
-
-//* This component manage user redirection, if server is alive check if user is logged, if it's logged go to app or go to auth picker
 
 export default function Splash() {
   const [isLoading, setIsLoading] = useState(true);

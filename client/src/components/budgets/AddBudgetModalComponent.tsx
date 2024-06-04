@@ -1,13 +1,6 @@
-// ------ REACT ------
 import React, { useRef, useEffect, SyntheticEvent, useState } from 'react';
-
-// ------ COMPONENTS & PAGES ------
 import ErrorComponent from '../shared/ErrorComponent';
-
-// ------ SERVICES ------
 import { createNewSpendilowUserBudget } from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
-
-// ------- TYPESCRIPT ------
 import { SpendilowBudget } from '../../shared/interfaces';
 
 interface AddBudgetModalProps {
@@ -17,7 +10,6 @@ interface AddBudgetModalProps {
 }
 
 export default function AddBudgetModalComponent({ visible, onClose }: AddBudgetModalProps) {
-  // ------ HOOKS ------
   const modalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -39,7 +31,6 @@ export default function AddBudgetModalComponent({ visible, onClose }: AddBudgetM
     message: 'Errore in fase di creazione del budget.',
   });
 
-  // ------ DIALOG HANDLING ------
   const handleClose = () => {
     if (onClose) {
       onClose(false); //Update Show Dialog State
@@ -51,7 +42,6 @@ export default function AddBudgetModalComponent({ visible, onClose }: AddBudgetM
     handleClose();
   };
 
-  // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSpendilowUserBudget({
       ...newSpendilowUserBudget,

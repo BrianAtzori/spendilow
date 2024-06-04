@@ -1,13 +1,9 @@
-// ------ REACT ------
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-// ------ REDUX ------
 import { useAppDispatch } from '../../redux/hooks';
 import { setTransactionModalShowing } from '../../redux/reducers/interactions/transactionModalSlice';
 
 export default function FloatingMenuComponent() {
-  // ------ HOOKS ------
   const dispatch = useAppDispatch();
 
   return (

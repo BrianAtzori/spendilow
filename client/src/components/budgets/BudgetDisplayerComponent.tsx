@@ -13,7 +13,6 @@ interface BudgetDisplayerProps {
 }
 
 export default function BudgetDisplayerComponent({ userBudgets }: BudgetDisplayerProps) {
-  // ------ HOOKS ------
   const dispatch = useAppDispatch();
 
   const budgetMenuCreator = (budgetId?: string) => {
@@ -73,7 +72,6 @@ export default function BudgetDisplayerComponent({ userBudgets }: BudgetDisplaye
     );
   };
 
-  // ------ FUNCTIONS ------
   async function deleteBudget(budgetId?: string) {
     const response = confirm('Vuoi eliminare questo budget?');
 

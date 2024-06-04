@@ -1,7 +1,3 @@
-//------ REACT ------
-import React from 'react';
-
-// ------ COMPONENTS & PAGES ------
 import UserEditProfileComponent from '../../components/settings/UserEditProfileComponent';
 import ChangeOrLogoutComponent from '../../components/settings/ChangeOrLogoutComponent';
 import UserAccountDeletionComponent from '../../components/settings/UserAccountDeletionComponent';

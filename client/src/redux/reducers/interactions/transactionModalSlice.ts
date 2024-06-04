@@ -1,4 +1,3 @@
-// ------ REDUX ------
 import { createSlice } from '@reduxjs/toolkit';
 
 export const transactionModalSlice = createSlice({
