@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../redux/hooks';
 import { setTransactionModalShowing } from '../../redux/reducers/interactions/transactionModalSlice';
