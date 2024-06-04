@@ -15,6 +15,7 @@ import { updateUserTransactions } from '../../redux/reducers/transactions/userTr
 // ------ SERVICES ------
 import { getSpendilowUserTransactions } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
 import { ExternalCallResult } from '../../shared/interfaces';
+import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 
 export default function Expenses() {
   // ------ HOOKS ------
@@ -40,6 +41,9 @@ export default function Expenses() {
 
     if ((externalCallResult as ExternalCallResult).transactions) {
       dispatch(updateUserTransactions((externalCallResult as ExternalCallResult).transactions));
+      // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+      dispatch(changeUserLoggedState(true));
+      //TODO: Manage success
     } else {
       setTransactionsError({
         state: true,

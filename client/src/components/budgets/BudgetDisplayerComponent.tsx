@@ -6,6 +6,7 @@ import {
 } from '../../redux/reducers/interactions/budgetMenuModalSlice';
 import { deleteSpendilowUserBudget } from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
 import { ExternalCallResult, SpendilowBudget } from '../../shared/interfaces';
+import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 
 interface BudgetDisplayerProps {
   userBudgets: SpendilowBudget[];
@@ -82,7 +83,9 @@ export default function BudgetDisplayerComponent({ userBudgets }: BudgetDisplaye
       );
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        dispatch(changeUserLoggedState(true));
+        //TODO: Manage success
       } else {
         alert(externalCallResult);
       }

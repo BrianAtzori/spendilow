@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../redux/hooks';
 import nextId from 'react-id-generator';
 import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
+import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 
 // ------ RESOURCES ------
 // https://daisyui.com/components/modal/
@@ -147,6 +148,8 @@ export default function AddTransactionModalComponent({
 
     if ((externalCallResult as ExternalCallResult).budgets) {
       dispatch(updateUserBudgets((externalCallResult as ExternalCallResult).budgets));
+      dispatch(changeUserLoggedState(true));
+      //TODO: Manage success
     } else {
       setBudgetsError({
         state: true,
@@ -160,7 +163,7 @@ export default function AddTransactionModalComponent({
       setIsLoading(false);
     });
 
-    //TODO: Manage external call result
+    //TODO: Manage success
 
     window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
   }

@@ -7,8 +7,12 @@ import ErrorComponent from '../shared/ErrorComponent';
 // ------ SERVICES ------
 import { deleteSpendilowUserBudget } from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
 
+// ------ REDUX ------
+import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
+
 // ------ TYPESCRIPT ------
 import { ExternalCallResult, SpendilowBudget, SpendilowError } from '../../shared/interfaces';
+import { useDispatch } from 'react-redux';
 
 interface BudgetDataFunctionsProps {
   budget: SpendilowBudget;
@@ -31,6 +35,8 @@ export default function BudgetDataFunctionsComponent({
   // ------ HOOKS ------
   const [isDeletionLoading, setIsLoading] = useState(false);
 
+  const dispatch = useDispatch();
+
   const [budgetMenuDeletionError, setBudgetMenuDeletionError] = useState({
     state: false,
     message: 'Errore in fase di eliminazione del budget.',
@@ -49,7 +55,9 @@ export default function BudgetDataFunctionsComponent({
       });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        dispatch(changeUserLoggedState(true));
+        //TODO: Manage success
       } else {
         setBudgetMenuDeletionError({
           state: true,

@@ -14,6 +14,7 @@ import { deleteSpendilowUserTransaction } from '../../services/authenticated-use
 
 // ------ TYPESCRIPT ------
 import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
+import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 
 type TransactionDisplayerProp = {
   userTransactions: SpendilowTransaction[];
@@ -165,7 +166,9 @@ export default function TransactionsDisplayerComponent({
         await deleteSpendilowUserTransaction(transactionID);
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        dispatch(changeUserLoggedState(true));
+        //TODO: Manage success
       } else {
         alert(externalCallResult);
       }

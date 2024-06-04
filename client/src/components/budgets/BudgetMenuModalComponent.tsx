@@ -16,6 +16,8 @@ import {
   SpendilowBudget,
   ExternalCallResult,
 } from '../../shared/interfaces';
+import { useDispatch } from 'react-redux';
+import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 
 interface BudgetMenuModalProps {
   visible: boolean;
@@ -49,6 +51,8 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
 
   const [isLoading, setIsLoading] = useState(false);
   const [isEditingLoading, setIsEditingLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const [budgetMenuError, setBudgetMenuError] = useState<SpendilowError>({
     state: false,
@@ -117,7 +121,10 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
       (externalCallResult as SpendilowBudgetAPIResponse).budget &&
       (externalCallResult as SpendilowBudgetAPIResponse).transactions
     ) {
+      dispatch(changeUserLoggedState(true));
+
       setSpendilowUserBudget(externalCallResult as SpendilowBudgetAPIResponse);
+      //TODO: Manage success
     } else {
       setBudgetMenuError({
         state: true,
@@ -142,7 +149,9 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
       });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        dispatch(changeUserLoggedState(true));
+        //TODO: Manage success
       } else {
         setBudgetMenuEditingError({
           state: true,

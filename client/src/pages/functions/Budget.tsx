@@ -8,6 +8,7 @@ import DataDisplayerComponent from '../../components/shared/DataDisplayerCompone
 import ErrorScreenComponent from '../../components/shared/ErrorScreenComponent';
 import LoaderComponent from '../../components/shared/LoaderComponent';
 import { ExternalCallResult } from '../../shared/interfaces';
+import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 
 export default function Budget() {
   const dispatch = useAppDispatch();
@@ -32,6 +33,8 @@ export default function Budget() {
 
     if ((externalCallResult as ExternalCallResult).budgets) {
       dispatch(updateUserBudgets((externalCallResult as ExternalCallResult).budgets));
+      dispatch(changeUserLoggedState(true));
+      //TODO: Manage success
     } else {
       setBudgetsError({
         state: true,

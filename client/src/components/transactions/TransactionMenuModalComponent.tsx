@@ -17,6 +17,8 @@ import { editSpendilowUserTransaction } from '../../services/authenticated-users
 
 // ------ TYPESCRIPT ------
 import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
+import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
+import { useDispatch } from 'react-redux';
 
 interface TransactionMenuModalProps {
   visible: boolean;
@@ -63,6 +65,8 @@ export default function TransactionMenuModalComponent({
     state: false,
     message: 'Errore in fase di aggiunta della transazione.',
   });
+
+  const dispatch = useDispatch();
 
   const [isEditingLoading, setIsEditingLoading] = useState(false);
 
@@ -138,6 +142,8 @@ export default function TransactionMenuModalComponent({
 
     if ((externalCallResult as ExternalCallResult).transaction) {
       setNewSpendilowUserTransaction((externalCallResult as ExternalCallResult).transaction!);
+      dispatch(changeUserLoggedState(true));
+      //TODO: Manage success
     } else {
       setTransactionMenuError({
         state: true,
@@ -168,7 +174,9 @@ export default function TransactionMenuModalComponent({
       });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        dispatch(changeUserLoggedState(true));
+        //TODO: Manage success
       } else {
         setTransactionMenuEditingError({
           state: true,
