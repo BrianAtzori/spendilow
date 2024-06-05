@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, SyntheticEvent, useState } from 'react';
 import ErrorComponent from '../shared/ErrorComponent';
 import { createNewSpendilowUserBudget } from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
-import { SpendilowBudget } from '../../shared/interfaces';
+import { SpendilowBudget, SpendilowSuccess } from '../../shared/interfaces';
+import SuccessComponent from '../shared/SuccessComponent';
 
 interface AddBudgetModalProps {
   visible: boolean;
@@ -29,6 +30,11 @@ export default function AddBudgetModalComponent({ visible, onClose }: AddBudgetM
   const [budgetInputError, setBudgetInputError] = useState({
     state: false,
     message: 'Errore in fase di creazione del budget.',
+  });
+
+  const [budgetCreationSuccess, setBudgetCreationSuccess] = useState<SpendilowSuccess>({
+    state: false,
+    message: '',
   });
 
   const handleClose = () => {
@@ -78,9 +84,11 @@ export default function AddBudgetModalComponent({ visible, onClose }: AddBudgetM
       setIsLoading(false);
     });
 
-    //TODO: manage external call result
-
-    window.location.href = import.meta.env.VITE_BASENAME + '/user/budget';
+    setBudgetCreationSuccess({ state: true, message: 'Budget creato correttamente!' });
+    setIsLoading(false);
+    setTimeout(() => {
+      window.location.href = import.meta.env.VITE_BASENAME + '/user/budget';
+    }, 2000);
   }
 
   return (
@@ -137,6 +145,11 @@ export default function AddBudgetModalComponent({ visible, onClose }: AddBudgetM
           <div className='form-control desktop:w-full'>
             {budgetInputError.state && (
               <ErrorComponent message={budgetInputError.message}></ErrorComponent>
+            )}
+          </div>
+          <div className='form-control desktop:w-full'>
+            {budgetCreationSuccess.state && (
+              <SuccessComponent message={budgetCreationSuccess.message!}></SuccessComponent>
             )}
           </div>
           <div className='form-control desktop:w-full'>

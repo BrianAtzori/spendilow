@@ -9,8 +9,13 @@ import LoaderComponent from '../shared/LoaderComponent';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../redux/hooks';
 import nextId from 'react-id-generator';
-import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
+import {
+  ExternalCallResult,
+  SpendilowSuccess,
+  SpendilowTransaction,
+} from '../../shared/interfaces';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
+import SuccessComponent from '../shared/SuccessComponent';
 
 // ------ RESOURCES ------
 // https://daisyui.com/components/modal/
@@ -65,6 +70,11 @@ export default function AddTransactionModalComponent({
       transaction_type: 'Expense',
       target_id: null,
     });
+
+  const [transactionCreationSuccess, setTransactionCreationSuccess] = useState<SpendilowSuccess>({
+    state: false,
+    message: 'Errore in fase di aggiunta della transazione.',
+  });
 
   const availableBudgets = useAppSelector((state) => state.userBudget.budgets);
 
@@ -140,7 +150,6 @@ export default function AddTransactionModalComponent({
     if ((externalCallResult as ExternalCallResult).budgets) {
       dispatch(updateUserBudgets((externalCallResult as ExternalCallResult).budgets));
       dispatch(changeUserLoggedState(true));
-      //TODO: Manage success
     } else {
       setBudgetsError({
         state: true,
@@ -154,9 +163,11 @@ export default function AddTransactionModalComponent({
       setIsLoading(false);
     });
 
-    //TODO: Manage success
-
-    window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+    setTransactionCreationSuccess({ state: true, message: 'Transazione creata correttamente!' });
+    setIsLoading(false);
+    setTimeout(() => {
+      window.location.href = import.meta.env.VITE_BASENAME + '/user/expenses';
+    }, 1500);
   }
 
   return (
@@ -310,6 +321,13 @@ export default function AddTransactionModalComponent({
                 <div className='form-control desktop:w-full'>
                   {transactionInputError.state && (
                     <ErrorComponent message={transactionInputError.message}></ErrorComponent>
+                  )}
+                </div>
+                <div className='form-control desktop:w-full'>
+                  {transactionCreationSuccess.state && (
+                    <SuccessComponent
+                      message={transactionCreationSuccess.message!}
+                    ></SuccessComponent>
                   )}
                 </div>
                 <div className='form-control desktop:w-full'>

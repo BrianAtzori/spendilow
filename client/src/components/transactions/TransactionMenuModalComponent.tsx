@@ -7,7 +7,12 @@ import TransactionDataFunctionsComponent from './transaction-menu-modal-componen
 import { useAppSelector } from '../../redux/hooks';
 import { getSpendilowUserTransaction } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
 import { editSpendilowUserTransaction } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
-import { ExternalCallResult, SpendilowTransaction } from '../../shared/interfaces';
+import {
+  ExternalCallResult,
+  SpendilowError,
+  SpendilowSuccess,
+  SpendilowTransaction,
+} from '../../shared/interfaces';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
 import { useDispatch } from 'react-redux';
 
@@ -60,10 +65,16 @@ export default function TransactionMenuModalComponent({
 
   const [isEditingLoading, setIsEditingLoading] = useState(false);
 
-  const [transactionMenuEditingError, setTransactionMenuEditingError] = useState({
+  const [transactionMenuEditingError, setTransactionMenuEditingError] = useState<SpendilowError>({
     state: false,
     message: 'Errore in fase di modifica della transazione.',
   });
+
+  const [transactionMenuEditingSuccess, setTransactionMenuEditingSuccess] =
+    useState<SpendilowSuccess>({
+      state: false,
+      message: 'Movimento modificato correttamente!',
+    });
 
   const handleClose = () => {
     if (onClose) {
@@ -130,7 +141,6 @@ export default function TransactionMenuModalComponent({
     if ((externalCallResult as ExternalCallResult).transaction) {
       setNewSpendilowUserTransaction((externalCallResult as ExternalCallResult).transaction!);
       dispatch(changeUserLoggedState(true));
-      //TODO: Manage success
     } else {
       setTransactionMenuError({
         state: true,

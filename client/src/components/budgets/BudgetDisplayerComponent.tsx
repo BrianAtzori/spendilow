@@ -81,9 +81,11 @@ export default function BudgetDisplayerComponent({ userBudgets }: BudgetDisplaye
       );
 
       if ((externalCallResult as ExternalCallResult).success) {
-        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
         dispatch(changeUserLoggedState(true));
-        //TODO: Manage success
+        alert('Budget eliminato correttamente!');
+        setTimeout(() => {
+          window.location.href = import.meta.env.VITE_BASENAME + '/user/budget';
+        }, 500);
       } else {
         alert(externalCallResult);
       }
