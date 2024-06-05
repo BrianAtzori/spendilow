@@ -2,8 +2,14 @@ import { useState } from 'react';
 import ErrorComponent from '../shared/ErrorComponent';
 import { deleteSpendilowUserBudget } from '../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
-import { ExternalCallResult, SpendilowBudget, SpendilowError } from '../../shared/interfaces';
+import {
+  ExternalCallResult,
+  SpendilowBudget,
+  SpendilowError,
+  SpendilowSuccess,
+} from '../../shared/interfaces';
 import { useDispatch } from 'react-redux';
+import SuccessComponent from '../shared/SuccessComponent';
 
 interface BudgetDataFunctionsProps {
   budget: SpendilowBudget;
@@ -13,6 +19,7 @@ interface BudgetDataFunctionsProps {
   budgetMenuEditingError: SpendilowError;
   isFormVisible: boolean;
   setIsFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  isEditingSuccess: SpendilowSuccess;
 }
 
 export default function BudgetDataFunctionsComponent({
@@ -22,17 +29,24 @@ export default function BudgetDataFunctionsComponent({
   budgetMenuEditingError,
   isFormVisible,
   setIsFormVisible,
+  isEditingSuccess,
 }: BudgetDataFunctionsProps) {
   const [isDeletionLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
-  const [budgetMenuDeletionError, setBudgetMenuDeletionError] = useState({
+  const [budgetMenuDeletionError, setBudgetMenuDeletionError] = useState<SpendilowError>({
     state: false,
     message: 'Errore in fase di eliminazione del budget.',
   });
 
+  const [budgetMenuDeletionSuccess, setBudgetMenuDeletionSuccess] = useState<SpendilowSuccess>({
+    state: false,
+    message: '',
+  });
+
   async function deleteBudget() {
+    setBudgetMenuDeletionSuccess({ state: false, message: '' });
     const response = confirm('Vuoi eliminare questo budget?');
     setIsLoading(true);
 
@@ -44,9 +58,12 @@ export default function BudgetDataFunctionsComponent({
       });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
         dispatch(changeUserLoggedState(true));
-        //TODO: Manage success
+        setBudgetMenuDeletionSuccess({ state: true, message: 'Budget eliminato correttamente!' });
+        setIsLoading(false);
+        setTimeout(() => {
+          window.location.href = import.meta.env.VITE_BASENAME + '/user/budget';
+        }, 2000);
       } else {
         setBudgetMenuDeletionError({
           state: true,
@@ -99,11 +116,7 @@ export default function BudgetDataFunctionsComponent({
                   </>
                 ) : (
                   <>
-                    <input
-                      type='submit'
-                      className='btn btn-accent font-primary'
-                      value='Conferma modifiche'
-                    ></input>
+                    <button className='btn btn-accent font-primary'>Conferma modifiche</button>
                   </>
                 )}
               </div>
@@ -113,6 +126,12 @@ export default function BudgetDataFunctionsComponent({
         <div className='form-control desktop:w-full'>
           {budgetMenuEditingError.state && (
             <ErrorComponent message={budgetMenuEditingError.message!}></ErrorComponent>
+          )}
+        </div>
+
+        <div className='form-control'>
+          {isEditingSuccess.state && (
+            <SuccessComponent message={isEditingSuccess.message!}></SuccessComponent>
           )}
         </div>
 
@@ -127,9 +146,16 @@ export default function BudgetDataFunctionsComponent({
 
         <div className='form-control'>
           {budgetMenuDeletionError.state && (
-            <ErrorComponent message={budgetMenuDeletionError.message}></ErrorComponent>
+            <ErrorComponent message={budgetMenuDeletionError.message!}></ErrorComponent>
           )}
         </div>
+
+        <div className='form-control'>
+          {budgetMenuDeletionSuccess.state && (
+            <SuccessComponent message={budgetMenuDeletionSuccess.message!}></SuccessComponent>
+          )}
+        </div>
+
         <div className='form-control desktop:w-full'>
           {isDeletionLoading ? (
             <>
@@ -139,7 +165,13 @@ export default function BudgetDataFunctionsComponent({
             </>
           ) : (
             <>
-              <button className='btn btn-accent font-primary' onClick={deleteBudget}>
+              <button
+                className='btn btn-accent font-primary'
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteBudget();
+                }}
+              >
                 Elimina questo budget
               </button>
             </>

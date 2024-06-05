@@ -49,3 +49,8 @@ export interface SpendilowError {
   state?: boolean;
   message?: string;
 }
+
+export interface SpendilowSuccess {
+  state?: boolean;
+  message?: string;
+}

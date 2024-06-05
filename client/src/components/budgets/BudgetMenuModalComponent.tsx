@@ -15,6 +15,7 @@ import {
   SpendilowBudgetAPIResponse,
   SpendilowBudget,
   ExternalCallResult,
+  SpendilowSuccess,
 } from '../../shared/interfaces';
 import { useDispatch } from 'react-redux';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
@@ -34,6 +35,12 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
     getBudget();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
+
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
+  useEffect(() => {
+    setBudgetMenuEditingSuccess({ state: false, message: '' });
+  }, [isFormVisible]);
 
   const currentBudgetId: string = useAppSelector((state) => state.budgetMenuModal.budgetID);
 
@@ -57,12 +64,16 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
     state: false,
     message: 'Errore in fase di recupero del budget.',
   });
+
   const [budgetMenuEditingError, setBudgetMenuEditingError] = useState<SpendilowError>({
     state: false,
     message: 'Errore in fase di modifica del budget.',
   });
 
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [budgetMenuEditingSuccess, setBudgetMenuEditingSuccess] = useState<SpendilowSuccess>({
+    state: false,
+    message: '',
+  });
 
   const handleClose = () => {
     if (onClose) {
@@ -119,9 +130,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
       (externalCallResult as SpendilowBudgetAPIResponse).transactions
     ) {
       dispatch(changeUserLoggedState(true));
-
       setSpendilowUserBudget(externalCallResult as SpendilowBudgetAPIResponse);
-      //TODO: Manage success
     } else {
       setBudgetMenuError({
         state: true,
@@ -146,9 +155,12 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
       });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
         dispatch(changeUserLoggedState(true));
-        //TODO: Manage success
+        setBudgetMenuEditingSuccess({ state: true, message: 'Budget modificato correttamente!' });
+        setIsLoading(false);
+        setTimeout(() => {
+          setIsFormVisible(false);
+        }, 2000);
       } else {
         setBudgetMenuEditingError({
           state: true,
@@ -228,6 +240,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
           budgetMenuEditingError={budgetMenuEditingError}
           isFormVisible={isFormVisible}
           setIsFormVisible={setIsFormVisible}
+          isEditingSuccess={budgetMenuEditingSuccess}
         ></BudgetDataFunctionsComponent>
       </form>
     </dialog>
