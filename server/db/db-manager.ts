@@ -189,7 +189,7 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
     isMFAActive,
     savings,
     salary,
-    profileImage,
+    profileimage,
     workfield,
     username,
   } = spendilowUser;
@@ -202,7 +202,7 @@ const createSplUser = async (spendilowUser: any, connection: any) => {
       isMFAActive,
       savings,
       salary,
-      profileImage,
+      profileimage,
       workfield,
       username,
     ]);

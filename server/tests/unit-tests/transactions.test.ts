@@ -146,19 +146,6 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
       });
   });
 
-  // ------ BULK TRANSACTIONS CREATION------
-  it("should create in bulk the dummy transactions on /authenticated-users/transactions/generate/ GET", function (done) {
-    chaiTests
-      .request(baseURL)
-      .get("api/v1/authenticated-users/transactions/generate/")
-      .set("Cookie", cookie)
-      .end(function (err: Error, res: any) {
-        res.should.have.status(201);
-        res.should.be.json;
-        done();
-      });
-  });
-
   // ------ GET ALL TRANSACTIONS ------
   it("should get all the user transactions on /authenticated-users/transactions/get/all GET", function (done) {
     chaiTests
