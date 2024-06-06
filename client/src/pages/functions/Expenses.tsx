@@ -31,9 +31,8 @@ export default function Expenses() {
 
     if ((externalCallResult as ExternalCallResult).transactions) {
       dispatch(updateUserTransactions((externalCallResult as ExternalCallResult).transactions));
-      // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+
       dispatch(changeUserLoggedState(true));
-      //TODO: Manage success
     } else {
       setTransactionsError({
         state: true,

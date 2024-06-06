@@ -153,9 +153,11 @@ export default function TransactionsDisplayerComponent({
         await deleteSpendilowUserTransaction(transactionID);
 
       if ((externalCallResult as ExternalCallResult).success) {
-        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
         dispatch(changeUserLoggedState(true));
-        //TODO: Manage success
+        alert('Transazione eliminata correttamente!');
+        setTimeout(() => {
+          window.location.href = import.meta.env.VITE_BASENAME + '/user/expenses';
+        }, 500);
       } else {
         alert(externalCallResult);
       }

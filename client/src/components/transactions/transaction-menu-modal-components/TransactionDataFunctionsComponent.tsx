@@ -10,8 +10,10 @@ import nextId from 'react-id-generator';
 import {
   ExternalCallResult,
   SpendilowError,
+  SpendilowSuccess,
   SpendilowTransaction,
 } from '../../../shared/interfaces';
+import SuccessComponent from '../../shared/SuccessComponent';
 
 interface TransactionDataFunctionsProps {
   transaction: SpendilowTransaction;
@@ -24,6 +26,9 @@ interface TransactionDataFunctionsProps {
       | React.ChangeEvent<HTMLTextAreaElement>,
   ) => void;
   transactionMenuEditingError: SpendilowError;
+  transactionMenuEditingSuccess: SpendilowSuccess;
+  isFormVisible: boolean;
+  setIsFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function TransactionDataFunctionsComponent({
@@ -31,9 +36,10 @@ export default function TransactionDataFunctionsComponent({
   handleChange,
   isEditingLoading,
   transactionMenuEditingError,
+  transactionMenuEditingSuccess,
+  isFormVisible,
+  setIsFormVisible,
 }: TransactionDataFunctionsProps) {
-  const [isFormVisible, setIsFormVisible] = useState(false);
-
   useEffect(() => {
     getAvailableBudgets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,6 +56,12 @@ export default function TransactionDataFunctionsComponent({
     state: false,
     message: 'Errore in fase di eliminazione della transazione.',
   });
+
+  const [transactionMenuDeletionSuccess, setTransactionMenuDeletionSuccess] =
+    useState<SpendilowSuccess>({
+      state: false,
+      message: '',
+    });
 
   const availableBudgets = useAppSelector((state) => state.userBudget.budgets);
 
@@ -83,7 +95,14 @@ export default function TransactionDataFunctionsComponent({
       });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
+        setTransactionMenuDeletionSuccess({
+          state: true,
+          message: 'Transazione elminata correttamente!',
+        });
+        setIsLoading(false);
+        setTimeout(() => {
+          window.location.href = import.meta.env.VITE_BASENAME + '/user/expenses';
+        }, 2000);
       } else {
         setTransactionMenuDeletionError({
           state: true,
@@ -226,6 +245,13 @@ export default function TransactionDataFunctionsComponent({
                   )}
                 </div>
                 <div className='form-control desktop:w-full'>
+                  {transactionMenuEditingSuccess.state && (
+                    <SuccessComponent
+                      message={transactionMenuEditingSuccess.message!}
+                    ></SuccessComponent>
+                  )}
+                </div>
+                <div className='form-control desktop:w-full'>
                   {isEditingLoading ? (
                     <>
                       <button className='btn btn-accent font-primary'>
@@ -260,6 +286,12 @@ export default function TransactionDataFunctionsComponent({
             <ErrorComponent message={transactionMenuDeletionError.message}></ErrorComponent>
           )}
         </div>
+
+        <div className='form-control'>
+          {transactionMenuDeletionSuccess.state && (
+            <SuccessComponent message={transactionMenuDeletionSuccess.message!}></SuccessComponent>
+          )}
+        </div>
         <div className='form-control desktop:w-full'>
           {isDeletionLoading ? (
             <>
@@ -269,7 +301,13 @@ export default function TransactionDataFunctionsComponent({
             </>
           ) : (
             <>
-              <button className='btn btn-accent font-primary' onClick={deleteTransaction}>
+              <button
+                className='btn btn-accent font-primary'
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteTransaction();
+                }}
+              >
                 Elimina questa transazione
               </button>
             </>

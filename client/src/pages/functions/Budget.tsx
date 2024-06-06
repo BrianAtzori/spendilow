@@ -34,7 +34,6 @@ export default function Budget() {
     if ((externalCallResult as ExternalCallResult).budgets) {
       dispatch(updateUserBudgets((externalCallResult as ExternalCallResult).budgets));
       dispatch(changeUserLoggedState(true));
-      //TODO: Manage success
     } else {
       setBudgetsError({
         state: true,

@@ -56,6 +56,8 @@ export default function TransactionMenuModalComponent({
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isFormVisible, setIsFormVisible] = useState(false);
+
   const [transactionMenuError, setTransactionMenuError] = useState({
     state: false,
     message: 'Errore in fase di aggiunta della transazione.',
@@ -171,9 +173,15 @@ export default function TransactionMenuModalComponent({
       });
 
       if ((externalCallResult as ExternalCallResult).success) {
-        // window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
         dispatch(changeUserLoggedState(true));
-        //TODO: Manage success
+        setTransactionMenuEditingSuccess({
+          state: true,
+          message: 'Transazione modificata correttamente!',
+        });
+        setIsLoading(false);
+        setTimeout(() => {
+          setIsFormVisible(false);
+        }, 2000);
       } else {
         setTransactionMenuEditingError({
           state: true,
@@ -217,6 +225,9 @@ export default function TransactionMenuModalComponent({
               handleChange={handleChange}
               isEditingLoading={isEditingLoading}
               transactionMenuEditingError={transactionMenuEditingError}
+              transactionMenuEditingSuccess={transactionMenuEditingSuccess}
+              isFormVisible={isFormVisible}
+              setIsFormVisible={setIsFormVisible}
             ></TransactionDataFunctionsComponent>
           </>
         )}
