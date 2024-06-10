@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 import crypto from "crypto";
+import { SpendilowTransaction } from "../classes/transaction";
 
 // ------ CREATE BUDGET ------
 const createBudget = async (req: any, res: Response) => {
@@ -57,6 +58,25 @@ const getAllBudgets = async (req: any, res: Response) => {
   );
 
   if (successState) {
+    for (let i = 0; i < payload.length; i++) {
+      let total = 0;
+
+      const dbInteractionResponse = await dbManager.databaseInteraction(
+        "GET_BUDGET_TRANSACTIONS",
+        { budgetId: payload[i].id, spendilowUserId: req.user.id }
+      );
+
+      if (dbInteractionResponse.successState) {
+        dbInteractionResponse.payload.map(
+          (transaction: SpendilowTransaction) => {
+            total += Number(transaction.amount);
+          }
+        );
+      }
+
+      payload[i] = { ...payload[i], total };
+    }
+
     res.status(StatusCodes.OK).json({ budgets: payload });
   } else {
     throw new Error(
@@ -90,6 +110,14 @@ const getSingleBudget = async (req: any, res: Response) => {
   );
 
   if (successState && dbInteractionResponse.successState) {
+    let total = 0;
+
+    dbInteractionResponse.payload.map((transaction: SpendilowTransaction) => {
+      total += Number(transaction.amount);
+    });
+
+    payload[0] = { ...payload[0], total };
+
     res.status(StatusCodes.OK).json({
       budget: payload[0],
       transactions: dbInteractionResponse.payload,

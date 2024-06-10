@@ -210,7 +210,9 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
               <label className='label'>
                 <span className='label-text font-bold'>Totale:</span>
               </label>
-              <div className='flex flex-row flex-wrap justify-start'>0.0</div>
+              <div className='flex flex-row flex-wrap justify-start'>
+                {spendilowUserBudget.budget.total}
+              </div>
               <div className='divider font-primary divider-neutral opacity-50'></div>
               {!isFormVisible ? (
                 <>

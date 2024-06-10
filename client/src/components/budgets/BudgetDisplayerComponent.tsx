@@ -110,8 +110,7 @@ export default function BudgetDisplayerComponent({ userBudgets }: BudgetDisplaye
               return (
                 <tr key={nextId()} className='font-body'>
                   <td>{budget.name}</td>
-                  {/* <td className="font-bold">{budget.amount}</td> */}
-                  <td>0.0</td>
+                  <td>{budget.total}</td>
                   <td className='hidden tablet:table-cell '>{budget.description}</td>
                   <td className='text-right tablet:table-cell '>{budgetMenuCreator(budget?.id)}</td>
                 </tr>

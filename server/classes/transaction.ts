@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-class SpendilowTransaction {
+export class SpendilowTransaction {
   public id: string;
   public user_id: string;
   public amount: number;

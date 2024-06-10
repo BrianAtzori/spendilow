@@ -25,6 +25,7 @@ export interface SpendilowBudget {
   id?: string;
   name?: string;
   description?: string;
+  total?: number;
 }
 
 export interface SpendilowUserLogin {

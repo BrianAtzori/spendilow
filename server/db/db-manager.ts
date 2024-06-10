@@ -641,7 +641,7 @@ async function getBudgetTransactions(
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
+  // console.log(rows);
 
   return rows;
 }
