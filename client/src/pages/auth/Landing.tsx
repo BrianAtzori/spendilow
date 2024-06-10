@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import landingImage from '../../assets/auth/landing-image-piggy.jpeg';
 
 export default function Landing() {
+  // eslint-disable-next-line no-console
+  console.log(document.cookie.indexOf('spendilow-access-token') ? 'OK' : 'DENIED');
+
   return (
     <div className='hero min-h-screen text-neutral'>
       <div className='hero-content flex-col desktop:flex-row-reverse'>
