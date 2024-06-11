@@ -9,7 +9,11 @@ const {
   deleteUser,
   getUserProfile,
   logoutUserProfile,
+  verifyUserAccess,
 } = require("../controllers/authenticated-users");
+
+// ------ MODIFY USER ------
+authenticatedUsersRouter.get("/verify/", verifyUserAccess);
 
 // ------ MODIFY USER ------
 authenticatedUsersRouter.patch("/mod/", modifyUser);

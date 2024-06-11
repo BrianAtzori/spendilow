@@ -4,6 +4,33 @@ const route: string = '/authenticated-users';
 import { apiErrorResponseHandler } from '../general/apiErrorResponseHandler';
 import { ExternalCallResult, SpendilowUser } from '../../shared/interfaces';
 
+const verifyUserAccess = async (): Promise<boolean | string> => {
+  let result: boolean | string;
+
+  try {
+    result = await axios
+      .get(baseURL + route + '/verify', {
+        withCredentials: true,
+      })
+      .then((res) => {
+        return res.data.success;
+      })
+      .catch((error) => {
+        return apiErrorResponseHandler(
+          error.response.status,
+          'Non siamo riusciti a recuperare una sessione di accesso per caricare il tuo profilo, se possiedi un account effettua nuovamente il login altrimenti registra un nuovo profilo.',
+        );
+      });
+  } catch (error) {
+    result = apiErrorResponseHandler(
+      500,
+      'Non siamo riusciti a recuperare una sessione di accesso per caricare il tuo profilo, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
+    );
+  }
+
+  return result;
+};
+
 const getSpendilowUserProfile = async (): Promise<ExternalCallResult | string> => {
   let result: ExternalCallResult | string;
 
@@ -120,4 +147,5 @@ export {
   editSpendilowUserProfile,
   logoutSpendilowUserProfile,
   deleteSpendilowUserProfile,
+  verifyUserAccess,
 };

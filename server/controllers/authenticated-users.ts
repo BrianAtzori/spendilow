@@ -3,6 +3,18 @@ import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 
+// ------ CHECK USER ACCESS ------
+const verifyUserAccess = async (req: any, res: Response) => {
+  if (!req.user.id) {
+    throw new UnauthenticatedError(
+      "L'utente con cui si sta cercando di effettuare l'accesso non esiste, l'ID é errato oppure non siamo riusciti a caricare la sessione, prova ad effettuare nuovamente il login oppure contatta il supporto utente."
+    );
+  }
+
+  res.status(StatusCodes.OK).json({ success: true });
+};
+
+// ------ EDIT USER ------
 const modifyUser = async (req: any, res: Response) => {
   if (!req.body) {
     throw new BadRequestError(
@@ -178,4 +190,5 @@ module.exports = {
   deleteUser,
   getUserProfile,
   logoutUserProfile,
+  verifyUserAccess,
 };
