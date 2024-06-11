@@ -5,7 +5,6 @@ export const transactionMenuModalSlice = createSlice({
   initialState: { isShowing: false, transactionID: '' },
   reducers: {
     setTransactionMenuModalSliceShowing: (state, action) => {
-      // console.log(state.isShowing)
       state.isShowing = action.payload;
     },
     setTransactionMenuModalSliceTransaction: (state, action) => {

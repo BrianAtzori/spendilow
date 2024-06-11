@@ -5,7 +5,6 @@ export const budgetMenuModalSlice = createSlice({
   initialState: { isShowing: false, budgetID: '' },
   reducers: {
     setBudgetMenuModalSliceShowing: (state, action) => {
-      // console.log(state.isShowing)
       state.isShowing = action.payload;
     },
     setBudgetMenuModalSliceBudgetId: (state, action) => {

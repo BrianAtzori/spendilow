@@ -297,8 +297,6 @@ const updateUserByID = async (spendilowUser: any, connection: any, id: any) => {
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
-
   return rows;
 };
 
@@ -371,8 +369,6 @@ const createTransactionQuery = async (
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
-
   return rows;
 };
 
@@ -396,8 +392,6 @@ const getAllTransactions = async (spendilowUserId: any, connection: any) => {
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
-
-  console.log(rows);
 
   return rows;
 };
@@ -428,8 +422,6 @@ const getSingleTransaction = async (
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
-
-  console.log(rows);
 
   return rows;
 };
@@ -489,8 +481,6 @@ const updateSingleTransaction = async (
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
-
   return rows;
 };
 
@@ -522,8 +512,6 @@ const deleteSingleTransaction = async (
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
-
   return rows;
 };
 
@@ -532,8 +520,6 @@ const deleteUserTransactions = async (
   spendilowUserId: any,
   connection: any
 ) => {
-  console.log(spendilowUserId);
-
   const query = `
   DELETE FROM transactions
   WHERE user_id = ?
@@ -550,8 +536,6 @@ const deleteUserTransactions = async (
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
-
-  console.log(rows);
 
   return rows;
 };
@@ -583,8 +567,6 @@ const createBudgetQuery = async (budgetData: any, connection: any) => {
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
-
   return rows;
 };
 
@@ -612,8 +594,6 @@ const getSingleBudget = async (
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
-
   return rows;
 };
 
@@ -640,8 +620,6 @@ async function getBudgetTransactions(
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
-
-  // console.log(rows);
 
   return rows;
 }
@@ -683,8 +661,6 @@ const updateSingleBudget = async (
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
-
   return rows;
 };
 
@@ -710,8 +686,6 @@ async function getAllBudgets(
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
-
-  console.log(rows);
 
   return rows;
 }
@@ -741,15 +715,11 @@ const deleteSingleBudget = async (
     rows.payload = error.sqlMessage;
   }
 
-  console.log(rows);
-
   return rows;
 };
 
 // ------ DELETE USER BUDGETS ------
 const deleteUserBudgets = async (spendilowUserId: any, connection: any) => {
-  console.log(spendilowUserId);
-
   const query = `
   DELETE FROM budget
   WHERE user_id = ?
@@ -766,8 +736,6 @@ const deleteUserBudgets = async (spendilowUserId: any, connection: any) => {
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
-
-  console.log(rows);
 
   return rows;
 };
@@ -795,8 +763,6 @@ const deleteBudgetFromTransactions = async (
   } catch (error: any) {
     rows.payload = error.sqlMessage;
   }
-
-  console.log(rows);
 
   return rows;
 };
