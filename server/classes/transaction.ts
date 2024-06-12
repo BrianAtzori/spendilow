@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-class SpendilowTransaction {
+export class SpendilowTransaction {
   public id: string;
   public user_id: string;
   public amount: number;
@@ -21,7 +21,7 @@ class SpendilowTransaction {
     tags,
     transaction_type,
     target_id,
-  }: any) {
+  }: SpendilowTransaction) {
     this.id = id;
     this.user_id = user_id;
     this.amount = amount;

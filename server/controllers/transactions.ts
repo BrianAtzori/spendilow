@@ -1,5 +1,4 @@
-// ------ Imports ------
-import { Response } from "express"; //TS Import
+import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
@@ -21,10 +20,6 @@ const createTransaction = async (req: any, res: Response) => {
   }
 
   let newTransactionID: string = crypto.randomUUID();
-
-  //TODO: renderlo dinamico in base agli input -> Default budget dell'utente?
-  let target_id: string = crypto.randomUUID();
-  req.body.target_id = target_id
 
   let userID: string = req.user.id;
 
@@ -175,74 +170,10 @@ const deleteSingleTransaction = async (req: any, res: Response) => {
   }
 };
 
-// ------ BULK TRANSACTIONS CREATION ------
-const bulkDataCreation = async (req: any, res: any) => {
-  let howMany: number = 10;
-  let userId = req.user.id;
-
-  for (let i = 0; howMany >= i; i++) {
-    // ------ Random UUID ------
-
-    let newTransactionID: string = crypto.randomUUID();
-    let randomTargetID: string = crypto.randomUUID();
-
-    // ------ Random Type ------
-    const transactionTypeArray = ["Income", "Expense", "Budget"];
-
-    let randomNumber = Math.floor(Math.random() * transactionTypeArray.length);
-
-    let transaction_type = transactionTypeArray[randomNumber];
-
-    // ------ Random Date ------
-    const dates = [
-      "2024-02-06",
-      "2024-02-05",
-      "2024-02-01",
-      "2024-01-28",
-      "2024-01-27",
-      "2023-12-20",
-      "2023-12-18",
-      "2023-11-14",
-      "2023-11-13",
-      "2023-11-05",
-      "2022-11-15",
-      "2022-10-30",
-      "2022-10-29",
-      "2022-10-13",
-      "2022-10-08",
-      "2021-07-23",
-      "2021-07-19",
-      "2021-06-02",
-      "2021-05-09",
-      "2020-06-15",
-    ];
-
-    let randomDate = Math.floor(Math.random() * dates.length);
-
-    let transaction_date = dates[randomDate];
-
-    await dbManager.databaseInteraction("CREATE_TRANSACTION", {
-      id: newTransactionID,
-      user_id: userId,
-      amount: 10.8,
-      transaction_date,
-      title: `Fake transaction #${i + 1}`,
-      notes: `For the user ${userId}`,
-      tags: "FakeTag1;FakeTag2;",
-      transaction_type,
-      target_id: randomTargetID,
-    });
-  }
-
-  res.status(StatusCodes.CREATED).json({ message: "OK" });
-};
-
-// ------ Exports ------
 module.exports = {
   createTransaction,
   getAllTransactions,
   getSingleTransaction,
   updateSingleTransaction,
   deleteSingleTransaction,
-  bulkDataCreation,
 };

@@ -31,10 +31,7 @@ const cookieParser = require("cookie-parser");
 //Activation
 app.use(helmet());
 app.use(cors({
-    // origin: "http://localhost:5173",
-    origin: "http://localhost",
-    // origin: '*',
-    // origin: "https://spendilow-frontend.onrender.com",
+    origin: `${process.env.ORIGIN}`,
     credentials: true,
 }));
 app.use(xss());
@@ -53,10 +50,12 @@ const usersRouter = require("./routes/users");
 const utilitiesRouter = require("./routes/utilities");
 const authenticatedUsersRouter = require("./routes/authenticated-users");
 const transactionsRouter = require("./routes/transactions");
+const budgetRouter = require("./routes/budgets");
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
 app.use("/api/v1/authenticated-users", authenticationMiddleware, authenticatedUsersRouter);
 app.use("/api/v1/authenticated-users/transactions", authenticationMiddleware, transactionsRouter);
+app.use("/api/v1/authenticated-users/budgets", authenticationMiddleware, budgetRouter);
 // app.use("/api-docs/", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 //Activation for Error Middleware
 app.use(errorHandlerMiddleware);

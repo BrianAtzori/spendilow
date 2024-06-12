@@ -146,19 +146,6 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
       });
   });
 
-  // ------ BULK TRANSACTIONS CREATION------
-  it("should create in bulk the dummy transactions on /authenticated-users/transactions/generate/ GET", function (done) {
-    chaiTests
-      .request(baseURL)
-      .get("api/v1/authenticated-users/transactions/generate/")
-      .set("Cookie", cookie)
-      .end(function (err: Error, res: any) {
-        res.should.have.status(201);
-        res.should.be.json;
-        done();
-      });
-  });
-
   // ------ GET ALL TRANSACTIONS ------
   it("should get all the user transactions on /authenticated-users/transactions/get/all GET", function (done) {
     chaiTests
@@ -196,7 +183,7 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
         should.exist(res.body.transactions[0].transaction_type);
 
         res.body.transactions[0].should.have.property("target_id");
-        should.exist(res.body.transactions[0].target_id);
+        // should.exist(res.body.transactions[0].target_id);
 
         done();
       });
@@ -239,7 +226,7 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
         should.exist(res.body.transaction.transaction_type);
 
         res.body.transaction.should.have.property("target_id");
-        should.exist(res.body.transaction.target_id);
+        // should.exist(res.body.transaction.target_id);
 
         done();
       });
@@ -277,7 +264,7 @@ describe("Spendilow API 💰 - Transactions Tests", function () {
   });
 
   // ------ DELETE SINGLE TRANSACTION ------
-  it("should delete a single user transaction given the ID on /authenticated-users/transactions/get/:id", function (done) {
+  it("should delete a single user transaction given the ID on /authenticated-users/transactions/del/:id", function (done) {
     chaiTests
       .request(baseURL)
       .delete(

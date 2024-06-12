@@ -9,7 +9,11 @@ const {
   deleteUser,
   getUserProfile,
   logoutUserProfile,
+  verifyUserAccess,
 } = require("../controllers/authenticated-users");
+
+// ------ MODIFY USER ------
+authenticatedUsersRouter.get("/verify/", verifyUserAccess);
 
 // ------ MODIFY USER ------
 authenticatedUsersRouter.patch("/mod/", modifyUser);
@@ -23,5 +27,4 @@ authenticatedUsersRouter.get("/get-profile/", getUserProfile);
 // ------ LOGOUT USER PROFILE ------
 authenticatedUsersRouter.get("/logout/", logoutUserProfile);
 
-// ------ Exports ------
 module.exports = authenticatedUsersRouter;

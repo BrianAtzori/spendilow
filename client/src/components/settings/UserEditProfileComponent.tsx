@@ -1,44 +1,21 @@
-//------ REACT ------
-import React, { SyntheticEvent, useState } from "react";
-
-//------ REDUX ------
-import { useAppSelector } from "../../redux/hooks";
-
-// ------ COMPONENTS & PAGES ------
-import ErrorComponent from "../shared/ErrorComponent";
-
-// ------ SERVICES ------
-import { editSpendilowUserProfile } from "../../services/authenticated-users/authenticated-users-external-calls";
-
-// ------ TYPESCRIPT ------
-interface spendilowUserProfile {
-  id: string;
-  email: string;
-  isMFAActive: boolean;
-  savings: number;
-  salary: number;
-  profileimage: string;
-  workfield: string;
-  username: string;
-}
+import React, { SyntheticEvent, useState } from 'react';
+import { useAppSelector } from '../../redux/hooks';
+import ErrorComponent from '../shared/ErrorComponent';
+import { editSpendilowUserProfile } from '../../services/authenticated-users/authenticated-users-external-calls';
+import { SpendilowUser } from '../../shared/interfaces';
 
 export default function UserEditProfileComponent() {
-  // ------ HOOKS ------
-  const currentSpendilowUser: spendilowUserProfile = useAppSelector(
-    (state) => state.userProfile.value
-  );
+  const currentSpendilowUser: SpendilowUser = useAppSelector((state) => state.userProfile.value);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const [editError, setEditError] = useState({
     state: false,
-    message: "Errore durante la modifica del profilo",
+    message: 'Errore durante la modifica del profilo',
   });
 
-  const [inEditSpendilowUser, setInEditSpendilowUser] =
-    useState(currentSpendilowUser);
+  const [inEditSpendilowUser, setInEditSpendilowUser] = useState(currentSpendilowUser);
 
-  // ------ FORM HANDLING ------
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInEditSpendilowUser({
       ...inEditSpendilowUser,
@@ -46,9 +23,7 @@ export default function UserEditProfileComponent() {
     });
   };
 
-  const handleProfileImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
 
     if (file) {
@@ -63,16 +38,13 @@ export default function UserEditProfileComponent() {
       };
 
       reader.onerror = (error) => {
-        alert(
-          "Errore nel caricare l'immagine! Contatta il supporto. Errore: " +
-            error
-        );
+        alert('Errore durante il caricamento immagine! Contatta il supporto. Errore: ' + error);
       };
 
       reader.readAsDataURL(file);
     } else {
       alert(
-        "Errore nel caricare l'immagine! Riprova, cambia immagine oppure contatta il supporto."
+        'Errore durante il caricamento immagine! Riprova, cambia immagine oppure contatta il supporto.',
       );
     }
   };
@@ -82,18 +54,18 @@ export default function UserEditProfileComponent() {
 
     setEditError({
       state: false,
-      message: "",
+      message: '',
     });
 
     if (
-      inEditSpendilowUser.email === "" ||
-      inEditSpendilowUser.profileimage === "" ||
-      inEditSpendilowUser.workfield === "" ||
-      inEditSpendilowUser.username === ""
+      inEditSpendilowUser.email === '' ||
+      inEditSpendilowUser.profileimage === '' ||
+      inEditSpendilowUser.workfield === '' ||
+      inEditSpendilowUser.username === ''
     ) {
       setEditError({
         state: true,
-        message: "Verifica i dati inseriti, alcuni campi sono vuoti!",
+        message: 'Verifica i dati inseriti, alcuni campi sono vuoti!',
       });
     } else {
       setIsLoading(true);
@@ -101,20 +73,18 @@ export default function UserEditProfileComponent() {
     }
   }
 
-  // ------ FUNCTIONS ------
   async function editProfile() {
-    const response = confirm("Vuoi modificare il tuo profilo?");
+    const response = confirm('Vuoi modificare il tuo profilo?');
     setIsLoading(true);
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await editSpendilowUserProfile(
-        inEditSpendilowUser
+      const externalCallResult: string = await editSpendilowUserProfile(
+        inEditSpendilowUser,
       ).finally(() => {
         setIsLoading(false);
       });
 
-      externalCallResult.startsWith("/")
+      externalCallResult.startsWith('/')
         ? (window.location.href = import.meta.env.VITE_BASENAME + externalCallResult)
         : setEditError({ state: true, message: externalCallResult });
     } else {
@@ -123,121 +93,114 @@ export default function UserEditProfileComponent() {
   }
 
   return (
-    <div className="hero min-h-screen text-neutral py-6">
-      <div className="hero-content flex-col desktop:flex-row-reverse">
-        <div className="text-center desktop:text-left">
-          <h1 className="text-5xl font-bold font-primary">Impostazioni</h1>
+    <div className='hero min-h-screen text-neutral py-6'>
+      <div className='hero-content flex-col desktop:flex-row-reverse'>
+        <div className='text-center desktop:text-left'>
+          <h1 className='text-5xl font-bold font-primary'>Impostazioni</h1>
         </div>
-        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form
-            className="card-body font-body"
-            onSubmit={verifyInputThenTriggerEditProfile}
-          >
-            <div className="text-center desktop:text-left">
-              <h2 className="font-bold font-heading text-left">
-                Modifica il tuo profilo
-              </h2>
+        <div className='card shrink-0 w-full max-w-sm shadow-2xl bg-base-100'>
+          <form className='card-body font-body' onSubmit={verifyInputThenTriggerEditProfile}>
+            <div className='text-center desktop:text-left'>
+              <h2 className='font-bold font-heading text-left'>Modifica il tuo profilo</h2>
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Indirizzo Email</span>
+            <div className='form-control'>
+              <label className='label'>
+                <span className='label-text'>Indirizzo Email</span>
               </label>
               <input
-                className="input input-bordered"
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Indirizzo Email"
+                className='input input-bordered'
+                type='email'
+                id='email'
+                name='email'
+                placeholder='Indirizzo Email'
                 onChange={handleChange}
                 defaultValue={inEditSpendilowUser.email}
               />
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Risparmi</span>
+            <div className='form-control'>
+              <label className='label'>
+                <span className='label-text'>Risparmi di partenza</span>
               </label>
               <input
-                className="input input-bordered"
-                id="savings"
-                name="savings"
-                placeholder="Risparmi"
+                className='input input-bordered'
+                id='savings'
+                name='savings'
+                placeholder='Quanto possiedi al momento'
                 onChange={handleChange}
-                type="number"
+                type='number'
                 defaultValue={inEditSpendilowUser.savings}
               />
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Stipendio Medio Mensile</span>
+            <div className='form-control'>
+              <label className='label'>
+                <span className='label-text'>Stipendio Medio Mensile</span>
               </label>
               <input
-                className="input input-bordered"
-                id="salary"
-                name="salary"
-                placeholder="Stipendio"
+                className='input input-bordered'
+                id='salary'
+                name='salary'
+                placeholder='Stipendio'
                 onChange={handleChange}
-                type="number"
+                type='number'
                 defaultValue={inEditSpendilowUser.salary}
               />
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Foto Profilo</span>
+            <div className='form-control'>
+              <label className='label'>
+                <span className='label-text'>Foto Profilo</span>
               </label>
               <input
-                type="file"
-                id="profileimage"
-                name="profileimage"
-                accept="image/png, image/jpeg"
-                placeholder="Foto profilo"
-                className="file-input file-input-bordered file-input-accent w-full max-w-xs"
+                type='file'
+                id='profileimage'
+                name='profileimage'
+                accept='image/png, image/jpeg'
+                placeholder='Foto profilo'
+                className='file-input file-input-bordered file-input-accent w-full max-w-xs'
                 onChange={handleProfileImageChange}
               />
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Ambito Di Lavoro</span>
+            <div className='form-control'>
+              <label className='label'>
+                <span className='label-text'>Ambito Di Lavoro</span>
               </label>
               <input
-                className="input input-bordered"
-                id="workfield"
-                name="workfield"
-                placeholder="Ambito lavoro"
+                className='input input-bordered'
+                id='workfield'
+                name='workfield'
+                placeholder='Ambito lavoro'
                 onChange={handleChange}
                 defaultValue={inEditSpendilowUser.workfield}
               />
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Username</span>
+            <div className='form-control'>
+              <label className='label'>
+                <span className='label-text'>Username</span>
               </label>
               <input
-                className="input input-bordered"
-                id="username"
-                name="username"
-                placeholder="Username"
+                className='input input-bordered'
+                id='username'
+                name='username'
+                placeholder='Username'
                 onChange={handleChange}
                 defaultValue={inEditSpendilowUser.username}
               />
             </div>
-            <div className="form-control">
-              {editError.state && (
-                <ErrorComponent message={editError.message}></ErrorComponent>
-              )}
+            <div className='form-control'>
+              {editError.state && <ErrorComponent message={editError.message}></ErrorComponent>}
             </div>
-            <div className="form-control">
+            <div className='form-control'>
               {isLoading ? (
                 <>
-                  <button className="btn btn-accent font-primary">
-                    <span className="loading loading-dots loading-md"></span>
+                  <button className='btn btn-accent font-primary'>
+                    <span className='loading loading-dots loading-md'></span>
                   </button>
                 </>
               ) : (
                 <>
                   <input
-                    type="submit"
-                    className="btn btn-accent font-primary"
-                    value="Modifica il profilo"
+                    type='submit'
+                    className='btn btn-accent font-primary'
+                    value='Modifica il profilo'
                   ></input>
                 </>
               )}

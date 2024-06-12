@@ -8,7 +8,7 @@ class SpendilowUser {
   public password: string;
   public savings: string;
   public salary: string;
-  public profileImage: string;
+  public profileimage: string;
   public workfield: string;
   public username: string;
   public isMFAActive: boolean;
@@ -23,13 +23,13 @@ class SpendilowUser {
     profileimage,
     workfield,
     username,
-  }: any) {
+  }: SpendilowUser) {
     this.id = id;
     this.email = email;
     this.password = password;
     this.savings = savings;
     this.salary = salary;
-    this.profileImage = profileimage;
+    this.profileimage = profileimage;
     this.workfield = workfield;
     this.username = username;
     this.isMFAActive = isMFAActive;

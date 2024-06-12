@@ -12,9 +12,9 @@ app.use(express.json({ limit: "10mb" }));
 const dbConnectionPool = require("./db/db-connector");
 
 // ------ SWAGGER ------
-// const swaggerUI = require("swagger-ui-express");
+const swaggerUI = require("swagger-ui-express");
 const YAML = require("yamljs");
-// const swaggerDocument = YAML.load("./swagger.yaml");
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 //------ SECURITY SETUP ------
 //Imports
@@ -28,7 +28,7 @@ const cookieParser = require("cookie-parser");
 app.use(helmet());
 app.use(
   cors({
-    origin:`${process.env.ORIGIN}`,
+    origin: `${process.env.ORIGIN}`,
     credentials: true,
   })
 );
@@ -52,6 +52,7 @@ const usersRouter: Router = require("./routes/users");
 const utilitiesRouter: Router = require("./routes/utilities");
 const authenticatedUsersRouter: Router = require("./routes/authenticated-users");
 const transactionsRouter: Router = require("./routes/transactions");
+const budgetRouter: Router = require("./routes/budgets");
 
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/utilities", utilitiesRouter);
@@ -65,7 +66,12 @@ app.use(
   authenticationMiddleware,
   transactionsRouter
 );
-// app.use("/api-docs/", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use(
+  "/api/v1/authenticated-users/budgets",
+  authenticationMiddleware,
+  budgetRouter
+);
+app.use("/api-docs/", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 //Activation for Error Middleware
 app.use(errorHandlerMiddleware);
@@ -94,5 +100,4 @@ const start = async () => {
 
 start();
 
-// ------ Exports ------
 module.exports = start;

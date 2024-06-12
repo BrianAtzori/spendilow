@@ -1,48 +1,108 @@
-// ------ REACT ------
-import React, { useState } from "react";
+import { useEffect, useState } from 'react';
+import ErrorComponent from '../../shared/ErrorComponent';
+import { deleteSpendilowUserTransaction } from '../../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
+import { getSpendilowUserBudgets } from '../../../services/authenticated-users/budgets/auth-usr-budgets-external-calls';
+import { updateUserBudgets } from '../../../redux/reducers/budgets/userBudgetSlice';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../../redux/hooks';
+import LoaderComponent from '../../shared/LoaderComponent';
+import nextId from 'react-id-generator';
+import {
+  ExternalCallResult,
+  SpendilowError,
+  SpendilowSuccess,
+  SpendilowTransaction,
+} from '../../../shared/interfaces';
+import SuccessComponent from '../../shared/SuccessComponent';
 
-// ------ PAGES & COMPONENTS
-import ErrorComponent from "../../shared/ErrorComponent";
+interface TransactionDataFunctionsProps {
+  transaction: SpendilowTransaction;
+  isEditingLoading: boolean;
+  handleChange: (
+    // eslint-disable-next-line no-unused-vars
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => void;
+  transactionMenuEditingError: SpendilowError;
+  transactionMenuEditingSuccess: SpendilowSuccess;
+  isFormVisible: boolean;
+  setIsFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-// ------ SERVICES ------
-import { deleteSpendilowUserTransaction } from "../../../services/authenticated-users/transactions/auth-usr-transactions-external-calls";
-
-// ------ TYPESCRIPT ------
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function TransactionDataFunctionsComponent({
   transaction,
   handleChange,
   isEditingLoading,
   transactionMenuEditingError,
-}: any) {
-  // ------ HOOKS ------
-  const [isDeletionLoading, setIsLoading] = useState(false);
+  transactionMenuEditingSuccess,
+  isFormVisible,
+  setIsFormVisible,
+}: TransactionDataFunctionsProps) {
+  useEffect(() => {
+    getAvailableBudgets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFormVisible]);
 
-  const [transactionMenuDeletionError, setTransactionMenuDeletionError] =
-    useState({
+  const [areAvailableBudgetsLoading, setAreAvailableBudgetsLoading] = useState(true);
+  const [budgetsError, setBudgetsError] = useState({
+    state: false,
+    message: 'Errore durante il caricamento dei tuoi budget.',
+  });
+
+  const [isDeletionLoading, setIsLoading] = useState(false);
+  const [transactionMenuDeletionError, setTransactionMenuDeletionError] = useState({
+    state: false,
+    message: 'Errore in fase di eliminazione della transazione.',
+  });
+
+  const [transactionMenuDeletionSuccess, setTransactionMenuDeletionSuccess] =
+    useState<SpendilowSuccess>({
       state: false,
-      message: "Errore in fase di eliminazione della transazione.",
+      message: '',
     });
 
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const availableBudgets = useAppSelector((state) => state.userBudget.budgets);
 
-  // ------ FUNCTIONS ------
+  const dispatch = useDispatch();
+
+  async function getAvailableBudgets() {
+    const externalCallResult: ExternalCallResult | string = await getSpendilowUserBudgets().finally(
+      () => {
+        setAreAvailableBudgetsLoading(false);
+      },
+    );
+    if ((externalCallResult as ExternalCallResult).budgets) {
+      dispatch(updateUserBudgets((externalCallResult as ExternalCallResult).budgets));
+    } else {
+      setBudgetsError({
+        state: true,
+        message: externalCallResult as string,
+      });
+    }
+  }
+
   async function deleteTransaction() {
-    const response = confirm("Vuoi eliminare questa transazione?");
+    const response = confirm('Vuoi eliminare questa transazione?');
     setIsLoading(true);
 
     if (response) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const externalCallResult: any = await deleteSpendilowUserTransaction(
-        transaction.id
+      const externalCallResult: ExternalCallResult | string = await deleteSpendilowUserTransaction(
+        transaction.id!,
       ).finally(() => {
         setIsLoading(false);
       });
 
-      console.log(externalCallResult);
-
-      if (externalCallResult.success) {
-        window.location.href = import.meta.env.VITE_BASENAME +"/user/dashboard";
+      if ((externalCallResult as ExternalCallResult).success) {
+        setTransactionMenuDeletionSuccess({
+          state: true,
+          message: 'Transazione elminata correttamente!',
+        });
+        setIsLoading(false);
+        setTimeout(() => {
+          window.location.href = import.meta.env.VITE_BASENAME + '/user/expenses';
+        }, 2000);
       } else {
         setTransactionMenuDeletionError({
           state: true,
@@ -56,148 +116,197 @@ export default function TransactionDataFunctionsComponent({
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        {isFormVisible && (
-          <div className="form-control desktop:w-full">
-            <div className="flex flex-col gap-4 font-heading desktop:flex-row desktop:flex-wrap desktop:justify-between">
-              <div className="form-control desktop:w-5/12">
-                <label className="label">
-                  <span className="label-text font-bold">Quantitá</span>
-                </label>
-                <input
-                  className="input input-bordered"
-                  id="amount"
-                  name="amount"
-                  placeholder="0"
-                  onChange={handleChange}
-                  value={transaction.amount}
-                />
-              </div>
-              <div className="form-control desktop:w-5/12">
-                <label className="label">
-                  <span className="label-text font-bold">Titolo</span>
-                </label>
-                <input
-                  className="input input-bordered"
-                  id="title"
-                  name="title"
-                  placeholder="Supermercato"
-                  onChange={handleChange}
-                  value={transaction.title}
-                />
-              </div>
-              <div className="form-control desktop:w-5/12">
-                <label className="label">
-                  <span className="label-text font-bold">Data</span>
-                </label>
-                <input
-                  className="input input-bordered"
-                  type="date"
-                  id="transaction_date"
-                  name="transaction_date"
-                  placeholder="1970/01/01"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-control desktop:w-5/12">
-                <label className="label">
-                  <span className="label-text font-bold">Tipo di spesa</span>
-                </label>
-                <select
-                  className="input input-bordered"
-                  id="transaction_type"
-                  name="transaction_type"
-                  placeholder="Spesa"
-                  onChange={handleChange}
-                  value={transaction.transaction_type}
-                >
-                  <option value="Income">Entrata</option>
-                  <option value="Expense">Spesa</option>
-                  <option value="Budget">A Budget</option>
-                </select>
-              </div>
-              <div className="form-control desktop:w-5/12">
-                <label className="label">
-                  <span className="label-text font-bold">Note</span>
-                </label>
-                <textarea
-                  className="textarea textarea-bordered"
-                  id="notes"
-                  name="notes"
-                  placeholder="Extra spesa di Natale"
-                  onChange={handleChange}
-                  value={transaction.notes}
-                />
-              </div>
-              <div className="form-control desktop:w-5/12">
-                <label className="label">
-                  <span className="label-text font-bold">Tag</span>
-                </label>
-                <input
-                  className="input input-bordered"
-                  id="tags"
-                  name="tags"
-                  placeholder="Casa,Feste,Famiglia"
-                  onChange={handleChange}
-                  value={transaction.tags}
-                />
-              </div>
-              <div className="form-control desktop:w-full">
-                {transactionMenuEditingError.state && (
+      <div className='flex flex-col gap-2'>
+        {isFormVisible &&
+          (areAvailableBudgetsLoading ? (
+            <LoaderComponent
+              isLoading={areAvailableBudgetsLoading}
+              message={'Caricamento Budget disponibili'}
+            ></LoaderComponent>
+          ) : budgetsError.state ? (
+            <ErrorComponent message={budgetsError.message}></ErrorComponent>
+          ) : (
+            <div className='form-control desktop:w-full'>
+              <div className='flex flex-col gap-4 font-heading desktop:flex-row desktop:flex-wrap desktop:justify-between'>
+                <div className='form-control desktop:w-5/12'>
+                  <label className='label'>
+                    <span className='label-text font-bold'>Quantitá</span>
+                  </label>
+                  <input
+                    className='input input-bordered'
+                    id='amount'
+                    name='amount'
+                    placeholder='0'
+                    onChange={handleChange}
+                    value={transaction.amount}
+                  />
+                </div>
+                <div className='form-control desktop:w-5/12'>
+                  <label className='label'>
+                    <span className='label-text font-bold'>Titolo</span>
+                  </label>
+                  <input
+                    className='input input-bordered'
+                    id='title'
+                    name='title'
+                    placeholder='Supermercato'
+                    onChange={handleChange}
+                    value={transaction.title}
+                  />
+                </div>
+                <div className='form-control desktop:w-5/12'>
+                  <label className='label'>
+                    <span className='label-text font-bold'>Data</span>
+                  </label>
+                  <input
+                    className='input input-bordered'
+                    type='date'
+                    id='transaction_date'
+                    name='transaction_date'
+                    placeholder='1970/01/01'
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className='form-control desktop:w-5/12'>
+                  <label className='label'>
+                    <span className='label-text font-bold'>Tipo di spesa</span>
+                  </label>
+                  <select
+                    className='input input-bordered'
+                    id='transaction_type'
+                    name='transaction_type'
+                    placeholder='Spesa'
+                    onChange={handleChange}
+                    value={transaction.transaction_type}
+                  >
+                    <option value='Income'>Entrata</option>
+                    <option value='Expense'>Spesa</option>
+                    <option value='Budget'>A Budget</option>
+                  </select>
+                </div>
+                {transaction.transaction_type === 'Budget' && availableBudgets.length > 0 && (
+                  <div className='form-control desktop:w-5/12'>
+                    <label className='label'>
+                      <span className='label-text font-bold'>Budget</span>
+                    </label>
+                    <select
+                      className='input input-bordered'
+                      id='target_id'
+                      name='target_id'
+                      placeholder='I tuoi budget'
+                      value={transaction.target_id != null ? transaction.target_id! : ''}
+                      onChange={handleChange}
+                    >
+                      <option></option>
+                      {availableBudgets.map((budget) => {
+                        return (
+                          <option key={nextId()} value={budget.id}>
+                            {budget.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                )}
+                {transaction.transaction_type === 'Budget' && availableBudgets.length === 0 && (
                   <ErrorComponent
-                    message={transactionMenuEditingError.message}
+                    message={'Non hai budget da selezionare, creane uno nella sezione dedicata'}
                   ></ErrorComponent>
                 )}
-              </div>
-              <div className="form-control desktop:w-full">
-                {isEditingLoading ? (
-                  <>
-                    <button className="btn btn-accent font-primary">
-                      <span className="loading loading-dots loading-md"></span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <input
-                      type="submit"
-                      className="btn btn-accent font-primary"
-                      value="Conferma modifiche"
-                    ></input>
-                  </>
-                )}
+                <div className='form-control desktop:w-5/12'>
+                  <label className='label'>
+                    <span className='label-text font-bold'>Note</span>
+                  </label>
+                  <textarea
+                    className='textarea textarea-bordered'
+                    id='notes'
+                    name='notes'
+                    placeholder='Extra spesa di Natale'
+                    onChange={handleChange}
+                    value={transaction.notes}
+                  />
+                </div>
+                <div className='form-control desktop:w-5/12'>
+                  <label className='label'>
+                    <span className='label-text font-bold'>Tag</span>
+                  </label>
+                  <input
+                    className='input input-bordered'
+                    id='tags'
+                    name='tags'
+                    placeholder='Casa,Feste,Famiglia'
+                    onChange={handleChange}
+                    value={transaction.tags}
+                  />
+                </div>
+                <div className='form-control desktop:w-full'>
+                  {transactionMenuEditingError.state && (
+                    <ErrorComponent message={transactionMenuEditingError.message!}></ErrorComponent>
+                  )}
+                </div>
+                <div className='form-control desktop:w-full'>
+                  {transactionMenuEditingSuccess.state && (
+                    <SuccessComponent
+                      message={transactionMenuEditingSuccess.message!}
+                    ></SuccessComponent>
+                  )}
+                </div>
+                <div className='form-control desktop:w-full'>
+                  {isEditingLoading ? (
+                    <>
+                      <button className='btn btn-accent font-primary'>
+                        <span className='loading loading-dots loading-md'></span>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <input
+                        type='submit'
+                        className='btn btn-accent font-primary'
+                        value='Conferma modifiche'
+                      ></input>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          ))}
 
         {!isFormVisible && (
           <button
-            className="btn btn-accent font-primary"
+            className='btn btn-accent font-primary'
             onClick={() => setIsFormVisible(!isFormVisible)}
           >
             Modifica la transazione
           </button>
         )}
 
-        <div className="form-control">
+        <div className='form-control'>
           {transactionMenuDeletionError.state && (
-            <ErrorComponent
-              message={transactionMenuDeletionError.message}
-            ></ErrorComponent>
+            <ErrorComponent message={transactionMenuDeletionError.message}></ErrorComponent>
           )}
         </div>
-        <div className="form-control desktop:w-full">
+
+        <div className='form-control'>
+          {transactionMenuDeletionSuccess.state && (
+            <SuccessComponent message={transactionMenuDeletionSuccess.message!}></SuccessComponent>
+          )}
+        </div>
+        <div className='form-control desktop:w-full'>
           {isDeletionLoading ? (
             <>
-              <button className="btn btn-accent font-primary">
-                <span className="loading loading-dots loading-md"></span>
+              <button className='btn btn-accent font-primary'>
+                <span className='loading loading-dots loading-md'></span>
               </button>
             </>
           ) : (
             <>
               <button
-                className="btn btn-accent font-primary"
-                onClick={deleteTransaction}
+                className='btn btn-accent font-primary'
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteTransaction();
+                }}
               >
                 Elimina questa transazione
               </button>

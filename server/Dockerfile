@@ -30,6 +30,8 @@ USER node
 
 COPY package.json .
 
+COPY swagger.yaml .
+
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/dist ./dist
 

@@ -1,10 +1,20 @@
-// ------ Imports ------
-import { Request, Response } from "express"; //TS Import
+import { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const dbManager = require("../db/db-manager");
 
-// ------ MODIFY USER ------
+// ------ CHECK USER ACCESS ------
+const verifyUserAccess = async (req: any, res: Response) => {
+  if (!req.user.id) {
+    throw new UnauthenticatedError(
+      "L'utente con cui si sta cercando di effettuare l'accesso non esiste, l'ID é errato oppure non siamo riusciti a caricare la sessione, prova ad effettuare nuovamente il login oppure contatta il supporto utente."
+    );
+  }
+
+  res.status(StatusCodes.OK).json({ success: true });
+};
+
+// ------ EDIT USER ------
 const modifyUser = async (req: any, res: Response) => {
   if (!req.body) {
     throw new BadRequestError(
@@ -82,14 +92,19 @@ const deleteUser = async (req: any, res: Response) => {
     );
   }
 
-  // First you delete every transaction for that user
+  // First you delete every budgets and transactions for that user
+
+  const deleteUserBudgets = await dbManager.databaseInteraction(
+    "DELETE_USER_BUDGETS",
+    req.user.id
+  );
 
   const deleteUserTransactions = await dbManager.databaseInteraction(
     "DELETE_USER_TRANSACTIONS",
     req.user.id
   );
 
-  if (!deleteUserTransactions.successState) {
+  if (!deleteUserTransactions.successState || !deleteUserBudgets.successState) {
     throw new BadRequestError(
       "Qualcosa é andato storto durante l'eliminazione dei dati dell'utente e quindi non é stato possibile eliminare il suo profilo."
     );
@@ -170,10 +185,10 @@ const logoutUserProfile = async (req: any, res: Response) => {
     .json({ "logged-out": true });
 };
 
-// ------ Exports ------
 module.exports = {
   modifyUser,
   deleteUser,
   getUserProfile,
   logoutUserProfile,
+  verifyUserAccess,
 };

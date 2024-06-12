@@ -1,12 +1,10 @@
-// ------ REDUX ------
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const transactionModalSlice = createSlice({
-  name: "transactionModalShowing",
+  name: 'transactionModalShowing',
   initialState: { isShowing: false },
   reducers: {
     setTransactionModalShowing: (state, action) => {
-        // console.log(state.isShowing)
       state.isShowing = action.payload;
     },
   },

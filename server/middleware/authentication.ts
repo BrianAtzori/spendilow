@@ -1,9 +1,7 @@
-// ------ Imports ------
-import { NextFunction, Request, Response } from "express"; //TS Import
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 const jwt = require("jsonwebtoken");
 
-//------ MIDDLEWARE ------
 const auth = (req: any, res: Response, next: NextFunction) => {
   const accessToken = req.cookies["spendilow-access-token"];
   const refreshToken = req.cookies["spendilow-refresh-token"];

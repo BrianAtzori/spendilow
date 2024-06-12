@@ -1,18 +1,17 @@
-// ------ REDUX ------
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const userProfileSlice = createSlice({
-  name: "userProfile",
+  name: 'userProfile',
   initialState: {
     value: {
-      id: "",
-      email: "",
+      id: '',
+      email: '',
       isMFAActive: false,
       savings: 0,
       salary: 0,
-      profileimage: "",
-      workfield: "",
-      username: "",
+      profileimage: '',
+      workfield: '',
+      username: '',
     },
   },
   reducers: {

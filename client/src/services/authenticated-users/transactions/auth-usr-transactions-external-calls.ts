@@ -1,45 +1,15 @@
-// ------ PACKAGES ------
-import axios from "axios";
+import axios, { AxiosResponse } from 'axios';
+import { baseURL } from '../../';
+const route: string = '/authenticated-users/transactions';
+import { apiErrorResponseHandler } from '../../general/apiErrorResponseHandler';
+import { ExternalCallResult, SpendilowTransaction } from '../../../shared/interfaces';
 
-// ------ ASSETS ------
-import { baseURL } from "../../";
-
-// ------ DATA ------
-const route: string = "/authenticated-users/transactions";
-
-// ------ SERVICES ------
-import { apiErrorResponseHandler } from "../../general/apiErrorResponseHandler";
-
-// ------ TYPESCRIPT ------
-interface spendilowTransactions {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transaction_date: any;
-  amount: number;
-  title: string;
-  notes: string;
-  tags: string;
-  transaction_type: string;
-  target_id: string;
-}
-
-const getSpendilowUserTransactions = async (): Promise<
-  spendilowTransactions[] | string[]
-> => {
-  let result: spendilowTransactions[] | string[] = [
-    {
-      transaction_date: new Date(),
-      amount: 0,
-      title: "",
-      notes: "",
-      tags: "",
-      transaction_type: "",
-      target_id: "",
-    },
-  ];
+const getSpendilowUserTransactions = async (): Promise<ExternalCallResult | string> => {
+  let result: ExternalCallResult | string;
 
   try {
     result = await axios
-      .get(baseURL + route + "/get/all", {
+      .get(baseURL + route + '/get/all', {
         withCredentials: true,
       })
       .then((res) => {
@@ -48,13 +18,13 @@ const getSpendilowUserTransactions = async (): Promise<
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti a recuperare le tue transazioni, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+          'Non siamo riusciti a recuperare le tue transazioni, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto.',
         );
       });
   } catch (error) {
-    result[0] = apiErrorResponseHandler(
+    result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti a recuperare le tue transazioni, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti a recuperare le tue transazioni, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
@@ -62,24 +32,16 @@ const getSpendilowUserTransactions = async (): Promise<
 };
 
 const createNewSpendilowUserTransaction = async (
-  newSpendilowTransaction: spendilowTransactions
+  newSpendilowTransaction: SpendilowTransaction,
 ): Promise<string> => {
-  let result: string = "";
-
-  newSpendilowTransaction.transaction_date =
-    newSpendilowTransaction.transaction_date.getUTCFullYear().toString() +
-    "/" +
-    (newSpendilowTransaction.transaction_date.getUTCMonth() + 1).toString() +
-    "/" +
-    (newSpendilowTransaction.transaction_date.getUTCDate() + 1).toString();
+  let result: string = '';
 
   try {
     result = await axios
-      .post(baseURL + route + "/new", newSpendilowTransaction, {
+      .post(baseURL + route + '/new', newSpendilowTransaction, {
         withCredentials: true,
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
+      .then((res: AxiosResponse) => {
         switch (res.data.success) {
           case true:
             return res.data.message;
@@ -87,25 +49,22 @@ const createNewSpendilowUserTransaction = async (
           case false:
             return apiErrorResponseHandler(
               400,
-              "Qualcosa é andato storto nella creazione della transazione, ricontrolla i dati e riprova oppure contatta il supporto con questo messaggio:" +
-                res.data.message
+              'Qualcosa é andato storto nella creazione della transazione, ricontrolla i dati e riprova oppure contatta il supporto con questo messaggio:' +
+                res.data.message,
             );
             break;
           default:
-            return "/user/dashboard";
+            return '/user/dashboard';
             break;
         }
       })
       .catch((error) => {
-        return apiErrorResponseHandler(
-          error.response.status,
-          error.response.data.errorMessage
-        );
+        return apiErrorResponseHandler(error.response.status, error.response.data.errorMessage);
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "#500 - Qualcosa é andato storto nella creazione della  I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      '#500 - Qualcosa é andato storto nella creazione della  I servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
@@ -113,17 +72,10 @@ const createNewSpendilowUserTransaction = async (
 };
 
 const getSpendilowUserTransaction = async (
-  transactionID: string
-): Promise<spendilowTransactions | string> => {
-  let result: spendilowTransactions | string = {
-    transaction_date: new Date(),
-    amount: 0,
-    title: "",
-    notes: "",
-    tags: "",
-    transaction_type: "",
-    target_id: "",
-  };
+  transactionID: string,
+): Promise<ExternalCallResult | string> => {
+  let result: ExternalCallResult | string;
+
   try {
     result = await axios
       .get(baseURL + route + `/get/${transactionID}`, {
@@ -135,23 +87,21 @@ const getSpendilowUserTransaction = async (
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti a recuperare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+          'Non siamo riusciti a recuperare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto.',
         );
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti a recuperare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti a recuperare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
   return result;
 };
 
-const deleteSpendilowUserTransaction = async (
-  transactionID: string
-): Promise<string> => {
-  let result: string = "";
+const deleteSpendilowUserTransaction = async (transactionID: string): Promise<string> => {
+  let result: string = '';
 
   try {
     result = await axios
@@ -164,13 +114,13 @@ const deleteSpendilowUserTransaction = async (
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti ad eliminare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+          'Non siamo riusciti ad eliminare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto.',
         );
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti a recuperare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti a recuperare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 
@@ -178,55 +128,49 @@ const deleteSpendilowUserTransaction = async (
 };
 
 const editSpendilowUserTransaction = async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  editedTransaction: any
+  editedTransaction: SpendilowTransaction,
 ): Promise<string> => {
-  let result: string = "";
+  let result: string = '';
 
-  const { amount, title, notes, tags, target_id, transaction_type } =
-    editedTransaction;
+  const { amount, title, notes, tags, target_id, transaction_type } = editedTransaction;
 
   editedTransaction.transaction_date =
-    editedTransaction.transaction_date.getUTCFullYear().toString() +
-    "/" +
-    (editedTransaction.transaction_date.getUTCMonth() + 1).toString() +
-    "/" +
-    (editedTransaction.transaction_date.getUTCDate() + 1).toString();
+    (editedTransaction.transaction_date as Date).getUTCFullYear().toString() +
+    '/' +
+    ((editedTransaction.transaction_date as Date).getUTCMonth() + 1).toString() +
+    '/' +
+    (editedTransaction.transaction_date as Date).getUTCDate().toString();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const transactionEditingBody: any = {
+  const transactionEditingBody: SpendilowTransaction = {
     amount,
     title,
     notes,
     tags,
     target_id,
     transaction_type,
+    transaction_date: ' ',
   };
 
   transactionEditingBody.transaction_date = editedTransaction.transaction_date;
 
   try {
     result = await axios
-      .patch(
-        baseURL + route + `/mod/${editedTransaction.id}`,
-        transactionEditingBody,
-        {
-          withCredentials: true,
-        }
-      )
+      .patch(baseURL + route + `/mod/${editedTransaction.id}`, editedTransaction, {
+        withCredentials: true,
+      })
       .then((res) => {
         return res.data;
       })
       .catch((error) => {
         return apiErrorResponseHandler(
           error.response.status,
-          "Non siamo riusciti a modificare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto."
+          'Non siamo riusciti a modificare la tua transazione, se possiedi un account prova ad effettuare nuovamente il login altrimenti contatta il supporto.',
         );
       });
   } catch (error) {
     result = apiErrorResponseHandler(
       500,
-      "Non siamo riusciti a modificare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto."
+      'Non siamo riusciti a modificare la tua transazione, i servizi di Spendilow non sembrano raggiungibili. Riprova o contatta il supporto.',
     );
   }
 

@@ -10,7 +10,6 @@ const {
   getSingleTransaction,
   updateSingleTransaction,
   deleteSingleTransaction,
-  bulkDataCreation
 } = require("../controllers/transactions");
 
 // ------ CREATE TRANSACTION ------
@@ -27,8 +26,5 @@ transactionsRouter.patch("/mod/:id", updateSingleTransaction);
 
 // ------ DELETE SINGLE TRANSACTION ------
 transactionsRouter.delete("/del/:id", deleteSingleTransaction);
-
-// ------ BULK TRANSACTIONS CREATION------
-transactionsRouter.get('/generate/', bulkDataCreation)
 
 module.exports = transactionsRouter;

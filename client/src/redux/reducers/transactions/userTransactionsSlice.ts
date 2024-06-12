@@ -1,19 +1,18 @@
-// ------ REDUX ------
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const userTransactionsSlice = createSlice({
-  name: "userTransactions",
+  name: 'userTransactions',
   initialState: {
     transactions: [
       {
-        id: "",
-        transaction_date: "",
+        id: '',
+        transaction_date: '',
         amount: 0,
-        title: "",
-        notes: "",
-        tags: "",
-        transaction_type: "",
-        target_id: "",
+        title: '',
+        notes: '',
+        tags: '',
+        transaction_type: '',
+        target_id: '',
       },
     ],
   },
