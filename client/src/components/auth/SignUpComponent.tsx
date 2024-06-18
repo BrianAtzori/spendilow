@@ -218,7 +218,7 @@ export default function SignUpComponent() {
             <div className='form-control'>
               {signUpError.state && <ErrorComponent message={signUpError.message}></ErrorComponent>}
             </div>
-            <div className='form-control'>
+            <div className='form-control hidden desktop:block'>
               <label className='label cursor-pointer'>
                 <span className='label-text'>
                   Attiva autenticazione a due fattori <br></br>(Verrai redirettə dopo la

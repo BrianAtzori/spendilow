@@ -141,6 +141,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
 
   async function editBudget() {
     const response = confirm('Vuoi modificare il budget?');
+    //TODO: Look here for loading issue
     setIsLoading(true);
 
     const { id, name, description } = spendilowUserBudget.budget;
@@ -168,7 +169,7 @@ export default function BudgetMenuModalComponent({ visible, onClose }: BudgetMen
         });
       }
     } else {
-      setIsEditingLoading(false);
+      setIsLoading(false);
     }
   }
 

@@ -47,7 +47,7 @@ export default function Budget() {
       <div className='min-h-screen static'>
         <LoaderComponent
           isLoading={budgetsLoading}
-          message={'Caricamento del profilo in corso 💰'}
+          message={'Caricamento dei tuoi budget in corso 💰'}
         ></LoaderComponent>
 
         {budgetsError.state ? (
