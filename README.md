@@ -66,10 +66,6 @@ The APIs are public so you can build you own frontend!
 
 > You can test the application [here 📍](https://brianatzori.it/spendilow/)
 
-### USAGE
-
-...TBD
-
 ### CONTACTS
 
 - 🤝🏻 My portfolio/Personal Website - https://www.brianatzori.it/
