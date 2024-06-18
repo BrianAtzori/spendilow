@@ -57,7 +57,7 @@ The APIs are public so you can build you own frontend!
 
 ## FRONTEND BUILT WITH 🎨
 
-- React JS (With TYpescript)
+- React JS (With Typescript)
 - Vite
 - Tailwind CSS
 - Redux Toolkit
