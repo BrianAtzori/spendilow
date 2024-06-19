@@ -48,9 +48,9 @@ export default function BudgetDataFunctionsComponent({
   async function deleteBudget() {
     setBudgetMenuDeletionSuccess({ state: false, message: '' });
     const response = confirm('Vuoi eliminare questo budget?');
-    setIsLoading(true);
 
     if (response) {
+      setIsLoading(true);
       const externalCallResult: ExternalCallResult | string = await deleteSpendilowUserBudget(
         budget.id,
       ).finally(() => {
