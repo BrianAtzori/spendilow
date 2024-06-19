@@ -18,8 +18,6 @@ import ErrorScreenComponent from './components/shared/ErrorScreenComponent';
 import { setBudgetMenuModalSliceShowing } from './redux/reducers/interactions/budgetMenuModalSlice';
 import BudgetMenuModalComponent from './components/budgets/BudgetMenuModalComponent';
 
-
-
 function App() {
   const userLogged: boolean = useAppSelector((state) => state.userLogged.value);
   const modalShowing: boolean = useAppSelector((state) => state.transactionModal.isShowing);
