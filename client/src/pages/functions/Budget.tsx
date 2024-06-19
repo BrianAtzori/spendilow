@@ -9,9 +9,12 @@ import ErrorScreenComponent from '../../components/shared/ErrorScreenComponent';
 import LoaderComponent from '../../components/shared/LoaderComponent';
 import { ExternalCallResult } from '../../shared/interfaces';
 import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
+import { useLoadUserProfile } from '../../hooks/useLoadUserProfile';
 
 export default function Budget() {
   const dispatch = useAppDispatch();
+
+  useLoadUserProfile();
 
   const [budgetsLoading, setAreBudgetsLoading] = useState(true);
   const [budgetsError, setBudgetsError] = useState({
@@ -47,7 +50,7 @@ export default function Budget() {
       <div className='min-h-screen static'>
         <LoaderComponent
           isLoading={budgetsLoading}
-          message={'Caricamento del profilo in corso 💰'}
+          message={'Caricamento dei tuoi budget in corso 💰'}
         ></LoaderComponent>
 
         {budgetsError.state ? (

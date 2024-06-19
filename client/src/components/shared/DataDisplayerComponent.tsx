@@ -47,7 +47,11 @@ export default function DataDisplayerComponent({
               <>
                 <LoaderComponent
                   isLoading={!error && isLoading}
-                  message={'Caricamento delle transazioni in corso 💰'}
+                  message={
+                    displayerMode === 'transactions'
+                      ? 'Caricamento delle transazioni in corso 💰'
+                      : 'Caricamento dei tuoi budget in corso 💰'
+                  }
                 ></LoaderComponent>
                 {!isLoading && (
                   <>

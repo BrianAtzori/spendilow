@@ -8,10 +8,12 @@ import { useAppDispatch } from '../../redux/hooks';
 import { updateUserTransactions } from '../../redux/reducers/transactions/userTransactionsSlice';
 import { getSpendilowUserTransactions } from '../../services/authenticated-users/transactions/auth-usr-transactions-external-calls';
 import { ExternalCallResult } from '../../shared/interfaces';
-import { changeUserLoggedState } from '../../redux/reducers/auth/userLoggedSlice';
+import { useLoadUserProfile } from '../../hooks/useLoadUserProfile';
 
 export default function Expenses() {
   const dispatch = useAppDispatch();
+
+  useLoadUserProfile();
 
   const [transactionsLoading, setAreTransactionsLoading] = useState(true);
   const [transactionsError, setTransactionsError] = useState({
@@ -31,8 +33,6 @@ export default function Expenses() {
 
     if ((externalCallResult as ExternalCallResult).transactions) {
       dispatch(updateUserTransactions((externalCallResult as ExternalCallResult).transactions));
-
-      dispatch(changeUserLoggedState(true));
     } else {
       setTransactionsError({
         state: true,

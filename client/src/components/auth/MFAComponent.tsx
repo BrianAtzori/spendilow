@@ -64,7 +64,7 @@ export default function MFAComponent() {
             </div>
             <div className='form-control mt-6'>
               <Link to='/' className='btn btn-accent font-primary font-bold text-neutral'>
-                Vai alla Login
+                Accedi
               </Link>
             </div>
           </form>

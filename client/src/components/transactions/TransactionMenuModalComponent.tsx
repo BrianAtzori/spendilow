@@ -153,19 +153,23 @@ export default function TransactionMenuModalComponent({
 
   async function editTransaction() {
     const response = confirm('Vuoi modificare la transazione?');
-    setIsLoading(true);
 
-    const { id, amount, title, notes, tags, target_id, transaction_date, transaction_type } =
+    const { id, amount, title, notes, tags, transaction_date, transaction_type } =
       spendilowUserTransaction;
 
     if (response) {
+      setIsLoading(true);
+
       const externalCallResult: ExternalCallResult | string = await editSpendilowUserTransaction({
         id,
         amount,
         title,
         notes,
         tags,
-        target_id,
+        target_id:
+          transaction_type === 'Expense' || transaction_type === 'Income'
+            ? null
+            : spendilowUserTransaction.target_id,
         transaction_date,
         transaction_type,
       }).finally(() => {

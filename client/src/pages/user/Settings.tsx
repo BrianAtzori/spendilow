@@ -1,8 +1,11 @@
 import UserEditProfileComponent from '../../components/settings/UserEditProfileComponent';
 import ChangeOrLogoutComponent from '../../components/settings/ChangeOrLogoutComponent';
 import UserAccountDeletionComponent from '../../components/settings/UserAccountDeletionComponent';
+import { useLoadUserProfile } from '../../hooks/useLoadUserProfile';
 
 export default function Settings() {
+  useLoadUserProfile();
+
   return (
     <>
       <UserEditProfileComponent></UserEditProfileComponent>
