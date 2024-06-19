@@ -16,7 +16,7 @@ export default function UserExpensesWidgets() {
     if (!(transactions.length === 0)) {
       switch (mode) {
         case 'total': {
-          calculatedValue = currentSpendilowUser.savings;
+          calculatedValue += Number(currentSpendilowUser.savings);
           for (let i = 0; i < transactions.length; i++) {
             switch (transactions[i].transaction_type) {
               case 'Income':
@@ -74,6 +74,9 @@ export default function UserExpensesWidgets() {
 
       return Number(calculatedValue).toFixed(2);
     } else {
+      if (mode === 'total') {
+        return Number(currentSpendilowUser.savings);
+      }
       return 0;
     }
   };
@@ -160,8 +163,11 @@ export default function UserExpensesWidgets() {
                       />
                     </svg>
                   </div>
-                  <div className='stat-title'>Ultimo movimento:</div>
-                  <div className='stat-value'>{transactions[0].amount}</div>
+                  <div className='stat-title'>Movimento piú recente:</div>
+                  <div className='stat-value'>
+                    {transactions[0].transaction_type === 'Expense' ? '- ' : '+ '}
+                    {transactions[0].amount}
+                  </div>
                   <div className='stat-desc'>{transactions[0].title}</div>
                 </div>
               </div>

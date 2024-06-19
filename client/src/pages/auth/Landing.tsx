@@ -23,8 +23,6 @@ export default function Landing() {
 
     if (typeof externalCallResult != 'string') {
       window.location.href = import.meta.env.VITE_BASENAME + '/user/dashboard';
-    } else {
-      alert(externalCallResult as string);
     }
   }
 
