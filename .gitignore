@@ -2,5 +2,4 @@ info.txt
 node_modules
 .env
 **spendilow-db**
-# Local Netlify folder
-.netlify
+dist
